@@ -70,4 +70,12 @@ declare namespace SETTING {
     afterPrice?: string;
     createTime?: string;
   }
+
+  interface PaymentType {
+    name: string;
+    id?: number;
+    storeId?: number;
+    sort?: number;
+    acquiesce?: 0 | 1;
+  }
 }

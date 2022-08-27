@@ -1,0 +1,81 @@
+.financial-payment-card {
+  display: inline-block;
+  .content {
+    width: 172px;
+    height: 56px;
+    background-color: #fff;
+    cursor: move;
+    box-shadow: 0 2px 8px 0 rgb(5 61 200 / 8%);
+    border-radius: 2px;
+    border: 1px solid #eee;
+    margin-right: 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    overflow: hidden;
+    position: relative;
+    padding: 0 12px 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    &.corner::after {
+      content: '默认';
+      position: absolute;
+      height: 18px;
+      line-height: 18px;
+      width: 56px;
+      background: #053dc8;
+      transform: rotate(45deg) scale(0.9);
+      top: 4px;
+      font-size: 12px;
+      right: -17px;
+      color: #fff;
+      text-align: center;
+    }
+
+    & .text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-left: 11px;
+    }
+
+    & .text-input {
+      margin-right: 8px;
+    }
+
+    &.sortable-chosen,
+    &:hover {
+      border: 1px solid #1890ff;
+    }
+
+    &.sortable-chosen.sortable-ghost {
+      box-shadow: 0 2px 8px 0 rgb(25 111 255 / 8%);
+      border-radius: 2px;
+      opacity: 0.3;
+      border: 1px dashed #1890ff;
+    }
+
+    &:before {
+      position: absolute;
+      content: '';
+      display: block;
+      width: 20px;
+      height: 20px;
+      background-image: url('~@/assets/images/draggable.svg');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    & .action {
+      & .pointer {
+        cursor: pointer;
+      }
+    }
+  }
+}

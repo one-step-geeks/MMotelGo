@@ -20,6 +20,12 @@ declare namespace API {
     };
   }
 
+  interface Result_List_ALL_<T = null> {
+    success: boolean;
+    errorCode: number;
+    errorMessage: string;
+    data: T[];
+  }
   // 全局-菜单，枚举，用户信息
   type Result_String_ = Result<string>;
   type Result_Number_ = Result<number>;
@@ -44,12 +50,9 @@ declare namespace API {
   type Result_RoomState_RoomTypeList_ = Result_List_<ROOM_STATE.RoomType>;
   type Result_RoomState_StockList_ = Result_List_<ROOM_STATE.StockData>;
   type Result_RoomState_SingleDayList_ = Result_List_<ROOM_STATE.SingleDayData>;
-  type Result_RoomState_RoomConditionList_ =
-    Result_List_<ROOM_STATE.RoomCondition>;
-  type Result_RoomState_RoomOverviewList_ =
-    Result_List_<ROOM_STATE.RoomOverview>;
-  type Result_RoomState_ChangeLogList_ =
-    Result_List_<ROOM_STATE.StateChangeLog>;
+  type Result_RoomState_RoomConditionList_ = Result_List_<ROOM_STATE.RoomCondition>;
+  type Result_RoomState_RoomOverviewList_ = Result_List_<ROOM_STATE.RoomOverview>;
+  type Result_RoomState_ChangeLogList_ = Result_List_<ROOM_STATE.StateChangeLog>;
   type Result_RoomState_StatusEnum_ = Result_List_<ROOM_STATE.StatusEnum>;
 
   // 用户注册，登录，修改密码相关
