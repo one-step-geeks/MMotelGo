@@ -78,4 +78,13 @@ declare namespace SETTING {
     sort?: number;
     acquiesce?: 0 | 1;
   }
+
+  interface Channel {
+    name: string;
+    id?: number;
+    storeId?: number;
+    sort?: number;
+    acquiesce?: 0 | 1;
+    color?: string;
+  }
 }

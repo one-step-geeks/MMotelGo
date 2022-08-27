@@ -4,6 +4,7 @@ import * as RoomStateController from './RoomStateController';
 import * as UserController from './UserController';
 import * as AccountController from './AccountController';
 import * as FinanceController from './FinanceController';
+import * as ChannelController from './ChannelController';
 
 export default {
   AppController,
@@ -12,4 +13,5 @@ export default {
   UserController,
   AccountController,
   FinanceController,
+  ChannelController,
 };

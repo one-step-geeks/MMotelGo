@@ -14,6 +14,15 @@ export default [
     path: 'pms/room-state/calendar',
     component: 'pms/RoomState',
   },
+  // {
+  //   name: '订单',
+  //   path: 'pms/order',
+  //   component: 'pms/Order', routes: [
+  //     { path: '/pms/order/all', component: 'pms/Order/All' },
+  //     { path: '/pms/order/unarrange', component: 'pms/Order/All' },
+  //     { path: '/pms/order/unhandle', component: 'pms/Order/All' },
+  //   ]
+  // },
   {
     name: '单日房态',
     path: 'pms/room-state/single-day',
@@ -30,6 +39,10 @@ export default [
     path: 'pms/setting',
     component: 'pms/Setting',
     routes: [
+      {
+        path: '/pms/setting/channel-manage',
+        component: 'pms/Setting/ChannelManage',
+      },
       { path: '/pms/setting/rooms-manage', component: 'pms/Setting/RoomType' },
       { path: '/pms/setting/rooms-hour', component: 'pms/Setting/HourRooms' },
       { path: '/pms/setting/rooms-group', component: 'pms/Setting/RoomGroup' },

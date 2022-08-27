@@ -6,6 +6,7 @@ import {
   LaptopOutlined,
   NotificationOutlined,
   MoneyCollectOutlined,
+  AppstoreAddOutlined,
 } from '@ant-design/icons';
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
@@ -28,6 +29,15 @@ const SettingContainer: React.FC = (props) => {
             history.push(key);
           }}
         >
+          <SubMenu
+            key="channels"
+            icon={<AppstoreAddOutlined />}
+            title={intl.formatMessage({ id: '渠道管理' })}
+          >
+            <Menu.Item key="/pms/setting/channel-manage">
+              {intl.formatMessage({ id: '渠道设置设置' })}
+            </Menu.Item>
+          </SubMenu>
           <SubMenu
             key="rooms"
             icon={<UserOutlined />}
