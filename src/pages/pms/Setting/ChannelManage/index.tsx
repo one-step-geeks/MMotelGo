@@ -14,7 +14,7 @@ export default () => {
   );
 
   return (
-    <PageContainer title=" " ghost>
+    <PageContainer pageHeaderRender={() => <></>} ghost>
       <ProCard
         ghost
         title="渠道设置"
@@ -48,13 +48,15 @@ export default () => {
             }}
           />
           {newType ? (
-            <ChannelCard
-              onChange={() => {
-                setNewType(undefined);
-                executeReq();
-              }}
-              value={newType}
-            />
+            <div style={{ display: 'inline' }}>
+              <ChannelCard
+                onChange={() => {
+                  setNewType(undefined);
+                  executeReq();
+                }}
+                value={newType}
+              />
+            </div>
           ) : null}
         </>
       </ProCard>

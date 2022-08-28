@@ -9,12 +9,12 @@ import PaymentCard from './components/PaymentCard';
 export default () => {
   const [newType, setNewType] = useState<SETTING.PaymentType | undefined>();
 
-  const { data: types, error, loading, run: executeReq } = useRequest(
+  const { data: types, loading, run: executeReq } = useRequest(
     services.FinanceController.queryPaymentTypes,
   );
 
   return (
-    <PageContainer title=" " ghost>
+    <PageContainer pageHeaderRender={() => <></>} ghost>
       <ProCard
         ghost
         title="收款方式设置"
