@@ -1,5 +1,4 @@
-export const emailPattern =
-  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+export const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const localeMap = [
   { label: '中文', value: 'zh-CN' },
@@ -34,3 +33,10 @@ export const systemMenuOptions = [
     remark: true,
   },
 ];
+
+export enum ConsumerItemClassifyEnum {
+  OTHER = 1, // 其他
+  BREAKFAST = 2, // 早餐消费
+  ROOM_CONSUMPTION = 3, // 客房消费
+  COMPENSATION = 4, // 赔偿
+}

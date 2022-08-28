@@ -24,7 +24,7 @@ const SettingContainer: React.FC = (props) => {
           defaultOpenKeys={[
             pathname?.split('/pms/setting/')?.[1]?.split('-')?.[0],
           ]}
-          onSelect={(info) => {
+          onClick={(info) => {
             const { key } = info;
             history.push(key);
           }}
@@ -52,6 +52,9 @@ const SettingContainer: React.FC = (props) => {
             </Menu.Item>
             <Menu.Item key="/pms/setting/rooms-sort">
               {intl.formatMessage({ id: '排序设置' })}
+            </Menu.Item>
+            <Menu.Item key="/pms/setting/consumer-item">
+              {intl.formatMessage({ id: '消费项设置' })}
             </Menu.Item>
           </SubMenu>
           <SubMenu

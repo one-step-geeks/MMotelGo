@@ -87,4 +87,20 @@ declare namespace SETTING {
     acquiesce?: 0 | 1;
     color?: string;
   }
+  interface MakeNote {
+    id?: number;
+    name?: string;
+    sort?: number;
+    type?: 0 | 1;
+    storeId?: number;
+  }
+
+  interface ConsumerItem extends BasicExtraProps {
+    id?: number;
+    name?: string;
+    storeId?: number;
+    classify?: number;
+    price?: number;
+    status?: 0 | 1;
+  }
 }
