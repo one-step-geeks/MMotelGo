@@ -35,26 +35,29 @@ export default {
   改价记录: 'Price 	Change Record',
   门店设置: 'Store Setting',
   房型名称: 'Room Type Name',
+  全部房型: 'All Room Type',
   简称: 'Short Name',
   默认门市价: 'Default Counter Price',
   房间数: 'Number of Room',
   房间号: 'Room Number',
   操作: 'Operation',
   新增房型: 'New Room Type',
+  新增分组: 'New Group',
   分组名称: 'Group Name',
   编辑: 'Edit',
   删除: 'Delete',
   未分组房间: 'Ungrouped Room',
-  点击编辑才可拖拽房间至分组: 'Click Edit to Drag Room to Group',
-  '设置分组后，可在日历房态页面按照分组进行筛选':
-    'After setting Group, filter according to the Group on Calendar Room Status page ',
-  '拖拽房型即可进行房型排序，选定排序方式之后，房态日历将按照下方顺序展示':
+  EDIT_TIP_NOTE: 'Click Edit to Drag Room to Group',
+  GROUP_TIP_NOTE:
+    'After setting Group, filter according to the Group on Calendar Room Status page',
+  SORT_TIP_NOTE:
     'Move Room Type option to sort them. After selecting the sorting method, Room Status Calendar will be displayed in the following order',
   房型排序: 'Room Type Sorting',
   房间排序: 'Room Sorting',
   分组排序: 'Group Sorting',
   本地房型: 'Local Room Type',
-  隐藏库存: 'Hidden Inventory',
+  隐藏库存: 'Hide Inventory',
+  显示库存: 'Show Inventory',
   价格渠道: 'Price Channel',
   价格日期: 'Price Date',
   修改前价格: 'Price before Modification',
@@ -88,4 +91,7 @@ export default {
   财务设置: 'Financial Setting',
   收款方式设置: 'Payment Setting',
   记一笔设置: 'Take Note Setting',
+
+  成功: 'Success',
+  失败: 'Fail',
 };

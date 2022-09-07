@@ -7,10 +7,12 @@ import { getWeekDay, getCalendarDate } from '@/utils';
 import moment from 'moment';
 import PriceEditDrawer from './components/PriceEditDrawer';
 import services from '@/services';
-import { useRequest } from 'umi';
+import { useRequest, useIntl } from 'umi';
 import './style.less';
 
 const SettingPriceCalendar: React.FC = () => {
+  const intl = useIntl();
+
   const [showRemain, setShowRemain] = useState(false);
   const [fromDate, setFromDate] = useState(() => moment());
   const [roomTypeId, setRoomTypeId] = useState(0);
@@ -20,7 +22,9 @@ const SettingPriceCalendar: React.FC = () => {
     return services.SettingController.getRoomTypeList();
   });
 
-  const roomTypeOptions = [{ label: '全部房型', value: 0 }].concat(
+  const roomTypeOptions = [
+    { label: intl.formatMessage({ id: '全部房型' }), value: 0 },
+  ].concat(
     data?.list?.map((item) => {
       return {
         label: item.roomTypeName!,
@@ -75,7 +79,7 @@ const SettingPriceCalendar: React.FC = () => {
 
   const columns: ProColumns<SETTING.RoomPriceListData>[] = [
     {
-      title: '本地房型',
+      title: intl.formatMessage({ id: '本地房型' }),
       width: 180,
       dataIndex: 'roomTypeName',
       ellipsis: true,
@@ -127,7 +131,9 @@ const SettingPriceCalendar: React.FC = () => {
             checked={showRemain}
             onChange={(checked) => setShowRemain(checked)}
           />
-          {showRemain ? '显示库存' : '隐藏库存'}
+          {showRemain
+            ? intl.formatMessage({ id: '显示库存' })
+            : intl.formatMessage({ id: '隐藏库存' })}
         </Space>,
       ]}
     ></ProTable>
