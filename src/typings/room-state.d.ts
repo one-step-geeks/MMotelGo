@@ -32,6 +32,7 @@ declare namespace ROOM_STATE {
     id?: React.Key;
     roomTypeId?: number;
     roomTypeName?: string;
+    roomCount?: number;
     rowSpan?: number;
     colSpan?: number;
     dateList?: {

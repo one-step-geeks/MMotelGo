@@ -175,7 +175,9 @@ const RoomStatePage: React.FC = () => {
               },
               render: (_: ReactNode, record: ROOM_STATE.StateTableData) => {
                 if (expand) {
-                  return <div className="left-room-box">7间</div>;
+                  return (
+                    <div className="left-room-box">{record.roomCount}间</div>
+                  );
                 }
                 const order = findOrderByRecord(record, item.date);
 

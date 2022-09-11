@@ -32,6 +32,7 @@ const EmptyBox: React.FC<Props> = (props) => {
         case 'CANCEL_SELECTED':
           setVisible(false);
           setSelected(false);
+          break;
         default:
           break;
       }
