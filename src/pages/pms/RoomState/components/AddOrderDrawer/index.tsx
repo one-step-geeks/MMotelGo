@@ -1,19 +1,8 @@
-import {
-  Button,
-  Col,
-  Card,
-  DatePicker,
-  Drawer,
-  Form,
-  Input,
-  Row,
-  Select,
-  Space,
-} from 'antd';
+import { Button, Col, Card, DatePicker, Drawer, Form, Input, Row } from 'antd';
 import React, { useState } from 'react';
 import { selectService } from '../service';
 import { useModel } from 'umi';
-const { Option } = Select;
+import OrderRoomItem from './OrderRoomItem';
 
 interface Props {
   visible: boolean;
@@ -25,8 +14,6 @@ const AddOrderDrawer: React.FC<Props> = (props) => {
   const [form] = Form.useForm();
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
-  console.log(selectedRooms);
-
   return (
     <Drawer
       title="新建订单"
@@ -37,8 +24,10 @@ const AddOrderDrawer: React.FC<Props> = (props) => {
       }}
       width={532}
       visible={visible}
+      maskClosable={false}
+      destroyOnClose
     >
-      <Form form={form}>
+      <Form form={form} preserve={false}>
         <Card title="基本信息" bordered={false} size="small">
           <Row gutter={16}>
             <Col span={12}>
@@ -62,7 +51,9 @@ const AddOrderDrawer: React.FC<Props> = (props) => {
           </Row>
         </Card>
         <Card title="房间信息" bordered={false} size="small">
-          todo
+          {selectedRooms?.map((item) => {
+            return <OrderRoomItem data={item} />;
+          })}
         </Card>
       </Form>
     </Drawer>
