@@ -33,8 +33,10 @@ const RoomStatePage: React.FC = () => {
       switch (info.type) {
         case 'ADD_ORDER':
           setAddVisible(true);
+          break;
         case 'CLOSE_ROOM':
           setCloseVisible(true);
+          break;
         default:
           break;
       }

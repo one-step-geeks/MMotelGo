@@ -30,6 +30,7 @@ const EmptyBox: React.FC<Props> = (props) => {
           }
           break;
         case 'CANCEL_SELECTED':
+          setVisible(false);
           setSelected(false);
         default:
           break;
@@ -53,7 +54,6 @@ const EmptyBox: React.FC<Props> = (props) => {
             type="secondary"
             className="btn"
             onClick={() => {
-              setVisible(false);
               setSelectedRooms([]);
               selectService.sendCancelInfo();
             }}

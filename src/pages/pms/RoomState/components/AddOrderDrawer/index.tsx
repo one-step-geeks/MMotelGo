@@ -11,6 +11,7 @@ import {
   Space,
 } from 'antd';
 import React, { useState } from 'react';
+import { selectService } from '../service';
 import { useModel } from 'umi';
 const { Option } = Select;
 
@@ -21,14 +22,18 @@ interface Props {
 
 const AddOrderDrawer: React.FC<Props> = (props) => {
   const { visible, onClose } = props;
-  const { selectedRooms } = useModel('state');
+  const { selectedRooms, setSelectedRooms } = useModel('state');
 
   console.log(selectedRooms);
 
   return (
     <Drawer
       title="Create a new account"
-      onClose={onClose}
+      onClose={() => {
+        setSelectedRooms([]);
+        selectService.sendCancelInfo();
+        onClose?.();
+      }}
       width={720}
       visible={visible}
       bodyStyle={{
