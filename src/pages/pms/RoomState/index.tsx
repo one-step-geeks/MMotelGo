@@ -6,6 +6,7 @@ import { getWeekDay, getCalendarDate } from '@/utils';
 import OrderDrawer from './components/OrderDrawer';
 import EmptyDrawer from './components/EmptyDrawer';
 import AddOrderDrawer from './components/AddOrderDrawer';
+import CloseRoomModal from './components/CloseRoomModal';
 import RoomCodeBox from './components/RoomCodeBox';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import TodayOverviewModal from './components/TodayOverviewModal';
@@ -23,6 +24,7 @@ const RoomStatePage: React.FC = () => {
   const history = useHistory();
   const [expand, setExpand] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
+  const [closeVisible, setCloseVisible] = useState(false);
   const [duration, setDuration] = useState(7);
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
 
@@ -31,6 +33,8 @@ const RoomStatePage: React.FC = () => {
       switch (info.type) {
         case 'ADD_ORDER':
           setAddVisible(true);
+        case 'CLOSE_ROOM':
+          setCloseVisible(true);
         default:
           break;
       }
@@ -331,6 +335,12 @@ const RoomStatePage: React.FC = () => {
         visible={addVisible}
         onClose={() => {
           setAddVisible(false);
+        }}
+      />
+      <CloseRoomModal
+        visible={closeVisible}
+        onClose={() => {
+          setCloseVisible(false);
         }}
       />
     </div>

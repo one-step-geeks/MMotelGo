@@ -60,7 +60,11 @@ const EmptyBox: React.FC<Props> = (props) => {
           >
             取消
           </Text>
-          <Text type="secondary" className="btn">
+          <Text
+            type="secondary"
+            className="btn"
+            onClick={selectService.sendCloseRoom}
+          >
             关房
           </Text>
           <Text
