@@ -3,11 +3,11 @@ import SortableNoteItem from './components/SortableNoteItem';
 import { NoteTypeEnum } from './components/NoteItem';
 import { editingService } from './components/service';
 import { Card, Button, Skeleton, Empty } from 'antd';
-import { useRequest } from 'umi';
+import { useRequest, useIntl } from 'umi';
 import services from '@/services';
-import Cookie from 'js-cookie';
 
 export default () => {
+  const intl = useIntl();
   const [editing, setEditing] = useState(false);
   const [incomeList, setIncomeList] = useState<SETTING.MakeNote[]>([]);
   const [expendList, setExpendList] = useState<SETTING.MakeNote[]>([]);
@@ -51,7 +51,7 @@ export default () => {
   return (
     <Skeleton loading={loading}>
       <Card
-        title="收入项"
+        title={intl.formatMessage({ id: '收入项' })}
         extra={
           <Button
             type="primary"
@@ -61,7 +61,7 @@ export default () => {
               setIncomeList([...incomeList, { id: -1 }]);
             }}
           >
-            新增收入项
+            {intl.formatMessage({ id: '添加' })}
           </Button>
         }
       >
@@ -76,7 +76,7 @@ export default () => {
         )}
       </Card>
       <Card
-        title="支出项"
+        title={intl.formatMessage({ id: '支出项' })}
         style={{ marginTop: 24 }}
         extra={
           <Button
@@ -87,7 +87,7 @@ export default () => {
               setExpendList([...expendList, { id: -1 }]);
             }}
           >
-            新增支出项
+            {intl.formatMessage({ id: '添加' })}
           </Button>
         }
       >

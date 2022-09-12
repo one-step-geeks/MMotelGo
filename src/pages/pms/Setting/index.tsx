@@ -35,7 +35,7 @@ const SettingContainer: React.FC = (props) => {
             title={intl.formatMessage({ id: '渠道管理' })}
           >
             <Menu.Item key="/pms/setting/channel-manage">
-              {intl.formatMessage({ id: '渠道设置设置' })}
+              {intl.formatMessage({ id: '渠道设置' })}
             </Menu.Item>
           </SubMenu>
           <SubMenu

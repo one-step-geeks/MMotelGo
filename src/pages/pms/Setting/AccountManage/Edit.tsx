@@ -4,7 +4,7 @@ import AuthorityCheckGroup, {
   AuthorityTypeEnum,
 } from './components/AuthorityCheckGroup';
 import { flatten, values } from 'lodash-es';
-import { useRequest, useParams, useHistory } from 'umi';
+import { useRequest, useParams, useHistory, useIntl } from 'umi';
 import services from '@/services';
 // import './less.less';
 
@@ -17,6 +17,7 @@ export default () => {
   const [form] = Form.useForm();
   const params = useParams<{ accountId: string }>();
   const history = useHistory();
+  const intl = useIntl();
 
   const isUpdate = !!params?.accountId;
 
@@ -42,7 +43,7 @@ export default () => {
     <Skeleton loading={authorityLoading || detailLoading}>
       <Form {...formLayout} form={form}>
         <Card
-          title="基本设置"
+          title={intl.formatMessage({ id: '基本设置' })}
           extra={
             <>
               <Button
@@ -67,13 +68,13 @@ export default () => {
                   } catch (error) {}
                 }}
               >
-                保存
+                {intl.formatMessage({ id: '保存' })}
               </Button>
             </>
           }
         >
           <ProFormText
-            label="账号（邮箱）"
+            label={intl.formatMessage({ id: '账号（邮箱）' })}
             name="emailAddress"
             fieldProps={{
               maxLength: 100,
@@ -82,7 +83,7 @@ export default () => {
             initialValue={account?.emailAddress}
           />
           <ProFormText
-            label="员工姓名"
+            label={intl.formatMessage({ id: '员工姓名' })}
             name="nickName"
             fieldProps={{
               maxLength: 100,
@@ -91,7 +92,10 @@ export default () => {
             initialValue={account?.nickName}
           />
         </Card>
-        <Card title="权限设置" style={{ marginTop: 24 }}>
+        <Card
+          title={intl.formatMessage({ id: '权限设置' })}
+          style={{ marginTop: 24 }}
+        >
           <Tabs type="card">
             {menuAuthorityList?.map((module) => {
               const { mainMenuList, moduleName } = module || {};

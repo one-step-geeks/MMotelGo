@@ -2,7 +2,7 @@ import { Button, Typography, Switch, message, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { useHistory } from 'umi';
+import { useHistory, useIntl } from 'umi';
 import services from '@/services';
 
 const { Link } = Typography;
@@ -10,10 +10,12 @@ const { Link } = Typography;
 type TableListItem = Partial<ACCOUNT.AccountData>;
 
 export default () => {
+  const intl = useIntl();
+
   const history = useHistory();
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: '账号',
+      title: intl.formatMessage({ id: '账号' }),
       ellipsis: true,
       dataIndex: 'emailAddress',
       formItemProps: {
@@ -24,13 +26,13 @@ export default () => {
       },
     },
     {
-      title: '员工姓名',
+      title: intl.formatMessage({ id: '员工姓名' }),
       ellipsis: true,
       dataIndex: 'nickName',
       search: false,
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: '状态' }),
       dataIndex: 'status',
       search: false,
       render: (_, record) => {
@@ -53,9 +55,9 @@ export default () => {
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: '操作' }),
       fixed: 'right',
-      width: 140,
+      width: 180,
       key: 'option',
       valueType: 'option',
       render: (_text, record, _, action) => {
@@ -77,7 +79,7 @@ export default () => {
               );
             }}
           >
-            设置权限
+            {intl.formatMessage({ id: '设置权限' })}
           </Link>,
           <Popconfirm
             key="status"
@@ -85,7 +87,7 @@ export default () => {
             title="此操作将永久删除, 是否继续？"
             onConfirm={deleteAccount}
           >
-            <Link>删除</Link>
+            <Link>{intl.formatMessage({ id: '删除' })}</Link>
           </Popconfirm>,
         ];
       },
