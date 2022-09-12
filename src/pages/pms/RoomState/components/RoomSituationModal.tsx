@@ -81,7 +81,6 @@ export default (props: Props) => {
     <ModalForm
       width={1000}
       layout="horizontal"
-      size="small"
       modalProps={{
         maskClosable: false,
         destroyOnClose: true,
@@ -118,7 +117,6 @@ export default (props: Props) => {
         headerTitle={
           <Space>
             <DatePicker
-              size="middle"
               value={fromDate}
               onChange={(date) => setFromDate(date!)}
               style={{ width: 140 }}

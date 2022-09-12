@@ -159,4 +159,8 @@ export default {
   '账号（邮箱）': 'Email Account',
   基本设置: 'Basic Settings',
   权限设置: 'Permission Settings',
+  数量: 'Room Count',
+  可售: 'For Sale',
+  占用: 'Occupied',
+  不可售: 'Not For Sale',
 };
