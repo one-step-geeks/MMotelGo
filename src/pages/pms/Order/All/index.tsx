@@ -1,192 +1,423 @@
-import React, { useEffect, useState } from 'react';
-import type { RadioChangeEvent } from 'antd';
-import { useHistory } from 'umi';
-import { Layout, Menu, Radio, Button, Input, Space } from 'antd';
-// import {
-//   UserOutlined,
-//   LaptopOutlined,
-//   NotificationOutlined,
-//   MoneyCollectOutlined,
-// } from '@ant-design/icons';
-import { QueryFilter } from '@ant-design/pro-form';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  ProForm,
-  ProFormDatePicker,
+  ProTable,
   ProFormDateRangePicker,
-  ProFormSelect,
+  ProFormInstance,
 } from '@ant-design/pro-components';
-import { message } from 'antd';
+import type { ProColumns } from '@ant-design/pro-components';
+import moment from 'moment';
+import { useRequest } from 'umi';
+import services from '@/services';
+import { Radio, Button, Input, Space, Select } from 'antd';
+import {
+  OrderState,
+  OrderStateOptions,
+  OrderPayOptions,
+} from '@/services/OrderController';
+import OrderDetailDrawer from '../components/OrderDetailDrawer';
+import OrderFormDrawer from '../components/OrderFormDrawer';
 
 import './style.less';
 
-// const { SubMenu } = Menu;
-// const { Content, Sider } = Layout;
+const { Option } = Select;
+
+const convertOptionToEnums = (options: Array<SETTING.Option>) => {
+  const enums: Record<number, object> = {};
+  options.forEach(({ value, label }) => {
+    enums[value] = { text: label };
+  });
+  return enums;
+};
 
 enum QueryType {
-  ALL = 'all',
-  TODAY_ARRIVE = 'today-arrive',
-  TODAY_LEAVE = 'today-leave',
-  TODAY_CREAYED = 'today-created',
+  ALL = 1,
+  TODAY_ARRIVE,
+  TODAY_LEAVE,
+  TODAY_CREAYED,
 }
 interface QueryParam {
   queryType?: QueryType;
   keyword?: string;
-  channel?: number; //  "chapter"
-  checkInStatus?: number; //  "chapter"
-  endTime?: string; //  "2022-10-02"
-  startTime?: string; //  "2022-09-01"
-  payStatus?: number; //  "chapter"
-  payType?: number; //  "chapter"
-  rentType?: number; //  "chapter"
-  roomType?: number; //  "chapter"
+  searchType: string;
 }
 
-const OrdeerContainer: React.FC = (props) => {
+const OrderContainer: React.FC = (props) => {
+  const ref = useRef<ProFormInstance>();
   const [param, setParam] = useState<QueryParam>({
     queryType: QueryType.ALL,
+    searchType: 'channelOrderNo',
   });
-  const [keyword, setKeyword] = useState<string>('');
+  const [roomTypeOptions, setRoomTypeOptions] = useState<Array<SETTING.Option>>(
+    [],
+  );
+  const [channelOptions, setChannelOptions] = useState<Array<SETTING.Option>>(
+    [],
+  );
+  const [orderId, setOrderId] = useState<number>();
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [editDrawerVisible, setEditDrawerVisible] = useState(false);
 
   useEffect(() => {
-    search();
+    ref.current?.submit();
   }, [param]);
 
-  const generateParam = () => {
-    return Object.assign(param, { keyword });
+  useRequest(async () => {
+    const { data } = await services.ChannelController.queryChannels();
+    setChannelOptions(
+      data.map((row) => ({
+        label: row.name,
+        value: row.id as number,
+      })),
+    );
+  });
+
+  type TableListItem = ORDER.OrderListItemFlatted;
+
+  const columns: ProColumns<ORDER.OrderListItemFlatted>[] = [
+    {
+      title: '渠道单号/订单号',
+      key: 'channelOrderNo',
+      dataIndex: 'channelOrderNo',
+      search: false,
+      width: 200,
+      align: 'center',
+      render: (_, record) => {
+        return (
+          <Button
+            type="link"
+            onClick={() => {
+              setOrderId(record.orderId);
+              setDetailOpen(true);
+            }}
+          >
+            {record.channelOrderNo || '无'}
+          </Button>
+        );
+      },
+      onCell: (_) => {
+        return { rowSpan: _.rowSpan };
+      },
+    },
+    {
+      title: '渠道',
+      ellipsis: true,
+      key: 'channelType',
+      dataIndex: 'channelType',
+      valueEnum: convertOptionToEnums(channelOptions),
+      render: (_, record) => {
+        const option = channelOptions.find(
+          (o) => o.value === record.channelType,
+        );
+        return option && option.label;
+      },
+      onCell: (_) => {
+        return { rowSpan: _.rowSpan };
+      },
+    },
+    {
+      title: '联系人',
+      key: 'reserveName',
+      dataIndex: 'reserveName',
+      search: false,
+      onCell: (_) => {
+        return { rowSpan: _.rowSpan };
+      },
+    },
+    {
+      title: '手机号',
+      key: 'reservePhone',
+      dataIndex: 'reservePhone',
+      search: false,
+      onCell: (_) => {
+        return { rowSpan: _.rowSpan };
+      },
+    },
+    {
+      title: '房型',
+      dataIndex: 'roomTypeName',
+      key: 'roomTypeName',
+      valueEnum: convertOptionToEnums(roomTypeOptions),
+    },
+    {
+      title: '房间',
+      dataIndex: 'roomCode',
+      key: 'roomCode',
+      search: false,
+    },
+    {
+      title: '入住时间',
+      dataIndex: 'startDate',
+      key: 'startDate',
+      valueType: 'date',
+      renderFormItem: (
+        _,
+        { type, defaultRender, formItemProps, fieldProps, ...rest },
+        form,
+      ) => {
+        return (
+          <ProFormDateRangePicker
+            {...fieldProps}
+            transform={(values) => {
+              return {
+                startDate: values ? values[0] : undefined,
+                endDate: values ? values[1] : undefined,
+              };
+            }}
+            name="checkInTimeRanger"
+            placeholder={['入住开始时间', '入住开始时间']}
+          />
+        );
+      },
+    },
+    {
+      title: '离店时间',
+      dataIndex: 'endDate',
+      key: 'endDate',
+      valueType: 'date',
+      search: false,
+    },
+    {
+      title: '入住状态',
+      dataIndex: 'checkInStatus',
+      key: 'checkInStatus',
+      valueEnum: convertOptionToEnums(OrderStateOptions),
+      render: (value) => {
+        const option = OrderStateOptions.find(
+          (option) => option.value === value,
+        );
+        return option && option.label;
+      },
+    },
+    {
+      title: '房费',
+      dataIndex: 'roomPrice',
+      key: 'roomPrice',
+      search: false,
+      renderText(_) {
+        return `A$ ${_}`;
+      },
+    },
+    {
+      title: '订单总金额',
+      dataIndex: 'totalAmount',
+      key: 'totalAmount',
+      search: false,
+      renderText(_) {
+        return `A$ ${_}`;
+      },
+      onCell: (_) => {
+        return { rowSpan: _.rowSpan };
+      },
+    },
+    {
+      title: '结账状态',
+      dataIndex: 'orderStatus',
+      key: 'orderStatus',
+      valueEnum: convertOptionToEnums(OrderPayOptions),
+      renderText(_, record) {
+        const option = OrderPayOptions.find(
+          (o) => o.value === record.orderStatus,
+        );
+        return option && option.label;
+      },
+      onCell: (_) => {
+        return { rowSpan: _.rowSpan };
+      },
+    },
+  ];
+
+  useRequest(async () => {
+    const { data } = await services.SettingController.getRoomTypeList({
+      current: 1,
+      pageSize: 20, // may need extend
+    });
+    const options =
+      data.list?.map(({ id, roomTypeName }) => ({
+        value: id as number,
+        label: roomTypeName as string,
+      })) || [];
+
+    setRoomTypeOptions(options);
+  });
+
+  const handleQueryTabChange = (e: QueryType) => {
+    setParam({ ...param, queryType: e });
   };
-  const search = () => {
-    console.log('search via:', generateParam());
+  const handleKeywordChange = (e: string) => {
+    setParam({ ...param, keyword: e });
+  };
+  const handleSearchTypeChange = (e: string) => {
+    setParam({ ...param, searchType: e });
   };
 
-  const handleQueryTabChange = (e: RadioChangeEvent) => {
-    const value = e.target.value;
-    setParam({ ...param, queryType: value });
-  };
-
-  const handleOnSearch = () => {
-    search();
-  };
   const handleOnExport = () => {
-    console.log('export via:', generateParam());
+    console.log('export via', param);
   };
 
   return (
     <div className="all-order-page">
-      <Radio.Group
-        value={param.queryType}
-        onChange={handleQueryTabChange}
-        buttonStyle="solid"
-      >
-        <Radio.Button value={QueryType.ALL}>全部</Radio.Button>
-        <Radio.Button value={QueryType.TODAY_ARRIVE}>今日预抵</Radio.Button>
-        <Radio.Button value={QueryType.TODAY_LEAVE}>今日预离</Radio.Button>
-        <Radio.Button value={QueryType.TODAY_CREAYED}>今日新办</Radio.Button>
-      </Radio.Group>
+      <div className="custom-page-header">
+        <Radio.Group
+          value={param.queryType}
+          onChange={(e) => handleQueryTabChange(e.target.value)}
+          buttonStyle="solid"
+        >
+          <Radio.Button value={QueryType.ALL}>全部</Radio.Button>
+          <Radio.Button value={QueryType.TODAY_ARRIVE}>今日预抵</Radio.Button>
+          <Radio.Button value={QueryType.TODAY_LEAVE}>今日预离</Radio.Button>
+          <Radio.Button value={QueryType.TODAY_CREAYED}>今日新办</Radio.Button>
+        </Radio.Group>
+        <Space size="large" className="quick-action-bar">
+          {/* onSearch={onSearch} */}
 
-      <Space size="large" className="quick-action-bar">
-        <Input.Search
-          style={{ width: '340px' }}
-          value={keyword}
-          placeholder="订单&渠道号/姓名/手机号/房间号"
-          onChange={(e) => setKeyword(e.target.value)}
-          onPressEnter={handleOnSearch}
-          onSearch={handleOnSearch}
-          enterButton
-          allowClear
-        />
-        <Button type="primary" onClick={handleOnExport}>
-          导出报表
-        </Button>
-      </Space>
+          {/* (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase()) */}
+          {/* e => handleKeywordChange(e.target.value) */}
+          {/* 订单号/渠道单号/姓名/手机号/房间号 */}
+          <Select
+            placeholder="搜索类型"
+            // showSearch
+            optionFilterProp="children"
+            // onSearch={value => {
+            //   handleKeywordChange(value)
+            // }}
+            onChange={(value) => {
+              handleSearchTypeChange(value);
+              // return false;
+              // console.log('onChange e.target.value', e, el);
+            }}
+          >
+            <Option value="channelOrderNo">搜索订单号/渠道单号</Option>
+            <Option value="reserveName">搜索姓名</Option>
+            <Option value="reservePhone">搜索手机号</Option>
+            <Option value="roomCode">房间号</Option>
+          </Select>
 
-      <ProForm
-        // submitter={ { render: false}}
-        onFinish={async (values) => {
-          setParam({ ...param, ...values });
-          search();
+          <Input.Search
+            disabled={!param.searchType}
+            style={{ width: '340px' }}
+            placeholder="订单&渠道号/姓名/手机号/房间号"
+            // onChange={e => handleKeywordChange(e.target.value)}
+            onSearch={(e) => {
+              console.log('onSearch', e);
+              handleKeywordChange(e);
+            }}
+            enterButton
+            allowClear
+          />
+
+          <Button
+            type="primary"
+            onClick={() => {
+              setEditDrawerVisible(true);
+            }}
+          >
+            模拟新建
+          </Button>
+
+          <Button type="primary" onClick={handleOnExport}>
+            导出报表
+          </Button>
+        </Space>
+      </div>
+
+      <ProTable<TableListItem>
+        size="large"
+        formRef={ref}
+        scroll={{ x: 'scroll' }}
+        bordered
+        row-key="key"
+        search={{
+          collapsed: false,
         }}
-        layout="inline"
-      >
-        <ProFormDateRangePicker
-          transform={(values) => {
-            return {
-              startTime: values ? values[0] : undefined,
-              endTime: values ? values[1] : undefined,
-            };
+        columns={columns}
+        request={async (params) => {
+          console.log('request params', params);
+          console.log('extend param', param);
+
+          const { keyword, searchType, queryType } = param;
+          const {
+            roomTypeName: roomTypeId,
+            orderStatus: payStatus,
+            startDate,
+            endDate,
+            ...rest
+          } = params;
+          const keywordParam =
+            searchType && keyword ? { [searchType]: keyword } : {};
+
+          const { data } = await services.OrderController.queryList({
+            roomTypeId,
+            payStatus,
+            dateDto: {
+              startDate,
+              endDate,
+            },
+            queryType,
+            ...keywordParam,
+            ...rest,
+          });
+          const { list = [], total } = data || {};
+          const flattedList = [];
+          let index = 0;
+          for (let i = 0; i < list.length; i++) {
+            const { roomDtoList, ...rest } = list[i];
+            for (let j = 0; j < roomDtoList.length; j++) {
+              const room = roomDtoList[j];
+              console.log('roomDtoList.length', roomDtoList.length);
+              flattedList.push({
+                rowSpan: j === 0 ? roomDtoList.length : 0,
+                ...rest,
+                ...room,
+                key: `${index++}`,
+              });
+            }
+          }
+          return {
+            total,
+            data: flattedList || [],
+          };
+        }}
+        options={false}
+        pagination={{
+          pageSize: 10,
+          showQuickJumper: true,
+        }}
+      />
+
+      <OrderDetailDrawer
+        id={orderId!}
+        visible={detailOpen}
+        onVisibleChange={setDetailOpen}
+        gotoEdit={() => {
+          setEditDrawerVisible(true);
+        }}
+      />
+
+      {orderId ? (
+        <OrderFormDrawer
+          visible={editDrawerVisible}
+          onVisibleChange={(value) => setEditDrawerVisible(value)}
+          id={orderId}
+          onSubmited={() => ref.current?.submit()}
+        />
+      ) : (
+        <OrderFormDrawer
+          visible={editDrawerVisible}
+          onVisibleChange={(value) => setEditDrawerVisible(value)}
+          room={{
+            roomId: 452,
+            startDate: moment(),
+            checkInDays: 1,
+            roomTypeName: '大套房',
+            roomCode: '206',
+            roomPrice: 2,
           }}
-          name="checkInTimeRanger"
-          placeholder={['入住开始时间', '入住开始时间']}
+          checkInStatus={OrderState.IS_ORDERED}
+          onSubmited={() => ref.current?.submit()}
         />
-
-        <ProFormSelect
-          style={{ width: '200x' }}
-          options={[
-            {
-              value: 1,
-              label: '类型',
-            },
-          ]}
-          name="roomType"
-          placeholder="全部房型"
-        />
-
-        <ProFormSelect
-          options={[
-            {
-              value: 1,
-              label: '类型a',
-            },
-          ]}
-          name="checkInStatus"
-          placeholder="入住状态"
-        />
-
-        <ProFormSelect
-          options={[
-            {
-              value: 1,
-              label: '类型',
-            },
-          ]}
-          name="channel"
-          placeholder="全部渠道"
-        />
-
-        <ProFormSelect
-          options={[
-            {
-              value: 1,
-              label: '类型',
-            },
-          ]}
-          name="payType"
-          placeholder="付款类型"
-        />
-
-        <ProFormSelect
-          options={[
-            {
-              value: 1,
-              label: '类型',
-            },
-          ]}
-          name="rentType"
-          placeholder="全部入住类型"
-        />
-
-        <ProFormSelect
-          options={[
-            {
-              value: 1,
-              label: '类型',
-            },
-          ]}
-          name="payStatus"
-          placeholder="全部结账状态"
-        />
-      </ProForm>
+      )}
     </div>
   );
 };
 
-export default OrdeerContainer;
+export default OrderContainer;

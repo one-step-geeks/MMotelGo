@@ -1,13 +1,15 @@
 import React from 'react';
 import { useHistory } from 'umi';
-import { Layout, Menu } from 'antd';
+import { Typography, Layout, Menu } from 'antd';
 import { FileDoneOutlined } from '@ant-design/icons';
+
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
 const OrderContainer: React.FC = (props) => {
   const history = useHistory();
   const pathname = history.location.pathname;
+
   return (
     <Layout>
       <Sider width={200} collapsed={false} theme="light">

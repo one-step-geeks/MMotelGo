@@ -77,4 +77,9 @@ declare namespace API {
     overAllAuthorityList: ACCOUNT.OverallAuthorityModule[];
   }>;
   type Result_PmsAccountDetail_ = Result<ACCOUNT.AccountDetail>;
+
+  // 订单模块
+  type Result_OrderDetailInfo_ = Result<ORDER.OrderDetail>;
+  type Result_OrderListInfo_ = Result_List_<ORDER.OrderListItem>;
+  type Result_RoomTypeInfo_ = Result<ORDER.TypeAndRoomTree>;
 }

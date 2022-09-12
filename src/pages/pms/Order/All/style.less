@@ -1,11 +1,26 @@
 .all-order-page {
   position: relative;
-}
-.quick-action-bar {
-  right: 0;
-  top: 10px;
-  position: absolute;
-}
-.ant-form-inline {
-  margin-top: 40px;
+  .custom-page-header {
+    margin-bottom: 24px;
+    .ant-space {
+      position: absolute;
+      right: 0;
+    }
+    .ant-select-selector {
+      min-width: 172px;
+    }
+    .ant-space-item:first-of-type {
+      margin-right: -24px;
+      border-right: none;
+      .ant-select-selector {
+        border-right: 0;
+      }
+    }
+  }
+  .ant-pro-card-body {
+    margin-top: 32px;
+  }
+  .ant-form-item-control .ant-form-item-control {
+    max-width: 100% !important;
+  }
 }
