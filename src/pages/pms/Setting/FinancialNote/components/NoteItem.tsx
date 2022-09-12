@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 import { editingService } from './service';
 import services from '@/services';
-import Cookie from 'js-cookie';
 import './card.less';
 
 export enum NoteTypeEnum {
@@ -82,6 +81,7 @@ const NoteItem: React.FC<Props> = (props) => {
             className="text-input"
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            maxLength={10}
           />
           <Space className="action">
             <CheckOutlined
