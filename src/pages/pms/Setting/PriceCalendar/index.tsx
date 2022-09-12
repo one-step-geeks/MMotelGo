@@ -116,6 +116,7 @@ const SettingPriceCalendar: React.FC = () => {
             value={fromDate}
             onChange={(date) => setFromDate(date!)}
             style={{ width: 140 }}
+            allowClear={false}
           />
           <Select
             style={{ width: 140 }}
