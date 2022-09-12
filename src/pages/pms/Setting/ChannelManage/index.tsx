@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRequest } from 'umi';
+import { useRequest, useIntl } from 'umi';
 import { Button, message } from 'antd';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
 import services from '@/services';
@@ -7,17 +7,20 @@ import SortableList from '@/components/SortableList';
 import ChannelCard from './components/ChannelCard';
 
 export default () => {
+  const intl = useIntl();
   const [newType, setNewType] = useState<SETTING.Channel | undefined>();
 
-  const { data: types, loading, run: executeReq } = useRequest(
-    services.ChannelController.queryChannels,
-  );
+  const {
+    data: types,
+    loading,
+    run: executeReq,
+  } = useRequest(services.ChannelController.queryChannels);
 
   return (
     <PageContainer pageHeaderRender={() => <></>} ghost>
       <ProCard
         ghost
-        title="渠道设置"
+        title={intl.formatMessage({ id: '渠道设置' })}
         bordered
         extra={[
           <Button
@@ -27,7 +30,7 @@ export default () => {
               setNewType({ name: '' });
             }}
           >
-            新增渠道
+            {intl.formatMessage({ id: '添加' })}
           </Button>,
         ]}
       >

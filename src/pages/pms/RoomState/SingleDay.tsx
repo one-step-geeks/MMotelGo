@@ -10,7 +10,7 @@ import {
   Select,
   Checkbox,
 } from 'antd';
-import { useRequest } from 'umi';
+import { useRequest, useIntl } from 'umi';
 import services from '@/services';
 import SingleDayBox from './components/SingleDayBox';
 import moment from 'moment';
@@ -22,6 +22,7 @@ const { Text } = Typography;
 const { Option } = Select;
 
 const SingleDay: React.FC = () => {
+  const intl = useIntl();
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const [sortType, setSortType] = useState(1);
   const [statusList, setStatusList] = useState<number[]>([]);
@@ -81,7 +82,11 @@ const SingleDay: React.FC = () => {
           </Skeleton>
         </Col>
         <Col span={6}>
-          <Card size="small" bordered={false} title="日期筛选">
+          <Card
+            size="small"
+            bordered={false}
+            title={intl.formatMessage({ id: '日期筛选' })}
+          >
             <DatePicker
               inputReadOnly
               value={selectedDate}
@@ -93,18 +98,32 @@ const SingleDay: React.FC = () => {
               style={{ width: '100%' }}
             />
           </Card>
-          <Card size="small" bordered={false} title="房型筛选">
+          <Card
+            size="small"
+            bordered={false}
+            title={intl.formatMessage({ id: '房型筛选' })}
+          >
             <Select
               style={{ width: '100%' }}
               value={sortType}
               onChange={(type) => setSortType(type)}
             >
-              <Option value={1}>按房型排序</Option>
-              <Option value={2}>按房间排序</Option>
-              <Option value={3}>按房间分组排序</Option>
+              <Option value={1}>
+                {intl.formatMessage({ id: '按房型排序' })}
+              </Option>
+              <Option value={2}>
+                {intl.formatMessage({ id: '按房间排序' })}
+              </Option>
+              <Option value={3}>
+                {intl.formatMessage({ id: '按房间分组排序' })}
+              </Option>
             </Select>
           </Card>
-          <Card size="small" bordered={false} title="房态筛选">
+          <Card
+            size="small"
+            bordered={false}
+            title={intl.formatMessage({ id: '房态筛选' })}
+          >
             <Row gutter={[0, 8]}>
               <Col span={24}>
                 <Checkbox
@@ -124,7 +143,7 @@ const SingleDay: React.FC = () => {
                     }
                   }}
                 >
-                  全部
+                  {intl.formatMessage({ id: '全部' })}
                 </Checkbox>
               </Col>
               <CheckboxGroup
@@ -136,7 +155,9 @@ const SingleDay: React.FC = () => {
                 <Row gutter={[16, 8]}>
                   {enumData?.list?.map((item) => (
                     <Col span={8}>
-                      <Checkbox value={item.code}>{item.desc}</Checkbox>
+                      <Checkbox value={item.code}>
+                        {intl.formatMessage({ id: item.desc })}
+                      </Checkbox>
                     </Col>
                   ))}
                 </Row>

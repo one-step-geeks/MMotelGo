@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Popover, Space, Typography } from 'antd';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 import { selectService } from '../service';
 import moment from 'moment';
 import './style.less';
@@ -14,6 +14,7 @@ interface Props {
 
 const EmptyBox: React.FC<Props> = (props) => {
   const { record, date } = props;
+  const intl = useIntl();
 
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
@@ -30,7 +31,9 @@ const EmptyBox: React.FC<Props> = (props) => {
           }
           break;
         case 'CANCEL_SELECTED':
+          setVisible(false);
           setSelected(false);
+          break;
         default:
           break;
       }
@@ -53,22 +56,25 @@ const EmptyBox: React.FC<Props> = (props) => {
             type="secondary"
             className="btn"
             onClick={() => {
-              setVisible(false);
               setSelectedRooms([]);
               selectService.sendCancelInfo();
             }}
           >
-            取消
+            {intl.formatMessage({ id: '取消' })}
           </Text>
-          <Text type="secondary" className="btn">
-            关房
+          <Text
+            type="secondary"
+            className="btn"
+            onClick={selectService.sendCloseRoom}
+          >
+            {intl.formatMessage({ id: '关房' })}
           </Text>
           <Text
             type="secondary"
             className="btn"
             onClick={selectService.sendAddOrder}
           >
-            入住
+            {intl.formatMessage({ id: '入住' })}
           </Text>
         </Space>
       }
@@ -87,6 +93,7 @@ const EmptyBox: React.FC<Props> = (props) => {
               roomCode: record.roomCode,
               roomTypeId: record.roomTypeId,
               roomTypeName: record.roomTypeName,
+              price,
             };
             setVisible(true);
             setSelected(true);

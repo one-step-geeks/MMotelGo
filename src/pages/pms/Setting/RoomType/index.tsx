@@ -128,7 +128,7 @@ const SettingRoomsPage: React.FC = () => {
               openAddRoomTypeModal(action);
             }}
           >
-            新增房型
+            {intl.formatMessage({ id: '新增房型' })}
           </Button>,
         ]}
       ></ProTable>

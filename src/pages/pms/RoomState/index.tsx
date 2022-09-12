@@ -6,6 +6,7 @@ import { getWeekDay, getCalendarDate } from '@/utils';
 import OrderDrawer from './components/OrderDrawer';
 import EmptyDrawer from './components/EmptyDrawer';
 import AddOrderDrawer from './components/AddOrderDrawer';
+import CloseRoomModal from './components/CloseRoomModal';
 import RoomCodeBox from './components/RoomCodeBox';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import TodayOverviewModal from './components/TodayOverviewModal';
@@ -23,6 +24,7 @@ const RoomStatePage: React.FC = () => {
   const history = useHistory();
   const [expand, setExpand] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
+  const [closeVisible, setCloseVisible] = useState(false);
   const [duration, setDuration] = useState(7);
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
 
@@ -31,6 +33,10 @@ const RoomStatePage: React.FC = () => {
       switch (info.type) {
         case 'ADD_ORDER':
           setAddVisible(true);
+          break;
+        case 'CLOSE_ROOM':
+          setCloseVisible(true);
+          break;
         default:
           break;
       }
@@ -169,7 +175,9 @@ const RoomStatePage: React.FC = () => {
               },
               render: (_: ReactNode, record: ROOM_STATE.StateTableData) => {
                 if (expand) {
-                  return <div className="left-room-box">7间</div>;
+                  return (
+                    <div className="left-room-box">{record.roomCount}间</div>
+                  );
                 }
                 const order = findOrderByRecord(record, item.date);
 
@@ -294,16 +302,22 @@ const RoomStatePage: React.FC = () => {
               setDuration(dur);
             }}
           >
-            <Radio.Button value={30}>30天</Radio.Button>
-            <Radio.Button value={15}>15天</Radio.Button>
-            <Radio.Button value={7}>7天</Radio.Button>
+            <Radio.Button value={30}>
+              {intl.formatMessage({ id: '30天' })}
+            </Radio.Button>
+            <Radio.Button value={15}>
+              {intl.formatMessage({ id: '15天' })}
+            </Radio.Button>
+            <Radio.Button value={7}>
+              {intl.formatMessage({ id: '7天' })}
+            </Radio.Button>
           </Radio.Group>
           <Button
             onClick={() => {
               history.push('/pms/room-state/single-day');
             }}
           >
-            单日房态
+            {intl.formatMessage({ id: '单日房态' })}
           </Button>
         </Space>
         <Space>
@@ -331,6 +345,12 @@ const RoomStatePage: React.FC = () => {
         visible={addVisible}
         onClose={() => {
           setAddVisible(false);
+        }}
+      />
+      <CloseRoomModal
+        visible={closeVisible}
+        onClose={() => {
+          setCloseVisible(false);
         }}
       />
     </div>

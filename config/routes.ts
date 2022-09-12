@@ -1,7 +1,7 @@
 export default [
   {
     path: '/',
-    redirect: 'pms/setting',
+    redirect: 'pms/room-state/calendar',
   },
   {
     name: '首页',

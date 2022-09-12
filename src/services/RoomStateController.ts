@@ -126,3 +126,21 @@ export async function getRoomStatusEnum(params?: {}) {
     },
   );
 }
+
+/** 批量开房 / 关房 */
+export async function batchCloseOrOpenRooms(params?: {
+  remark?: string;
+  status?: number;
+  stateList: {
+    dateList: string[];
+    roomId: string;
+  }[];
+}) {
+  return request<API.Result>(
+    '/motel/roomState/calendar/batchCloseOrOpenState',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
+}

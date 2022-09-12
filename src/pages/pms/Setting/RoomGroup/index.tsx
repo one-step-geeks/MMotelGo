@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRequest } from 'umi';
+import { useRequest, useIntl } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
 import SortableList from '@/components/SortableList';
@@ -21,6 +21,8 @@ const FormItem = Form.Item;
 let uuid = -1;
 
 const SettingRoomGroup: React.FC = () => {
+  const intl = useIntl();
+
   const [form] = Form.useForm();
   const [editable, setEditable] = useState(false);
   const [groupData, setGroupData] = useState<SETTING.RoomGroup[]>([]);
@@ -39,7 +41,7 @@ const SettingRoomGroup: React.FC = () => {
 
   const columns: ProColumns<SETTING.RoomGroup>[] = [
     {
-      title: '分组名称',
+      title: intl.formatMessage({ id: '分组名称' }),
       width: 240,
       dataIndex: 'groupName',
       render: (_, record, index) => {
@@ -94,7 +96,7 @@ const SettingRoomGroup: React.FC = () => {
       },
     },
     {
-      title: '房间号',
+      title: intl.formatMessage({ id: '房间号' }),
       dataIndex: 'rooms',
       render: (_, record, index) => {
         if (editable) {
@@ -141,7 +143,7 @@ const SettingRoomGroup: React.FC = () => {
     <div>
       <Alert
         closable
-        message="设置分组后，可在日历房态页面按照分组进行筛选。例：可设置【杭州西湖区】分组，将所有位于西湖区的房间分配在该分组下"
+        message={intl.formatMessage({ id: 'GROUP_TIP_NOTE' })}
         type="info"
       />
       <Form form={form} preserve={false}>
@@ -162,7 +164,7 @@ const SettingRoomGroup: React.FC = () => {
                   setGroupData([...groupData, { groupId: uuid--, rooms: [] }]);
                 }}
               >
-                新增分组
+                {intl.formatMessage({ id: '新增分组' })}
               </Button>
             ) : (
               false
@@ -178,7 +180,7 @@ const SettingRoomGroup: React.FC = () => {
                     setEditable(false);
                   }}
                 >
-                  取消
+                  {intl.formatMessage({ id: '取消' })}
                 </Button>
                 <Button
                   type="primary"
@@ -204,7 +206,7 @@ const SettingRoomGroup: React.FC = () => {
                     }
                   }}
                 >
-                  保存
+                  {intl.formatMessage({ id: '保存' })}
                 </Button>
               </Space>
             ) : (
@@ -214,7 +216,7 @@ const SettingRoomGroup: React.FC = () => {
                   setEditable(true);
                 }}
               >
-                编辑
+                {intl.formatMessage({ id: '编辑' })}
               </Button>
             ),
           ]}
@@ -222,12 +224,12 @@ const SettingRoomGroup: React.FC = () => {
         <Card
           title={
             <div>
-              未分组房间
+              {intl.formatMessage({ id: '未分组房间' })}
               <Typography.Text
                 type="secondary"
                 style={{ fontSize: 12, marginLeft: 12 }}
               >
-                点击编辑才可拖拽房间至分组
+                {intl.formatMessage({ id: 'EDIT_TIP_NOTE' })}
               </Typography.Text>
             </div>
           }

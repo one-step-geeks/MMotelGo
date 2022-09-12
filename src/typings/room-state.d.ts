@@ -32,6 +32,7 @@ declare namespace ROOM_STATE {
     id?: React.Key;
     roomTypeId?: number;
     roomTypeName?: string;
+    roomCount?: number;
     rowSpan?: number;
     colSpan?: number;
     dateList?: {
@@ -43,12 +44,12 @@ declare namespace ROOM_STATE {
   }
 
   interface SelectTableData {
-    date?: string;
-    roomId?: Key;
+    date: string;
+    roomId: Key;
     roomCode?: string;
     price?: number;
-    roomTypeId?: number;
-    roomTypeName?: string;
+    roomTypeId: number;
+    roomTypeName: string;
   }
 
   interface RoomCondition {

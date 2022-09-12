@@ -18,5 +18,9 @@ export const selectService = {
     subject.next({
       type: 'ADD_ORDER',
     }),
+  sendCloseRoom: () =>
+    subject.next({
+      type: 'CLOSE_ROOM',
+    }),
   getSelectedInfo: () => subject.asObservable(),
 };

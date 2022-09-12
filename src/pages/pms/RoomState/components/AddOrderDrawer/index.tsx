@@ -1,18 +1,9 @@
-import { PlusOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Col,
-  DatePicker,
-  Drawer,
-  Form,
-  Input,
-  Row,
-  Select,
-  Space,
-} from 'antd';
+import { Button, Col, Card, DatePicker, Drawer, Form, Input, Row } from 'antd';
 import React, { useState } from 'react';
+import { selectService } from '../service';
 import { useModel } from 'umi';
-const { Option } = Select;
+import OrderRoomItem from './OrderRoomItem';
+import './index.less';
 
 interface Props {
   visible: boolean;
@@ -21,155 +12,52 @@ interface Props {
 
 const AddOrderDrawer: React.FC<Props> = (props) => {
   const { visible, onClose } = props;
-  const { selectedRooms } = useModel('state');
-
-  console.log(selectedRooms);
+  const [form] = Form.useForm();
+  const { selectedRooms, setSelectedRooms } = useModel('state');
 
   return (
-    <>
-      <Drawer
-        title="Create a new account"
-        onClose={onClose}
-        width={720}
-        visible={visible}
-        bodyStyle={{
-          paddingBottom: 80,
-        }}
-      >
-        <Form layout="vertical" hideRequiredMark>
+    <Drawer
+      title="新建订单"
+      onClose={() => {
+        setSelectedRooms([]);
+        selectService.sendCancelInfo();
+        onClose?.();
+      }}
+      width={532}
+      visible={visible}
+      maskClosable={false}
+      destroyOnClose
+    >
+      <Form form={form} preserve={false}>
+        <Card title="基本信息" bordered={false} size="small">
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 name="name"
-                label="Name"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter user name',
-                  },
-                ]}
+                label="姓名"
+                rules={[{ required: true, message: '必填项' }]}
               >
-                <Input placeholder="Please enter user name" />
+                <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="url"
-                label="Url"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter url',
-                  },
-                ]}
+                name="mobile"
+                label="手机"
+                rules={[{ required: true, message: '必填项' }]}
               >
-                <Input
-                  style={{
-                    width: '100%',
-                  }}
-                  addonBefore="http://"
-                  addonAfter=".com"
-                  placeholder="Please enter url"
-                />
+                <Input />
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="owner"
-                label="Owner"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select an owner',
-                  },
-                ]}
-              >
-                <Select placeholder="Please select an owner">
-                  <Option value="xiao">Xiaoxiao Fu</Option>
-                  <Option value="mao">Maomao Zhou</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="type"
-                label="Type"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please choose the type',
-                  },
-                ]}
-              >
-                <Select placeholder="Please choose the type">
-                  <Option value="private">Private</Option>
-                  <Option value="public">Public</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="approver"
-                label="Approver"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please choose the approver',
-                  },
-                ]}
-              >
-                <Select placeholder="Please choose the approver">
-                  <Option value="jack">Jack Ma</Option>
-                  <Option value="tom">Tom Liu</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="dateTime"
-                label="DateTime"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please choose the dateTime',
-                  },
-                ]}
-              >
-                <DatePicker.RangePicker
-                  style={{
-                    width: '100%',
-                  }}
-                  getPopupContainer={(trigger) => trigger.parentElement!}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                name="description"
-                label="Description"
-                rules={[
-                  {
-                    required: true,
-                    message: 'please enter url description',
-                  },
-                ]}
-              >
-                <Input.TextArea
-                  rows={4}
-                  placeholder="please enter url description"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Drawer>
-    </>
+        </Card>
+        <Card title="房间信息" bordered={false} size="small">
+          {selectedRooms?.map((item) => {
+            return <OrderRoomItem data={item} />;
+          })}
+        </Card>
+      </Form>
+    </Drawer>
   );
 };
 
