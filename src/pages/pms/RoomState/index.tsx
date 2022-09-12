@@ -302,9 +302,15 @@ const RoomStatePage: React.FC = () => {
               setDuration(dur);
             }}
           >
-            <Radio.Button value={30}>30天</Radio.Button>
-            <Radio.Button value={15}>15天</Radio.Button>
-            <Radio.Button value={7}>7天</Radio.Button>
+            <Radio.Button value={30}>
+              {intl.formatMessage({ id: '30天' })}
+            </Radio.Button>
+            <Radio.Button value={15}>
+              {intl.formatMessage({ id: '15天' })}
+            </Radio.Button>
+            <Radio.Button value={7}>
+              {intl.formatMessage({ id: '7天' })}
+            </Radio.Button>
           </Radio.Group>
           <Button
             onClick={() => {

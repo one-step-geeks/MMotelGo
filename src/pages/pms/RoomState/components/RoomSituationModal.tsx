@@ -6,43 +6,50 @@ import services from '@/services';
 
 type TableListItem = Partial<ROOM_STATE.StateChangeLog>;
 
-const columns: ProColumns<TableListItem>[] = [
-  { title: '房型名称', width: 120, dataIndex: 'roomTypeName' },
-  { title: '房间号', width: 120, dataIndex: 'roomCode' },
-  {
-    title: '操作内容',
-    width: 80,
-    dataIndex: 'operationDesc',
-  },
-  {
-    title: '开始/结束时间',
-    width: 180,
-    dataIndex: 'startTime',
-    valueType: 'dateTime',
-  },
-  {
-    title: '备注',
-    width: 120,
-    ellipsis: true,
-    dataIndex: 'remark',
-  },
-  {
-    title: '操作人',
-    width: 100,
-    dataIndex: 'operator',
-  },
-  {
-    title: '操作时间',
-    width: 180,
-    dataIndex: 'createTime',
-    valueType: 'dateTime',
-  },
-];
-
 interface Props {}
 
 export default (props: Props) => {
   const intl = useIntl();
+  const columns: ProColumns<TableListItem>[] = [
+    {
+      title: intl.formatMessage({ id: '房型名称' }),
+      width: 120,
+      dataIndex: 'roomTypeName',
+    },
+    {
+      title: intl.formatMessage({ id: '房间号' }),
+      width: 120,
+      dataIndex: 'roomCode',
+    },
+    {
+      title: '操作内容',
+      width: 80,
+      dataIndex: 'operationDesc',
+    },
+    {
+      title: '开始/结束时间',
+      width: 180,
+      dataIndex: 'startTime',
+      valueType: 'dateTime',
+    },
+    {
+      title: intl.formatMessage({ id: '备注' }),
+      width: 120,
+      ellipsis: true,
+      dataIndex: 'remark',
+    },
+    {
+      title: intl.formatMessage({ id: '操作人' }),
+      width: 100,
+      dataIndex: 'operator',
+    },
+    {
+      title: intl.formatMessage({ id: '操作时间' }),
+      width: 180,
+      dataIndex: 'createTime',
+      valueType: 'dateTime',
+    },
+  ];
   return (
     <ModalForm
       width={1000}
@@ -51,7 +58,7 @@ export default (props: Props) => {
         maskClosable: false,
         destroyOnClose: true,
       }}
-      title="房情表"
+      title={intl.formatMessage({ id: '房情表' })}
       trigger={<Button>{intl.formatMessage({ id: '房情表' })}</Button>}
       onFinish={async () => {
         return true;

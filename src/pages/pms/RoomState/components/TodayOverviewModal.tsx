@@ -9,46 +9,58 @@ const { TabPane } = Tabs;
 
 type TableListItem = Partial<ROOM_STATE.RoomOverview>;
 
-const columns: ProColumns<TableListItem>[] = [
-  {
-    title: '姓名',
-    width: 120,
-    ellipsis: true,
-    dataIndex: 'reserveName',
-  },
-  {
-    title: '邮箱账号',
-    width: 140,
-    dataIndex: 'emailAccount',
-    ellipsis: true,
-  },
-  { title: '渠道', width: 100, dataIndex: 'channelName' },
-  {
-    title: '房间类型',
-    width: 100,
-    dataIndex: 'type',
-    valueEnum: { 1: '全日房', 2: '钟点房' },
-  },
-  { title: '房型', width: 120, dataIndex: 'roomTypeName' },
-  { title: '房间号', width: 120, dataIndex: 'roomCode' },
-  {
-    title: '入离时间',
-    width: 180,
-    dataIndex: 'startTime',
-    valueType: 'dateTime',
-  },
-  {
-    title: '金额',
-    width: 120,
-    dataIndex: 'roomPrice',
-  },
-];
-
 interface Props {}
 
 export default (props: Props) => {
   const intl = useIntl();
   const [status, setStatus] = useState('1');
+
+  const columns: ProColumns<TableListItem>[] = [
+    {
+      title: intl.formatMessage({ id: '姓名' }),
+      width: 120,
+      ellipsis: true,
+      dataIndex: 'reserveName',
+    },
+    {
+      title: intl.formatMessage({ id: '邮箱账号' }),
+      width: 140,
+      dataIndex: 'emailAccount',
+      ellipsis: true,
+    },
+    {
+      title: intl.formatMessage({ id: '渠道' }),
+      width: 100,
+      dataIndex: 'channelName',
+    },
+    {
+      title: intl.formatMessage({ id: '房间类型' }),
+      width: 100,
+      dataIndex: 'type',
+      valueEnum: { 1: '全日房', 2: '钟点房' },
+    },
+    {
+      title: intl.formatMessage({ id: '房型' }),
+      width: 120,
+      dataIndex: 'roomTypeName',
+    },
+    {
+      title: intl.formatMessage({ id: '房间号' }),
+      width: 120,
+      dataIndex: 'roomCode',
+    },
+    {
+      title: '入离时间',
+      width: 180,
+      dataIndex: 'startTime',
+      valueType: 'dateTime',
+    },
+    {
+      title: intl.formatMessage({ id: '金额' }),
+      width: 120,
+      dataIndex: 'roomPrice',
+    },
+  ];
   return (
     <ModalForm
       width={1000}
@@ -57,7 +69,7 @@ export default (props: Props) => {
         maskClosable: false,
         destroyOnClose: true,
       }}
-      title="今日概览"
+      title={intl.formatMessage({ id: '今日概览' })}
       trigger={
         <Button type="primary">{intl.formatMessage({ id: '今日概览' })}</Button>
       }
@@ -66,10 +78,10 @@ export default (props: Props) => {
       }}
     >
       <Tabs defaultActiveKey={status} onChange={(key) => setStatus(key)}>
-        <TabPane tab="今日预抵" key="1"></TabPane>
-        <TabPane tab="今日预离" key="2"></TabPane>
-        <TabPane tab="今日在住" key="3"></TabPane>
-        <TabPane tab="未排房" key="4"></TabPane>
+        <TabPane tab={intl.formatMessage({ id: '今日预抵' })} key="1"></TabPane>
+        <TabPane tab={intl.formatMessage({ id: '今日预离' })} key="2"></TabPane>
+        <TabPane tab={intl.formatMessage({ id: '今日在住' })} key="3"></TabPane>
+        <TabPane tab={intl.formatMessage({ id: '未排房' })} key="4"></TabPane>
       </Tabs>
       <ProTable<TableListItem, { status: string }>
         params={{ status }}
