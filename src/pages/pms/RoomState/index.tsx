@@ -317,7 +317,7 @@ const RoomStatePage: React.FC = () => {
               history.push('/pms/room-state/single-day');
             }}
           >
-            单日房态
+            {intl.formatMessage({ id: '单日房态' })}
           </Button>
         </Space>
         <Space>

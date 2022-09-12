@@ -85,7 +85,7 @@ const SettingPriceChangeLog: React.FC = () => {
       rowKey="id"
       toolBarRender={(action) => [
         <Button type="primary" onClick={() => {}}>
-          导出
+          {intl.formatMessage({ id: '导出' })}
         </Button>,
       ]}
     ></ProTable>

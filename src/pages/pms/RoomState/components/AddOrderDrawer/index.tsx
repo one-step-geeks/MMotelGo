@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { selectService } from '../service';
 import { useModel } from 'umi';
 import OrderRoomItem from './OrderRoomItem';
+import './index.less';
 
 interface Props {
   visible: boolean;

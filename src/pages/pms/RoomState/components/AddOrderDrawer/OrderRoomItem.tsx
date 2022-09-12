@@ -10,7 +10,7 @@ interface Props {
 const OrderRoomItem: React.FC<Props> = (props) => {
   const { data } = props;
   return (
-    <Input.Group compact>
+    <Input.Group compact className="order-room-item">
       <DatePicker
         style={{ width: 120 }}
         format="MM-DD入住"
@@ -32,6 +32,7 @@ const OrderRoomItem: React.FC<Props> = (props) => {
         value={`${data?.roomCode || ''}/${data?.roomTypeName || ''}`}
         style={{ width: 120 }}
       />
+      <Input defaultValue={data?.price} style={{ width: 120 }} />
     </Input.Group>
   );
 };
