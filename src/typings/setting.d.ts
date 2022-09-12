@@ -103,4 +103,8 @@ declare namespace SETTING {
     price?: number;
     status?: 0 | 1;
   }
+  interface Option {
+    value: string | number;
+    label: string;
+  }
 }

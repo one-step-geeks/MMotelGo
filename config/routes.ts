@@ -14,25 +14,21 @@ export default [
     path: 'pms/room-state/calendar',
     component: 'pms/RoomState',
   },
-  // {
-  //   name: '订单',
-  //   path: 'pms/order',
-  //   component: 'pms/Order', routes: [
-  //     { path: '/pms/order/all', component: 'pms/Order/All' },
-  //     { path: '/pms/order/unarrange', component: 'pms/Order/All' },
-  //     { path: '/pms/order/unhandle', component: 'pms/Order/All' },
-  //   ]
-  // },
-  {
-    name: '订单',
-    path: 'pms/room-state/order',
-    component: 'pms/Order',
-  },
   {
     name: '单日房态',
     path: 'pms/room-state/single-day',
     component: 'pms/RoomState/SingleDay',
     hideInMenu: true,
+  },
+  {
+    name: '订单',
+    path: 'pms/order',
+    component: 'pms/Order',
+    routes: [
+      { path: '/pms/order/all', component: 'pms/Order/All' },
+      { path: '/pms/order/unarrange', component: 'pms/Order/All' },
+      { path: '/pms/order/unhandle', component: 'pms/Order/All' },
+    ],
   },
   {
     path: 'pms/setting',
