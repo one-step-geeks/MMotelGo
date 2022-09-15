@@ -27,7 +27,7 @@ const OrderContainer: React.FC = (props) => {
           <SubMenu key="rooms" icon={<FileDoneOutlined />} title="订单管理">
             <Menu.Item key="/pms/order/all">所有订单</Menu.Item>
             <Menu.Item key="/pms/order/unarrange">未排房</Menu.Item>
-            <Menu.Item key="/pms/order/unhandle">未处理</Menu.Item>
+            {/* <Menu.Item key="/pms/order/unhandle">未处理</Menu.Item> */}
           </SubMenu>
         </Menu>
       </Sider>

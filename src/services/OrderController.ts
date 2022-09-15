@@ -3,12 +3,16 @@ import moment from 'moment';
 
 export enum OrderState {
   IS_ORDERED = 1,
-  IS_CHECKED = 2,
+  IS_CHECKED,
+  IS_CANCELED,
+  IS_CHECKOUT,
 }
 
 export const OrderStateText = {
   [OrderState.IS_ORDERED]: '已预定',
   [OrderState.IS_CHECKED]: '已入住',
+  [OrderState.IS_CANCELED]: '已取消',
+  [OrderState.IS_CHECKOUT]: '已退房',
 };
 
 export const OrderStateOptions = [
@@ -19,6 +23,14 @@ export const OrderStateOptions = [
   {
     value: OrderState.IS_CHECKED,
     label: OrderStateText[OrderState.IS_CHECKED],
+  },
+  {
+    value: OrderState.IS_CANCELED,
+    label: OrderStateText[OrderState.IS_CANCELED],
+  },
+  {
+    value: OrderState.IS_CHECKOUT,
+    label: OrderStateText[OrderState.IS_CHECKOUT],
   },
 ];
 
@@ -34,10 +46,6 @@ export const OrderPayOptions = [
   {
     value: 2,
     label: '已付清',
-  },
-  {
-    value: 3,
-    label: '超收',
   },
 ];
 

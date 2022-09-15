@@ -3,10 +3,11 @@ import {
   ProTable,
   ProFormDateRangePicker,
   ProFormInstance,
+  FieldLabel,
 } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import moment from 'moment';
-import { useRequest } from 'umi';
+import { useRequest, useLocation } from 'umi';
 import services from '@/services';
 import { Radio, Button, Input, Space, Select } from 'antd';
 import {
@@ -34,17 +35,26 @@ enum QueryType {
   TODAY_ARRIVE,
   TODAY_LEAVE,
   TODAY_CREAYED,
+  NOT_ARRANGED,
 }
 interface QueryParam {
   queryType?: QueryType;
   keyword?: string;
   searchType: string;
+  dateType: DateType;
 }
-
+enum DateType {
+  checkInDate = 1,
+  checkOutDate,
+  createDate,
+}
 const OrderContainer: React.FC = (props) => {
+  const location = useLocation();
+  const isNotArranged = location.pathname === '/pms/order/unarrange';
   const ref = useRef<ProFormInstance>();
   const [param, setParam] = useState<QueryParam>({
-    queryType: QueryType.ALL,
+    dateType: DateType.checkInDate,
+    queryType: isNotArranged ? QueryType.NOT_ARRANGED : QueryType.ALL,
     searchType: 'channelOrderNo',
   });
   const [roomTypeOptions, setRoomTypeOptions] = useState<Array<SETTING.Option>>(
@@ -103,6 +113,7 @@ const OrderContainer: React.FC = (props) => {
       ellipsis: true,
       key: 'channelType',
       dataIndex: 'channelType',
+      order: 6 - 4,
       valueEnum: convertOptionToEnums(channelOptions),
       render: (_, record) => {
         const option = channelOptions.find(
@@ -137,9 +148,10 @@ const OrderContainer: React.FC = (props) => {
       dataIndex: 'roomTypeName',
       key: 'roomTypeName',
       valueEnum: convertOptionToEnums(roomTypeOptions),
+      order: 6 - 2,
     },
     {
-      title: '房间',
+      title: '房间号',
       dataIndex: 'roomCode',
       key: 'roomCode',
       search: false,
@@ -149,23 +161,45 @@ const OrderContainer: React.FC = (props) => {
       dataIndex: 'startDate',
       key: 'startDate',
       valueType: 'date',
+      hideInSearch: true,
+    },
+    {
+      title: '日期选择',
+      dataIndex: 'queryDate',
+      key: 'queryDate',
+      valueType: 'date',
+      order: 6 - 1,
+      hideInTable: true,
       renderFormItem: (
         _,
         { type, defaultRender, formItemProps, fieldProps, ...rest },
         form,
       ) => {
         return (
-          <ProFormDateRangePicker
-            {...fieldProps}
-            transform={(values) => {
-              return {
-                startDate: values ? values[0] : undefined,
-                endDate: values ? values[1] : undefined,
-              };
-            }}
-            name="checkInTimeRanger"
-            placeholder={['入住开始时间', '入住开始时间']}
-          />
+          <div className="compact-date-select" style={{ display: 'flex' }}>
+            <Select
+              defaultValue={param.dateType}
+              optionFilterProp="children"
+              onChange={(value) => {
+                handleDateTypeChange(value);
+              }}
+            >
+              <Option value={1}>入住时间</Option>
+              <Option value={2}>离店时间</Option>
+              <Option value={3}>创建时间</Option>
+            </Select>
+            <ProFormDateRangePicker
+              {...fieldProps}
+              transform={(values) => {
+                return {
+                  startDate: values ? values[0] : undefined,
+                  endDate: values ? values[1] : undefined,
+                };
+              }}
+              name="checkInTimeRanger"
+              placeholder={['开始时间', '开始时间']}
+            />
+          </div>
         );
       },
     },
@@ -177,11 +211,12 @@ const OrderContainer: React.FC = (props) => {
       search: false,
     },
     {
-      title: '入住状态',
+      title: '订单状态',
       dataIndex: 'checkInStatus',
       key: 'checkInStatus',
+      order: 6 - 3,
       valueEnum: convertOptionToEnums(OrderStateOptions),
-      render: (value) => {
+      renderText: (value) => {
         const option = OrderStateOptions.find(
           (option) => option.value === value,
         );
@@ -213,6 +248,7 @@ const OrderContainer: React.FC = (props) => {
       title: '结账状态',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
+      order: 6 - 5,
       valueEnum: convertOptionToEnums(OrderPayOptions),
       renderText(_, record) {
         const option = OrderPayOptions.find(
@@ -250,6 +286,9 @@ const OrderContainer: React.FC = (props) => {
     setParam({ ...param, searchType: e });
   };
 
+  const handleDateTypeChange = (e: DateType) => {
+    setParam({ ...param, dateType: e });
+  };
   const handleOnExport = () => {
     console.log('export via', param);
   };
@@ -257,16 +296,20 @@ const OrderContainer: React.FC = (props) => {
   return (
     <div className="all-order-page">
       <div className="custom-page-header">
-        <Radio.Group
-          value={param.queryType}
-          onChange={(e) => handleQueryTabChange(e.target.value)}
-          buttonStyle="solid"
-        >
-          <Radio.Button value={QueryType.ALL}>全部</Radio.Button>
-          <Radio.Button value={QueryType.TODAY_ARRIVE}>今日预抵</Radio.Button>
-          <Radio.Button value={QueryType.TODAY_LEAVE}>今日预离</Radio.Button>
-          <Radio.Button value={QueryType.TODAY_CREAYED}>今日新办</Radio.Button>
-        </Radio.Group>
+        {!isNotArranged ? (
+          <Radio.Group
+            value={param.queryType}
+            onChange={(e) => handleQueryTabChange(e.target.value)}
+            buttonStyle="solid"
+          >
+            <Radio.Button value={QueryType.ALL}>全部</Radio.Button>
+            <Radio.Button value={QueryType.TODAY_ARRIVE}>今日预抵</Radio.Button>
+            <Radio.Button value={QueryType.TODAY_LEAVE}>今日预离</Radio.Button>
+            <Radio.Button value={QueryType.TODAY_CREAYED}>
+              今日新办
+            </Radio.Button>
+          </Radio.Group>
+        ) : null}
         <Space size="large" className="quick-action-bar">
           {/* onSearch={onSearch} */}
 
@@ -304,7 +347,7 @@ const OrderContainer: React.FC = (props) => {
             enterButton
             allowClear
           />
-
+          {/* 
           <Button
             type="primary"
             onClick={() => {
@@ -316,7 +359,7 @@ const OrderContainer: React.FC = (props) => {
 
           <Button type="primary" onClick={handleOnExport}>
             导出报表
-          </Button>
+          </Button> */}
         </Space>
       </div>
 
@@ -327,14 +370,14 @@ const OrderContainer: React.FC = (props) => {
         bordered
         row-key="key"
         search={{
-          collapsed: false,
+          defaultCollapsed: false,
         }}
         columns={columns}
         request={async (params) => {
           console.log('request params', params);
           console.log('extend param', param);
 
-          const { keyword, searchType, queryType } = param;
+          const { keyword, searchType, queryType, dateType } = param;
           const {
             roomTypeName: roomTypeId,
             orderStatus: payStatus,
@@ -342,16 +385,22 @@ const OrderContainer: React.FC = (props) => {
             endDate,
             ...rest
           } = params;
+
           const keywordParam =
             searchType && keyword ? { [searchType]: keyword } : {};
+          const dateDto =
+            dateType && startDate && endDate
+              ? {
+                  dateType,
+                  startDate,
+                  endDate,
+                }
+              : null;
 
           const { data } = await services.OrderController.queryList({
             roomTypeId,
             payStatus,
-            dateDto: {
-              startDate,
-              endDate,
-            },
+            dateDto,
             queryType,
             ...keywordParam,
             ...rest,
