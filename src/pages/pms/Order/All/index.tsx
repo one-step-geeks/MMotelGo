@@ -138,6 +138,7 @@ const OrderContainer: React.FC = (props) => {
       title: '手机号',
       key: 'reservePhone',
       dataIndex: 'reservePhone',
+      width: 145,
       search: false,
       onCell: (_) => {
         return { rowSpan: _.rowSpan };
@@ -347,7 +348,7 @@ const OrderContainer: React.FC = (props) => {
             enterButton
             allowClear
           />
-          {/* 
+
           <Button
             type="primary"
             onClick={() => {
@@ -356,7 +357,7 @@ const OrderContainer: React.FC = (props) => {
           >
             模拟新建
           </Button>
-
+          {/* 
           <Button type="primary" onClick={handleOnExport}>
             导出报表
           </Button> */}
@@ -447,22 +448,30 @@ const OrderContainer: React.FC = (props) => {
           visible={editDrawerVisible}
           onVisibleChange={(value) => setEditDrawerVisible(value)}
           id={orderId}
-          onSubmited={() => ref.current?.submit()}
+          onSubmited={() => {
+            ref.current?.submit();
+            setEditDrawerVisible(false);
+          }}
         />
       ) : (
         <OrderFormDrawer
           visible={editDrawerVisible}
           onVisibleChange={(value) => setEditDrawerVisible(value)}
-          room={{
-            roomId: 452,
-            startDate: moment(),
-            checkInDays: 1,
-            roomTypeName: '大套房',
-            roomCode: '206',
-            roomPrice: 2,
-          }}
+          rooms={[
+            {
+              roomId: 452,
+              startDate: moment(),
+              checkInDays: 1,
+              roomTypeName: '大套房',
+              roomCode: '206',
+              roomPrice: 2,
+            },
+          ]}
           checkInStatus={OrderState.IS_ORDERED}
-          onSubmited={() => ref.current?.submit()}
+          onSubmited={() => {
+            ref.current?.submit();
+            setEditDrawerVisible(false);
+          }}
         />
       )}
     </div>

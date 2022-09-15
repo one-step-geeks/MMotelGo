@@ -27,7 +27,7 @@ import './style.less';
 
 interface Props {
   id?: number;
-  room?: Omit<ORDER.OrderRoom, 'roomDesc' | 'totalAmount' | 'key'>;
+  rooms?: Array<Omit<ORDER.OrderRoom, 'roomDesc' | 'totalAmount' | 'key'>>;
   checkInStatus?: number;
   visible: boolean;
   onVisibleChange: (value: boolean) => void;
@@ -46,17 +46,15 @@ export default (props: Props) => {
   const roomsValue = Form.useWatch('orderRoomList', form);
 
   useEffect(() => {
-    if (props.room) {
+    if (props.rooms) {
       form.setFieldsValue({
-        orderRoomList: [
-          {
-            ...props.room,
-            roomDesc: `${props.room.roomTypeName}-${props.room.roomCode}`,
-          },
-        ],
+        orderRoomList: props.rooms.map((room) => ({
+          ...room,
+          roomDesc: `${room.roomTypeName}-${room.roomCode}`,
+        })),
       });
     }
-  }, [props.room]);
+  }, [props.rooms]);
 
   useRequest(
     () => {
@@ -93,6 +91,8 @@ export default (props: Props) => {
       const { data } = await services.OrderController.queryObservableRooms(
         startDate,
       );
+      const { orderRoomList } = form.getFieldsValue();
+      const addedRoomIds = orderRoomList.map((room) => room.roomId);
       const treeDataInited = data?.list?.map((roomType) => {
         const { roomTypeId: id, roomTypeName, roomList } = roomType;
         return {
@@ -106,13 +106,15 @@ export default (props: Props) => {
           children: roomList?.map(
             ({ roomId, roomCode, isOccupy, roomPrice }) => {
               // const roomOccupied = occupiedRoomIds.includes(Number(cid));// % 2 === 0;
+              const isOccupyOrSelected =
+                addedRoomIds.includes(roomId) || isOccupy === 1;
               return {
                 id: roomId as number,
                 value: `${roomTypeName}-${roomCode}`,
-                title: isOccupy === 1 ? `${roomCode} 已占用` : roomCode,
+                title: isOccupyOrSelected ? `${roomCode} 已占用` : roomCode,
                 isLeaf: true,
                 price: roomPrice,
-                disabled: isOccupy === 1,
+                disabled: isOccupyOrSelected,
                 pid: roomId,
               };
             },
@@ -174,8 +176,8 @@ export default (props: Props) => {
         try {
           await services.OrderController[isEdit ? 'update' : 'add'](submitData);
           message.success(isEdit ? '保存成功' : '新建成功');
-          props.onVisibleChange(false);
-          // return true;
+          props.onSubmited();
+          return true;
         } catch (err) {}
       }}
       submitter={{
