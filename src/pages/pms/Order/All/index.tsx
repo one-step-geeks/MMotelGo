@@ -384,6 +384,7 @@ const OrderContainer: React.FC = (props) => {
             orderStatus: payStatus,
             startDate,
             endDate,
+            current: pageNum,
             ...rest
           } = params;
 
@@ -403,6 +404,7 @@ const OrderContainer: React.FC = (props) => {
             payStatus,
             dateDto,
             queryType,
+            pageNum,
             ...keywordParam,
             ...rest,
           });
@@ -424,7 +426,7 @@ const OrderContainer: React.FC = (props) => {
           }
           return {
             total,
-            data: flattedList || [],
+            data: flattedList.slice(0, 10) || [],
           };
         }}
         options={false}

@@ -345,14 +345,16 @@ const RoomStatePage: React.FC = () => {
       <OrderFormDrawer
         visible={addVisible}
         onVisibleChange={setAddVisible}
-        room={{
-          roomId: 452,
-          startDate: moment(),
-          checkInDays: 1,
-          roomTypeName: '大套房',
-          roomCode: '206',
-          roomPrice: 2,
-        }}
+        rooms={[
+          {
+            roomId: 452,
+            startDate: moment(),
+            checkInDays: 1,
+            roomTypeName: '大套房',
+            roomCode: '206',
+            roomPrice: 2,
+          },
+        ]}
         onSubmited={() => {}}
       />
       <CloseRoomModal
