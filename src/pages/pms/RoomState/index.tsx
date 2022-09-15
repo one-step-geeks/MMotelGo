@@ -12,6 +12,7 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import TodayOverviewModal from './components/TodayOverviewModal';
 import ChangeLogModal from './components/ChangeLogModal';
 import RoomSituationModal from './components/RoomSituationModal';
+import OrderFormDrawer from '../Order/components/OrderFormDrawer';
 import { selectService } from './components/service';
 import services from '@/services';
 import moment from 'moment';
@@ -341,11 +342,18 @@ const RoomStatePage: React.FC = () => {
         pagination={false}
         rowKey="id"
       />
-      <AddOrderDrawer
+      <OrderFormDrawer
         visible={addVisible}
-        onClose={() => {
-          setAddVisible(false);
+        onVisibleChange={setAddVisible}
+        room={{
+          roomId: 452,
+          startDate: moment(),
+          checkInDays: 1,
+          roomTypeName: '大套房',
+          roomCode: '206',
+          roomPrice: 2,
         }}
+        onSubmited={() => {}}
       />
       <CloseRoomModal
         visible={closeVisible}
