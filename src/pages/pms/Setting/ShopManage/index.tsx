@@ -45,6 +45,11 @@ const ShopMange: React.FC = () => {
                   type="primary"
                   onClick={async () => {
                     const values = await form.validateFields();
+                    if (!values?.name) {
+                      return message.error('请填写门店名称');
+                    } else if (!values?.address) {
+                      return message.error('请填写门店地址');
+                    }
                     await services.SettingController.setShopDetail({
                       id: data?.id,
                       ...values,
