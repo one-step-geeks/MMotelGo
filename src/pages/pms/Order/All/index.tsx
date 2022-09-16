@@ -66,6 +66,7 @@ const OrderContainer: React.FC = (props) => {
   const [orderId, setOrderId] = useState<number>();
   const [detailOpen, setDetailOpen] = useState(false);
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
+  const [checkInStatus, setCheckInStatus] = useState<OrderState>();
 
   useEffect(() => {
     ref.current?.submit();
@@ -353,9 +354,19 @@ const OrderContainer: React.FC = (props) => {
             type="primary"
             onClick={() => {
               setEditDrawerVisible(true);
+              setCheckInStatus(OrderState.IS_ORDERED);
             }}
           >
-            模拟新建
+            模拟预定
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              setEditDrawerVisible(true);
+              setCheckInStatus(OrderState.IS_CHECKED);
+            }}
+          >
+            模拟入住
           </Button>
           {/* 
           <Button type="primary" onClick={handleOnExport}>
@@ -467,9 +478,10 @@ const OrderContainer: React.FC = (props) => {
               roomTypeName: '大套房',
               roomCode: '206',
               roomPrice: 2,
+              totalAmount: 2 * 1,
             },
           ]}
-          checkInStatus={OrderState.IS_ORDERED}
+          checkInStatus={checkInStatus}
           onSubmited={() => {
             ref.current?.submit();
             setEditDrawerVisible(false);

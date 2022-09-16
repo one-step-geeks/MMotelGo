@@ -349,10 +349,11 @@ const RoomStatePage: React.FC = () => {
           {
             roomId: 452,
             startDate: moment(),
-            checkInDays: 1,
+            checkInDays: 2,
             roomTypeName: '大套房',
             roomCode: '206',
-            roomPrice: 2,
+            roomPrice: 200,
+            totalAmount: 200 * 2,
           },
         ]}
         onSubmited={() => {}}

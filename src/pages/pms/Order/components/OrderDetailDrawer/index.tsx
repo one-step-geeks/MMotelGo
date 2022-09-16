@@ -7,7 +7,7 @@ import { ProCard } from '@ant-design/pro-components';
 import './style.less';
 import { OrderStateText } from '@/services/OrderController';
 import moment from 'moment';
-
+import { OrderStateOptions } from '@/services/OrderController';
 interface Props {
   id: number;
   visible: boolean;
@@ -64,6 +64,17 @@ export default (props: Props) => {
       title: '入住人数',
       dataIndex: 'checkInPersonCount',
       key: 'checkInPersonCount',
+    },
+    {
+      title: '客房状态',
+      dataIndex: 'checkInStatus',
+      key: 'checkInStatus',
+      render(value, record, index) {
+        const option = OrderStateOptions.find(
+          (option) => option.value === value,
+        );
+        return option && option.label;
+      },
     },
   ];
 

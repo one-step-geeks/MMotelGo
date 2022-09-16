@@ -4,8 +4,8 @@ import moment from 'moment';
 export enum OrderState {
   IS_ORDERED = 1,
   IS_CHECKED,
-  IS_CANCELED,
   IS_CHECKOUT,
+  IS_CANCELED,
 }
 
 export const OrderStateText = {
@@ -36,15 +36,15 @@ export const OrderStateOptions = [
 
 export const OrderPayOptions = [
   {
-    value: 0,
+    value: 1,
     label: '未付清',
   },
   {
-    value: 1,
+    value: 2,
     label: '部分付清',
   },
   {
-    value: 2,
+    value: 3,
     label: '已付清',
   },
 ];

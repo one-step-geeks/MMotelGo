@@ -24,10 +24,11 @@ import moment from 'moment';
 import { useRequest } from 'umi';
 
 import './style.less';
+import { OrderState } from '@/services/OrderController';
 
 interface Props {
   id?: number;
-  rooms?: Array<Omit<ORDER.OrderRoom, 'roomDesc' | 'totalAmount' | 'key'>>;
+  rooms?: Array<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>>;
   checkInStatus?: number;
   visible: boolean;
   onVisibleChange: (value: boolean) => void;
@@ -144,7 +145,7 @@ export default (props: Props) => {
         destroyOnClose: true,
         maskClosable: false,
         onClose: (value) => {
-          console.log('onClose');
+          form.resetFields();
           props.onVisibleChange(false);
         },
       }}
@@ -261,7 +262,13 @@ export default (props: Props) => {
                         noStyle
                         initialValue={moment()}
                       >
-                        <DatePicker style={{ width: '25%' }}></DatePicker>
+                        <DatePicker
+                          disabled={
+                            form.getFieldValue('orderRoomList')[index]
+                              ?.checkInStatus == OrderState.IS_CHECKED
+                          }
+                          style={{ width: '25%' }}
+                        ></DatePicker>
                       </Form.Item>
                       {/* integer, min 1 */}
 
@@ -350,7 +357,10 @@ export default (props: Props) => {
                           parser={(value) => value!.replace(/A\$\s?/g, '')}
                         ></InputNumber>
                       </Form.Item>
-                      {fields.length > 1 ? (
+
+                      {fields.length > 1 &&
+                      form.getFieldValue('orderRoomList')[index]
+                        ?.checkInStatus != OrderState.IS_CHECKED ? (
                         <DeleteOutlined
                           style={{
                             padding: '10px 5px',
