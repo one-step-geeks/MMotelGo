@@ -12,11 +12,13 @@ import services from '@/services';
 import { Radio, Button, Input, Space, Select } from 'antd';
 import {
   OrderState,
+  OperateData,
   OrderStateOptions,
   OrderPayOptions,
 } from '@/services/OrderController';
 import OrderDetailDrawer from '../components/OrderDetailDrawer';
 import OrderFormDrawer from '../components/OrderFormDrawer';
+import OrderOperateDrawer from '../components/OrderOperateDrawer';
 
 import './style.less';
 
@@ -66,7 +68,9 @@ const OrderContainer: React.FC = (props) => {
   const [orderId, setOrderId] = useState<number>();
   const [detailOpen, setDetailOpen] = useState(false);
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
-  const [checkInStatus, setCheckInStatus] = useState<OrderState>();
+  const [operateDrawerVisible, setOperateDrawerVisible] = useState(false);
+  const [operateData, setOperateData] = useState<OperateData>();
+  const [orderStatus, setOrderStatus] = useState<OrderState>();
 
   useEffect(() => {
     ref.current?.submit();
@@ -214,8 +218,8 @@ const OrderContainer: React.FC = (props) => {
     },
     {
       title: '订单状态',
-      dataIndex: 'checkInStatus',
-      key: 'checkInStatus',
+      dataIndex: 'status',
+      key: 'status',
       order: 6 - 3,
       valueEnum: convertOptionToEnums(OrderStateOptions),
       renderText: (value) => {
@@ -248,14 +252,12 @@ const OrderContainer: React.FC = (props) => {
     },
     {
       title: '结账状态',
-      dataIndex: 'orderStatus',
-      key: 'orderStatus',
+      dataIndex: 'payStatus',
+      key: 'payStatus',
       order: 6 - 5,
       valueEnum: convertOptionToEnums(OrderPayOptions),
       renderText(_, record) {
-        const option = OrderPayOptions.find(
-          (o) => o.value === record.orderStatus,
-        );
+        const option = OrderPayOptions.find((o) => o.value === record.status);
         return option && option.label;
       },
       onCell: (_) => {
@@ -354,7 +356,7 @@ const OrderContainer: React.FC = (props) => {
             type="primary"
             onClick={() => {
               setEditDrawerVisible(true);
-              setCheckInStatus(OrderState.IS_ORDERED);
+              setOrderStatus(OrderState.IS_ORDERED);
             }}
           >
             模拟预定
@@ -363,7 +365,7 @@ const OrderContainer: React.FC = (props) => {
             type="primary"
             onClick={() => {
               setEditDrawerVisible(true);
-              setCheckInStatus(OrderState.IS_CHECKED);
+              setOrderStatus(OrderState.IS_CHECKED);
             }}
           >
             模拟入住
@@ -386,9 +388,6 @@ const OrderContainer: React.FC = (props) => {
         }}
         columns={columns}
         request={async (params) => {
-          console.log('request params', params);
-          console.log('extend param', param);
-
           const { keyword, searchType, queryType, dateType } = param;
           const {
             roomTypeName: roomTypeId,
@@ -426,7 +425,7 @@ const OrderContainer: React.FC = (props) => {
             const { roomDtoList, ...rest } = list[i];
             for (let j = 0; j < roomDtoList.length; j++) {
               const room = roomDtoList[j];
-              console.log('roomDtoList.length', roomDtoList.length);
+              // console.log('roomDtoList.length', roomDtoList.length);
               flattedList.push({
                 rowSpan: j === 0 ? roomDtoList.length : 0,
                 ...rest,
@@ -454,6 +453,15 @@ const OrderContainer: React.FC = (props) => {
         gotoEdit={() => {
           setEditDrawerVisible(true);
         }}
+        gotoOperate={(data: OperateData) => {
+          setOperateData(data);
+          setOperateDrawerVisible(true);
+        }}
+      />
+      <OrderOperateDrawer
+        visible={operateDrawerVisible}
+        onVisibleChange={(value) => setOperateDrawerVisible(value)}
+        operateData={operateData}
       />
 
       {orderId ? (
@@ -481,7 +489,7 @@ const OrderContainer: React.FC = (props) => {
               totalAmount: 2 * 1,
             },
           ]}
-          checkInStatus={checkInStatus}
+          status={orderStatus}
           onSubmited={() => {
             ref.current?.submit();
             setEditDrawerVisible(false);

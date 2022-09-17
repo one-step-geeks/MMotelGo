@@ -19,7 +19,7 @@ declare namespace ORDER {
   interface OrderBase {
     id: number;
     channelType: number;
-    checkInStatus: 1 | 2;
+    status: 1 | 2;
     remark: string;
     reserveName: string;
     reservePhone: string;
@@ -34,13 +34,12 @@ declare namespace ORDER {
     order: OrderBase;
     orderRoomList: Array<OrderRoom>;
   }
-  interface OrderListItem
-    extends Omit<OrderBase, 'id' | 'checkInStatus' | 'remark'> {
+  interface OrderListItem extends Omit<OrderBase, 'id' | 'remark'> {
     orderId: number;
     channelOrderNo: string; //渠道单号
     totalAmount: number; //订单金额
     // 列表衍生出来的字段
-    orderStatus: 0 | 1 | 2 | 3; //结账状态
+    payStatus: 0 | 1 | 2 | 3; //结账状态
     roomDtoList: Array<OrderRoom>;
   }
   interface OrderListItemFlatted
@@ -65,6 +64,7 @@ declare namespace ORDER {
   }
   interface OrderRoom {
     key: string | number;
+    id?: number;
     roomId: number;
     roomTypeName: string;
     roomCode: string;
@@ -75,5 +75,6 @@ declare namespace ORDER {
     totalAmount: number;
     checkInPersonCount?: number;
     checkInStatus?: number;
+    totalPrice?: number;
   }
 }

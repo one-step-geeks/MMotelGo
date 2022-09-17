@@ -15,6 +15,23 @@ export const OrderStateText = {
   [OrderState.IS_CHECKOUT]: '已退房',
 };
 
+export enum OperationType {
+  CONFIRM_CHECKIN = 1,
+  CANCEL_OBSERVE = 2,
+  CANCEL_CHECKIN = 3,
+  CHECK_OUT = 4,
+}
+// 】1-办理入住 2-取消预订 3-取消入住 4-办理退房 5-恢复预订 6-撤销退房
+export const OperationTypeText = {
+  [OperationType.CONFIRM_CHECKIN]: '办理入住',
+  [OperationType.CANCEL_OBSERVE]: '取消预定',
+  [OperationType.CANCEL_CHECKIN]: '取消入住',
+  [OperationType.CHECK_OUT]: '办理退房',
+};
+export interface OperateData extends ORDER.OrderDetail {
+  operationType: OperationType;
+}
+
 export const OrderStateOptions = [
   {
     value: OrderState.IS_ORDERED,
@@ -93,4 +110,12 @@ export async function queryObservableRooms(startDate: string) {
       },
     },
   );
+}
+
+/** 操作订单状态 */
+export async function operateOrder(params: Record<string, any>) {
+  return request<API.Result_RoomTypeInfo_>('/motel/order/operate', {
+    method: 'POST',
+    data: params,
+  });
 }

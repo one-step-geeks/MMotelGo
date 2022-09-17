@@ -29,7 +29,7 @@ import { OrderState } from '@/services/OrderController';
 interface Props {
   id?: number;
   rooms?: Array<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>>;
-  checkInStatus?: number;
+  status?: number;
   visible: boolean;
   onVisibleChange: (value: boolean) => void;
   onSubmited: () => void;
@@ -40,6 +40,7 @@ export interface FormOrder extends ORDER.OrderBase {
 }
 
 export default (props: Props) => {
+  // const [orderStatus, setOrderStatus] = useState<1|2|3|4>();
   const [form] = Form.useForm<FormOrder>();
   const [treeData, setTreeData] = useState<Omit<DefaultOptionType, 'label'>[]>(
     [],
@@ -65,6 +66,7 @@ export default (props: Props) => {
             const {
               data: { orderRoomList, order },
             } = orderRes;
+            // setOrderStatus(order.status);
             form.setFieldsValue({
               ...order,
               orderRoomList: orderRoomList.map(({ startDate, ...rest }) => {
@@ -131,9 +133,10 @@ export default (props: Props) => {
   // console.log('props.room', props.room)
 
   const isEdit = !!props?.id;
-
+  // | 'orderStatus'>
+  console.log('props.status', props.status);
   return (
-    <DrawerForm<Omit<FormOrder, 'id' | 'checkInStatus'>>
+    <DrawerForm<Omit<FormOrder, 'id' | 'status'>>
       title={isEdit ? '编辑订单' : '新建订单'}
       form={form}
       layout="horizontal"
@@ -153,11 +156,11 @@ export default (props: Props) => {
       onFinish={async (values) => {
         // const { room, order } = props;
         const { orderRoomList, ...rest } = values;
-        const checkInStatus = props?.checkInStatus;
+        const status = props?.status;
         const submitData = {
           order: {
             id: props?.id,
-            checkInStatus,
+            status,
             ...rest,
           },
           orderRoomList: orderRoomList.map((orderRoom) => {
@@ -167,7 +170,7 @@ export default (props: Props) => {
               roomId,
               startDate: moment(startDate).format('YYYY-MM-DD'),
               // // 房间状态可能和订单状态有差异，新增时候保持一致
-              checkInStatus,
+              checkInStatus: status,
               checkInPersonCount: 0,
               ...rest,
             };
@@ -177,6 +180,7 @@ export default (props: Props) => {
         try {
           await services.OrderController[isEdit ? 'update' : 'add'](submitData);
           message.success(isEdit ? '保存成功' : '新建成功');
+          form.resetFields();
           props.onSubmited();
           return true;
         } catch (err) {}
@@ -264,6 +268,7 @@ export default (props: Props) => {
                       >
                         <DatePicker
                           disabled={
+                            !!props.id &&
                             form.getFieldValue('orderRoomList')[index]
                               ?.checkInStatus == OrderState.IS_CHECKED
                           }

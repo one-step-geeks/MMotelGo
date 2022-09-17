@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
-import { Button, Drawer, Table, Space, Tag } from 'antd';
+import { Button, Drawer, Table, message, Space, Tag } from 'antd';
 import services from '@/services';
 import { useRequest } from 'umi';
 import type { ColumnsType } from 'antd/es/table';
 import { ProCard } from '@ant-design/pro-components';
 import './style.less';
-import { OrderStateText } from '@/services/OrderController';
+import {
+  OrderState,
+  OperationType,
+  OrderStateText,
+} from '@/services/OrderController';
 import moment from 'moment';
 import { OrderStateOptions } from '@/services/OrderController';
+
 interface Props {
   id: number;
   visible: boolean;
   onVisibleChange: (value: boolean) => void;
   gotoEdit: (orderBase: ORDER.OrderBase) => void;
+  gotoOperate: (data: any) => void;
   children?: JSX.Element;
 }
 
@@ -21,7 +27,7 @@ export default (props: Props) => {
   const { data: channelList } = useRequest(() => {
     return services.ChannelController.queryChannels();
   });
-  const { data, loading } = useRequest(
+  const { data, loading, run: executeQuery } = useRequest(
     () => {
       if (props.id) {
         return services.OrderController.queryDetail(props.id);
@@ -86,6 +92,90 @@ export default (props: Props) => {
     return value;
   };
 
+  let footerOperations;
+  const orderStatus = data?.order.status;
+
+  const modifyOrder = () => {
+    props.onVisibleChange(false);
+    props.gotoEdit(data?.order as ORDER.OrderBase);
+  };
+  const operateOrder = (operationType: OperationType) => {
+    props.gotoOperate({ operationType, ...data });
+  };
+
+  if (
+    orderStatus &&
+    [OrderState.IS_CANCELED, OrderState.IS_CHECKOUT].includes(orderStatus)
+  ) {
+    footerOperations = null;
+  } else if (OrderState.IS_ORDERED === orderStatus) {
+    footerOperations = (
+      <>
+        <Button
+          onClick={() => operateOrder(OperationType.CANCEL_OBSERVE)}
+          key="取消预定"
+        >
+          取消预定
+        </Button>
+        <Space>
+          <Button
+            onClick={() => operateOrder(OperationType.CONFIRM_CHECKIN)}
+            type="primary"
+            key="办理入住"
+          >
+            办理入住
+          </Button>
+          <Button onClick={modifyOrder} type="primary" key="修改订单">
+            修改订单
+          </Button>
+          <Button
+            onClick={() => {
+              message.info('打印暂未实现...');
+            }}
+            key="打印"
+          >
+            打印
+          </Button>
+        </Space>
+      </>
+    );
+  } else if (OrderState.IS_CHECKED === orderStatus) {
+    footerOperations = (
+      <>
+        <Button
+          onClick={() => operateOrder(OperationType.CANCEL_CHECKIN)}
+          key="撤销入住"
+        >
+          撤销入住
+        </Button>
+        ,
+        <Space>
+          <Button onClick={modifyOrder} type="primary" key="修改订单">
+            修改订单
+          </Button>
+          ,
+          <Button
+            onClick={() => operateOrder(OperationType.CHECK_OUT)}
+            type="primary"
+            key="办理退房"
+          >
+            办理退房
+          </Button>
+          ,
+          <Button
+            onClick={() => {
+              message.info('打印暂未实现...');
+            }}
+            key="打印"
+          >
+            打印
+          </Button>
+          ,
+        </Space>
+      </>
+    );
+  }
+
   return (
     <>
       {
@@ -100,19 +190,10 @@ export default (props: Props) => {
             props.onVisibleChange(false);
           }}
           visible={props.visible}
-          footer={
-            <>
-              <Button
-                type="primary"
-                onClick={() => {
-                  props.onVisibleChange(false);
-                  props.gotoEdit(data?.order as ORDER.OrderBase);
-                }}
-              >
-                修改订单
-              </Button>
-            </>
-          }
+          footerStyle={{
+            display: 'flex',
+          }}
+          footer={<>{footerOperations}</>}
         >
           <div className="basic-section">
             <div className="reserve-row">
@@ -122,8 +203,7 @@ export default (props: Props) => {
                 </div>
                 <div className="check-in">
                   <span>
-                    {data?.order.checkInStatus &&
-                      OrderStateText[data?.order.checkInStatus]}
+                    {data?.order.status && OrderStateText[data?.order.status]}
                   </span>
                 </div>
               </div>
