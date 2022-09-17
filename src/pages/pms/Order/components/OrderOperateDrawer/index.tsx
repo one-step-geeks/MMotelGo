@@ -36,6 +36,7 @@ export default (props: Props) => {
 
   useEffect(() => {
     if (props.operateData) {
+      console.log('setSelectedRoomIndexs');
       setSelectedRoomIndexs(props.operateData?.orderRoomList.map((r, i) => i));
     }
   }, [props.operateData]);
@@ -125,7 +126,26 @@ export default (props: Props) => {
       }}
     >
       <div className="overview-header">
-        <ProFormCheckbox name="allChecked" />
+        <Checkbox
+          onClick={() => {
+            if (
+              selectedRoomIndexs.length ===
+              props.operateData?.orderRoomList.length
+            ) {
+              setSelectedRoomIndexs([]);
+            } else if (props.operateData?.orderRoomList) {
+              setSelectedRoomIndexs(
+                props.operateData?.orderRoomList.map((r, i) => i),
+              );
+            }
+          }}
+          checked={
+            selectedRoomIndexs.length ===
+            props.operateData?.orderRoomList.length
+          }
+        >
+          全选
+        </Checkbox>
         <span>
           已选{selectedRoomIndexs.length}间，共
           {props.operateData?.orderRoomList?.length}间
@@ -137,6 +157,7 @@ export default (props: Props) => {
             <div className="room-card">
               {/* <ProFormCheckbox noStyle proFormFieldKey={}={{noS}} name={['roomKeys', index]} /> */}
               <Checkbox
+                checked={selectedRoomIndexs.includes(index)}
                 onChange={(e) => {
                   handleRoomChecked(index, e.target.checked);
                 }}

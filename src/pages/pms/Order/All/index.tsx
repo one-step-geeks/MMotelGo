@@ -65,7 +65,7 @@ const OrderContainer: React.FC = (props) => {
   const [channelOptions, setChannelOptions] = useState<Array<SETTING.Option>>(
     [],
   );
-  const [orderId, setOrderId] = useState<number>();
+  const [orderId, setOrderId] = useState<number | undefined>();
   const [detailOpen, setDetailOpen] = useState(false);
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const [operateDrawerVisible, setOperateDrawerVisible] = useState(false);
@@ -101,6 +101,7 @@ const OrderContainer: React.FC = (props) => {
           <Button
             type="link"
             onClick={() => {
+              console.log('record.orderId');
               setOrderId(record.orderId);
               setDetailOpen(true);
             }}
@@ -382,7 +383,7 @@ const OrderContainer: React.FC = (props) => {
         formRef={ref}
         scroll={{ x: 'scroll' }}
         bordered
-        row-key="key"
+        row-key="orderId"
         search={{
           defaultCollapsed: false,
         }}
@@ -472,6 +473,7 @@ const OrderContainer: React.FC = (props) => {
           onSubmited={() => {
             ref.current?.submit();
             setEditDrawerVisible(false);
+            setOrderId();
           }}
         />
       ) : (
@@ -493,6 +495,7 @@ const OrderContainer: React.FC = (props) => {
           onSubmited={() => {
             ref.current?.submit();
             setEditDrawerVisible(false);
+            setOrderId();
           }}
         />
       )}
