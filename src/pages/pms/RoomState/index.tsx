@@ -57,8 +57,8 @@ const RoomStatePage: React.FC = () => {
   const { data: rowData, loading: rowLoading } = useRequest(
     async () => {
       return services.RoomStateController.getAllRoomType({
-        startTime: selectedDate.clone().format('YYYY-MM-DD'),
-        endTime: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
+        startDate: selectedDate.clone().format('YYYY-MM-DD'),
+        endDate: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
         list: [],
       });
     },
@@ -71,8 +71,8 @@ const RoomStatePage: React.FC = () => {
   const { data: stockData, loading: stockLoading } = useRequest(
     async () => {
       return services.RoomStateController.getRoomStateStock({
-        startTime: selectedDate.clone().format('YYYY-MM-DD'),
-        endTime: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
+        startDate: selectedDate.clone().format('YYYY-MM-DD'),
+        endDate: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
         list: [],
       });
     },

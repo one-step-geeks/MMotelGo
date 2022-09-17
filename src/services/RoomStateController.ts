@@ -2,8 +2,8 @@ import { request } from 'umi';
 
 /** 查询房态日历 */
 export async function getRoomStateStock(params?: {
-  startTime?: string; //房态看板起始时间
-  endTime?: string; //房态看板结束时间
+  startDate?: string; //房态看板起始时间
+  endDate?: string; //房态看板结束时间
   list?: number[]; //房型房间
 }) {
   return request<API.Result_RoomState_StockList_>(
@@ -17,8 +17,8 @@ export async function getRoomStateStock(params?: {
 
 /** 查询房型房间列表 */
 export async function getAllRoomType(params: {
-  startTime?: string; //房态看板起始时间
-  endTime?: string; //房态看板结束时间
+  startDate?: string; //房态看板起始时间
+  endDate?: string; //房态看板结束时间
   list?: number[]; //房型房间
 }) {
   return request<API.Result_RoomState_RoomTypeList_>(
