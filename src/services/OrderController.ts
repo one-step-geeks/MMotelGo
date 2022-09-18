@@ -162,3 +162,38 @@ export async function deleteNotice(id: number) {
     params: { id },
   });
 }
+
+/** 新增订单消费项 */
+export async function addConsume(params: Record<string, any>) {
+  return request<API.Result>('/motel/order/consume/add', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/** 修改订单消费项 */
+export async function updateConsume(params: Record<string, any>) {
+  return request<API.Result>('/motel/order/consume/update', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/** 查询订单消费项 */
+export async function queryConsumeList(orderId: number) {
+  return request<API.Result_List_ALL_<ORDER.OrderConsume>>(
+    '/motel/order/consume/list',
+    {
+      method: 'GET',
+      params: { orderId },
+    },
+  );
+}
+
+/** 删除订单消费项 */
+export async function deleteConsume(id: number) {
+  return request<API.Result>('/motel/order/consume/delete', {
+    method: 'GET',
+    params: { id },
+  });
+}

@@ -1,4 +1,3 @@
-import { useNoticeDrawer } from '../NoticeDrawer';
 import React, { useState } from 'react';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Drawer, Table, message, Space, Tag } from 'antd';
@@ -14,6 +13,8 @@ import {
 } from '@/services/OrderController';
 import moment from 'moment';
 import { OrderStateOptions } from '@/services/OrderController';
+import { useNoticeDrawer } from '../NoticeDrawer';
+import { useConsumeDrawer } from '../ConsumeDrawer';
 
 interface Props {
   id: number;
@@ -35,10 +36,24 @@ export default (props: Props) => {
     },
     { refreshDeps: [props.id] },
   );
+  const { data: consumeList, run: queryConsumeList } = useRequest(
+    () => {
+      if (props.id) {
+        return services.OrderController.queryConsumeList(props.id);
+      }
+      return Promise.resolve([]);
+    },
+    { refreshDeps: [props.id] },
+  );
 
   const { NoticeDrawer, openNoticeDrawer } = useNoticeDrawer(() => {
     queryNoticeList();
   });
+
+  const { ConsumeDrawer, openConsumeDrawer } = useConsumeDrawer(() => {
+    queryConsumeList();
+  });
+
   const { data: channelList } = useRequest(() => {
     return services.ChannelController.queryChannels();
   });
@@ -85,6 +100,60 @@ export default (props: Props) => {
             onClick={async () => {
               await services.OrderController.deleteNotice(record.id);
               queryNoticeList();
+              message.success('删除成功');
+            }}
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  const consumeColumns: ColumnsType<ORDER.OrderConsume> = [
+    {
+      title: '消费项目',
+      dataIndex: 'consumptionSetName',
+      key: 'consumptionSetName',
+    },
+    {
+      title: '消费金额',
+      dataIndex: 'price',
+      key: 'price',
+      render(value, record, index) {
+        return record.price * record.count;
+      },
+    },
+    {
+      title: '录入人',
+      dataIndex: 'creator',
+      key: 'creator',
+    },
+    {
+      title: '消费时间',
+      dataIndex: 'consumeTime',
+      key: 'consumeTime',
+      render(value, record, index) {
+        return moment(value).format('YYYY-MM-DD hh:mm');
+      },
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <EditOutlined
+            onClick={() => {
+              openConsumeDrawer(props.id, record);
+            }}
+          />
+          <DeleteOutlined
+            onClick={async () => {
+              await services.OrderController.deleteConsume(record.id);
+              queryConsumeList();
               message.success('删除成功');
             }}
           />
@@ -325,6 +394,32 @@ export default (props: Props) => {
             showHeader={false}
           />
         </ProCard>
+        <ProCard
+          title="消费信息"
+          extra={
+            <>
+              <PlusOutlined />
+              <Button
+                type="link"
+                onClick={() => {
+                  openConsumeDrawer(props.id);
+                }}
+              >
+                添加消费
+              </Button>
+            </>
+          }
+        >
+          <Table
+            bordered
+            row-key="roomId"
+            columns={consumeColumns}
+            dataSource={consumeList || []}
+            pagination={false}
+            showHeader={false}
+          />
+        </ProCard>
+
         <ProCard>
           <div className="custom-form-item">
             <label>备注：</label>
@@ -338,6 +433,7 @@ export default (props: Props) => {
       </Drawer>
 
       {NoticeDrawer}
+      {ConsumeDrawer}
     </>
   );
 };

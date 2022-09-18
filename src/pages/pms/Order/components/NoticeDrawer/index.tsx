@@ -13,7 +13,7 @@ interface FormOrder {}
 export function useNoticeDrawer(onSuccess: () => void) {
   const [form] = Form.useForm<FormOrder>();
   const [visible, setVisible] = useState(false);
-  const [notice, setNotice] = useState<ORDER.OrderNotice | undefiend>();
+  const [notice, setNotice] = useState<ORDER.OrderNotice | undefined>();
   const [orderId, setOrderId] = useState<number | undefined>();
 
   useEffect(() => {

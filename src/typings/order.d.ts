@@ -82,4 +82,14 @@ declare namespace ORDER {
     remark: string;
     remindTime: string;
   }
+
+  interface OrderConsume {
+    id: number;
+    remark: string;
+    consumeDate: string;
+    consumptionSetId: number;
+    consumptionSetName: string;
+    count: number;
+    price: number;
+  }
 }
