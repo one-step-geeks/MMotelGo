@@ -76,4 +76,10 @@ declare namespace ORDER {
     checkInPersonCount?: number;
     status?: number;
   }
+
+  interface OrderNotice {
+    id: number;
+    remark: string;
+    remindTime: string;
+  }
 }

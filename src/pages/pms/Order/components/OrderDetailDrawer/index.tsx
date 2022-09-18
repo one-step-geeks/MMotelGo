@@ -1,4 +1,6 @@
+import { useNoticeDrawer } from '../NoticeDrawer';
 import React, { useState } from 'react';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Drawer, Table, message, Space, Tag } from 'antd';
 import services from '@/services';
 import { useRequest } from 'umi';
@@ -19,15 +21,28 @@ interface Props {
   onVisibleChange: (value: boolean) => void;
   gotoEdit: (orderBase: ORDER.OrderBase) => void;
   gotoOperate: (data: any) => void;
-  children?: JSX.Element;
+  openNotice: () => void;
 }
 
 // const App: React.FC =
 export default (props: Props) => {
+  const { data: noticeList, run: queryNoticeList } = useRequest(
+    () => {
+      if (props.id) {
+        return services.OrderController.queryNoticeList(props.id);
+      }
+      return Promise.resolve([]);
+    },
+    { refreshDeps: [props.id] },
+  );
+
+  const { NoticeDrawer, openNoticeDrawer } = useNoticeDrawer(() => {
+    queryNoticeList();
+  });
   const { data: channelList } = useRequest(() => {
     return services.ChannelController.queryChannels();
   });
-  const { data, loading, run: executeQuery } = useRequest(
+  const { data, run: executeQuery } = useRequest(
     () => {
       if (props.id) {
         return services.OrderController.queryDetail(props.id);
@@ -42,7 +57,41 @@ export default (props: Props) => {
   if (data && data.orderRoomList) {
     data.orderRoomList.forEach((d) => (d.key = d.roomId));
   }
-
+  const noticeColumns: ColumnsType<ORDER.OrderNotice> = [
+    {
+      title: '提醒时间',
+      dataIndex: 'remindTime',
+      key: 'remindTime',
+      render(value, record, index) {
+        return moment(value).format('YYYY-MM-DD hh:mm');
+      },
+    },
+    {
+      title: '提醒内容',
+      dataIndex: 'remark',
+      key: 'remark',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <EditOutlined
+            onClick={() => {
+              openNoticeDrawer(props.id, record);
+            }}
+          />
+          <DeleteOutlined
+            onClick={async () => {
+              await services.OrderController.deleteNotice(record.id);
+              queryNoticeList();
+              message.success('删除成功');
+            }}
+          />
+        </Space>
+      ),
+    },
+  ];
   const columns: ColumnsType<ORDER.OrderRoom> = [
     {
       title: '入住日期',
@@ -178,93 +227,117 @@ export default (props: Props) => {
 
   return (
     <>
-      {
-        <Drawer
-          width={540}
-          destroyOnClose
-          maskClosable={false}
-          title="订单详情"
-          placement="right"
-          onClose={() => {
-            console.log('onClose');
-            props.onVisibleChange(false);
-          }}
-          visible={props.visible}
-          footerStyle={{
-            display: 'flex',
-          }}
-          footer={<>{footerOperations}</>}
-        >
-          <div className="basic-section">
-            <div className="reserve-row">
-              <div>
-                <div className="reserver">
-                  {data?.order.reserveName} {data?.order.reservePhone}
-                </div>
-                <div className="check-in">
-                  <span>
-                    {data?.order.status && OrderStateText[data?.order.status]}
-                  </span>
-                </div>
+      <Drawer
+        width={540}
+        destroyOnClose
+        maskClosable={false}
+        title="订单详情"
+        placement="right"
+        onClose={() => {
+          console.log('onClose');
+          props.onVisibleChange(false);
+        }}
+        visible={props.visible}
+        footerStyle={{
+          display: 'flex',
+        }}
+        footer={<>{footerOperations}</>}
+      >
+        <div className="basic-section">
+          <div className="reserve-row">
+            <div>
+              <div className="reserver">
+                {data?.order.reserveName} {data?.order.reservePhone}
               </div>
-              <div>
-                <span className="channel-tag">
-                  <i
-                    style={{
-                      background:
-                        data?.order.channelType &&
-                        mapChannelText(data?.order.channelType, 'color'),
-                    }}
-                  ></i>
-                  {data?.order.channelType &&
-                    mapChannelText(data?.order.channelType, 'name')}
+              <div className="check-in">
+                <span>
+                  {data?.order.status && OrderStateText[data?.order.status]}
                 </span>
               </div>
             </div>
-            <div className="fee-row">
-              <div>
-                已付金额
-                <br />
-                <span className="fee">A$ {data?.order.paidAmount}</span>
-              </div>
-              <div>
-                还需付款
-                <br />
-                <span className="fee">A$ {data?.order.remainAmount}</span>
-              </div>
-              <div>
-                订单金额
-                <br />
-                <span className="fee">A$ {data?.order.totalAmount}</span>
-              </div>
+            <div>
+              <span className="channel-tag">
+                <i
+                  style={{
+                    background:
+                      data?.order.channelType &&
+                      mapChannelText(data?.order.channelType, 'color'),
+                  }}
+                ></i>
+                {data?.order.channelType &&
+                  mapChannelText(data?.order.channelType, 'name')}
+              </span>
             </div>
           </div>
+          <div className="fee-row">
+            <div>
+              已付金额
+              <br />
+              <span className="fee">A$ {data?.order.paidAmount}</span>
+            </div>
+            <div>
+              还需付款
+              <br />
+              <span className="fee">A$ {data?.order.remainAmount}</span>
+            </div>
+            <div>
+              订单金额
+              <br />
+              <span className="fee">A$ {data?.order.totalAmount}</span>
+            </div>
+          </div>
+        </div>
 
-          <ProCard
-            title="房间信息"
-            extra={`共${data?.orderRoomList?.length}间房`}
-          >
-            <Table
-              bordered
-              row-key="roomId"
-              columns={columns}
-              dataSource={data?.orderRoomList || []}
-              pagination={false}
-            />
-          </ProCard>
-          <ProCard>
-            <div className="custom-form-item">
-              <label>备注：</label>
-              {data?.order.remark}
-            </div>
-            <div className="custom-form-item">
-              <label>订单编号：</label>
-              {data?.order.channelOrderNo}
-            </div>
-          </ProCard>
-        </Drawer>
-        //  : null
-      }
+        <ProCard
+          title="房间信息"
+          extra={`共${data?.orderRoomList?.length}间房`}
+        >
+          <Table
+            bordered
+            row-key="roomId"
+            columns={columns}
+            dataSource={data?.orderRoomList || []}
+            pagination={false}
+          />
+        </ProCard>
+        <ProCard
+          title="提醒信息"
+          extra={
+            <>
+              <PlusOutlined />
+              <Button
+                type="link"
+                onClick={() => {
+                  openNoticeDrawer(props.id);
+                }}
+              >
+                添加提醒
+              </Button>
+            </>
+          }
+        >
+          <Table
+            bordered
+            row-key="roomId"
+            columns={noticeColumns}
+            dataSource={noticeList || []}
+            pagination={false}
+            showHeader={false}
+          />
+        </ProCard>
+        <ProCard>
+          <div className="custom-form-item">
+            <label>备注：</label>
+            {data?.order.remark}
+          </div>
+          <div className="custom-form-item">
+            <label>订单编号：</label>
+            {data?.order.channelOrderNo}
+          </div>
+        </ProCard>
+      </Drawer>
+
+      {NoticeDrawer}
     </>
   );
 };

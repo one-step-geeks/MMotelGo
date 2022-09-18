@@ -99,13 +99,11 @@ export async function queryList(params: Record<string, any>) {
   });
 }
 
-/** 查询订单列表 */
+/** 导出订单列表 */
 export async function exportList(params: Record<string, any>) {
   return request<ArrayBuffer>('/motel/order/exportOrders', {
-    method: 'POST',
-    data: {
-      ...params,
-    },
+    method: 'GET',
+    params,
   });
 }
 
@@ -127,5 +125,40 @@ export async function operateOrder(params: Record<string, any>) {
   return request<API.Result_RoomTypeInfo_>('/motel/order/operate', {
     method: 'POST',
     data: params,
+  });
+}
+
+/** 新增订单提醒 */
+export async function addNotice(params: Record<string, any>) {
+  return request<API.Result>('/motel/order/remind/add', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/** 修改订单提醒 */
+export async function updateNotice(params: Record<string, any>) {
+  return request<API.Result>('/motel/order/remind/update', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/** 查询订单提醒 */
+export async function queryNoticeList(orderId: number) {
+  return request<API.Result_List_ALL_<ORDER.OrderNotice>>(
+    '/motel/order/remind/list',
+    {
+      method: 'GET',
+      params: { orderId },
+    },
+  );
+}
+
+/** 删除订单提醒 */
+export async function deleteNotice(id: number) {
+  return request<API.Result>('/motel/order/remind/delete', {
+    method: 'GET',
+    params: { id },
   });
 }
