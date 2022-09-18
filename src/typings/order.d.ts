@@ -74,7 +74,6 @@ declare namespace ORDER {
     roomPrice: number;
     totalAmount: number;
     checkInPersonCount?: number;
-    checkInStatus?: number;
-    totalPrice?: number;
+    status?: number;
   }
 }

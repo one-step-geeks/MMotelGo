@@ -73,8 +73,8 @@ export default (props: Props) => {
     },
     {
       title: '客房状态',
-      dataIndex: 'checkInStatus',
-      key: 'checkInStatus',
+      dataIndex: 'status',
+      key: 'status',
       render(value, record, index) {
         const option = OrderStateOptions.find(
           (option) => option.value === value,

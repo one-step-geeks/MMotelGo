@@ -450,7 +450,10 @@ const OrderContainer: React.FC = (props) => {
       <OrderDetailDrawer
         id={orderId!}
         visible={detailOpen}
-        onVisibleChange={setDetailOpen}
+        onVisibleChange={(value) => {
+          setOrderId(undefined);
+          setDetailOpen(value);
+        }}
         gotoEdit={() => {
           setEditDrawerVisible(true);
         }}
@@ -473,7 +476,7 @@ const OrderContainer: React.FC = (props) => {
           onSubmited={() => {
             ref.current?.submit();
             setEditDrawerVisible(false);
-            setOrderId();
+            setOrderId(undefined);
           }}
         />
       ) : (
@@ -495,7 +498,7 @@ const OrderContainer: React.FC = (props) => {
           onSubmited={() => {
             ref.current?.submit();
             setEditDrawerVisible(false);
-            setOrderId();
+            setOrderId(undefined);
           }}
         />
       )}

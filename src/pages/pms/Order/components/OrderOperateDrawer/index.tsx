@@ -52,8 +52,8 @@ export default (props: Props) => {
     selectedRoomIndexs.forEach((i) => {
       const orderRoom = props.operateData?.orderRoomList[i];
       if (orderRoom) {
-        const { totalPrice } = orderRoom;
-        feeTotal += totalPrice!;
+        const { totalAmount } = orderRoom;
+        feeTotal += totalAmount!;
         feePaied += 0;
       }
     });
@@ -171,7 +171,7 @@ export default (props: Props) => {
                   .format('YYYY-MM-DD')}
                 ，共{room.checkInDays}晚
                 <br />
-                房费：A$ {room.totalPrice}
+                房费：A$ {room.totalAmount}
               </div>
             </div>
           );

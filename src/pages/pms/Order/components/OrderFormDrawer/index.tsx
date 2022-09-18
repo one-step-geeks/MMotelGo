@@ -170,7 +170,7 @@ export default (props: Props) => {
               roomId,
               startDate: moment(startDate).format('YYYY-MM-DD'),
               // // 房间状态可能和订单状态有差异，新增时候保持一致
-              checkInStatus: status,
+              status,
               checkInPersonCount: 0,
               ...rest,
             };
@@ -270,7 +270,7 @@ export default (props: Props) => {
                           disabled={
                             !!props.id &&
                             form.getFieldValue('orderRoomList')[index]
-                              ?.checkInStatus == OrderState.IS_CHECKED
+                              ?.status == OrderState.IS_CHECKED
                           }
                           style={{ width: '25%' }}
                         ></DatePicker>
@@ -364,8 +364,8 @@ export default (props: Props) => {
                       </Form.Item>
 
                       {fields.length > 1 &&
-                      form.getFieldValue('orderRoomList')[index]
-                        ?.checkInStatus != OrderState.IS_CHECKED ? (
+                      form.getFieldValue('orderRoomList')[index]?.status !=
+                        OrderState.IS_CHECKED ? (
                         <DeleteOutlined
                           style={{
                             padding: '10px 5px',
