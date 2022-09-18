@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { bufferDownload } from '@/utils';
 import {
   ProTable,
   ProFormDateRangePicker,
@@ -9,7 +10,7 @@ import type { ProColumns } from '@ant-design/pro-components';
 import moment from 'moment';
 import { useRequest, useLocation } from 'umi';
 import services from '@/services';
-import { Radio, Button, Input, Space, Select } from 'antd';
+import { message, Radio, Button, Input, Space, Select } from 'antd';
 import {
   OrderState,
   OperateData,
@@ -294,10 +295,44 @@ const OrderContainer: React.FC = (props) => {
   const handleDateTypeChange = (e: DateType) => {
     setParam({ ...param, dateType: e });
   };
-  const handleOnExport = () => {
+  const handleOnExport = async () => {
     console.log('export via', param);
+    const queryParam = generateQueryParam(ref.current?.getFieldsValue());
+    const buffer = await services.OrderController.exportList(queryParam);
+    bufferDownload(buffer, `订单列表.xlsx`);
+    message.success('下载成功');
   };
 
+  const generateQueryParam = (params: Record<string, any>) => {
+    const { keyword, searchType, queryType, dateType } = param;
+    const {
+      roomTypeName: roomTypeId,
+      orderStatus: payStatus,
+      startDate,
+      endDate,
+      current: pageNum,
+      ...rest
+    } = params;
+
+    const keywordParam = searchType && keyword ? { [searchType]: keyword } : {};
+    const dateDto =
+      dateType && startDate && endDate
+        ? {
+            dateType,
+            startDate,
+            endDate,
+          }
+        : null;
+    return {
+      roomTypeId,
+      payStatus,
+      dateDto,
+      queryType,
+      pageNum,
+      ...keywordParam,
+      ...rest,
+    };
+  };
   return (
     <div className="all-order-page">
       <div className="custom-page-header">
@@ -371,10 +406,9 @@ const OrderContainer: React.FC = (props) => {
           >
             模拟入住
           </Button>
-          {/* 
           <Button type="primary" onClick={handleOnExport}>
             导出报表
-          </Button> */}
+          </Button>
         </Space>
       </div>
 
@@ -389,36 +423,9 @@ const OrderContainer: React.FC = (props) => {
         }}
         columns={columns}
         request={async (params) => {
-          const { keyword, searchType, queryType, dateType } = param;
-          const {
-            roomTypeName: roomTypeId,
-            orderStatus: payStatus,
-            startDate,
-            endDate,
-            current: pageNum,
-            ...rest
-          } = params;
+          const queryParam = generateQueryParam(params);
 
-          const keywordParam =
-            searchType && keyword ? { [searchType]: keyword } : {};
-          const dateDto =
-            dateType && startDate && endDate
-              ? {
-                  dateType,
-                  startDate,
-                  endDate,
-                }
-              : null;
-
-          const { data } = await services.OrderController.queryList({
-            roomTypeId,
-            payStatus,
-            dateDto,
-            queryType,
-            pageNum,
-            ...keywordParam,
-            ...rest,
-          });
+          const { data } = await services.OrderController.queryList(queryParam);
           const { list = [], total } = data || {};
           const flattedList = [];
           let index = 0;
@@ -465,6 +472,9 @@ const OrderContainer: React.FC = (props) => {
       <OrderOperateDrawer
         visible={operateDrawerVisible}
         onVisibleChange={(value) => setOperateDrawerVisible(value)}
+        // onSuccess={() => {
+        //   setOperateDrawerVisible(false);
+        // }}
         operateData={operateData}
       />
 

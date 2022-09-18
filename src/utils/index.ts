@@ -34,3 +34,13 @@ export const isLoginPath = () => {
   }
   return false;
 };
+
+export const bufferDownload = (buffer: ArrayBuffer, filename: string) => {
+  const blob = new Blob([buffer]);
+  const a = document.createElement('a');
+  const url = window.URL.createObjectURL(blob);
+  a.href = url;
+  a.download = filename;
+  a.click();
+  window.URL.revokeObjectURL(url);
+};

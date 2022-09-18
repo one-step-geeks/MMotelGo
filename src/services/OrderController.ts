@@ -99,6 +99,16 @@ export async function queryList(params: Record<string, any>) {
   });
 }
 
+/** 查询订单列表 */
+export async function exportList(params: Record<string, any>) {
+  return request<ArrayBuffer>('/motel/order/exportOrders', {
+    method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
 /** 查询可预定的房间 */
 export async function queryObservableRooms(startDate: string) {
   return request<API.Result_RoomTypeInfo_>(
