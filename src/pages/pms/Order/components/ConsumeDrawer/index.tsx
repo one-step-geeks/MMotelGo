@@ -18,7 +18,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
   const [form] = Form.useForm<FormOrder>();
   const [visible, setVisible] = useState(false);
   const [notice, setConsume] = useState<ORDER.OrderConsume | undefined>();
-  const [consumeId, setConsumeId] = useState<number | undefined>();
+  const [orderId, setOrderId] = useState<number | undefined>();
 
   useEffect(() => {
     if (notice) {
@@ -54,16 +54,14 @@ export function useConsumeDrawer(onSuccess: () => void) {
       submitTimeout={2000}
       onFinish={async (values) => {
         try {
-          if (notice?.id) {
-            await services.OrderController.updateConsume({
-              ...values,
-              id: notice?.id,
-            });
-            message.success('修改成功');
-          } else {
-            await services.OrderController.addConsume(values);
-            message.success('添加成功');
-          }
+          const { consumptionSetId, ...rest } = values;
+          await services.OrderController.addConsume({
+            orderId,
+            consumptionSetId: consumptionSetId.value,
+            consumptionSetName: consumptionSetId.label,
+            ...rest,
+          });
+          message.success('添加成功');
           setVisible(false);
           form.resetFields();
           onSuccess();
@@ -76,6 +74,9 @@ export function useConsumeDrawer(onSuccess: () => void) {
         label="项目"
         rules={[{ required: true, message: '请选择项目' }]}
         name="consumptionSetId"
+        fieldProps={{
+          labelInValue: true,
+        }}
         request={async () => {
           const { data } = await services.SettingController.getConsumerItemList(
             {
@@ -90,6 +91,8 @@ export function useConsumeDrawer(onSuccess: () => void) {
           }));
         }}
       />
+
+      {/* <Form.Item name='consumptionSetName' noStyle/> */}
 
       <ProFormText
         rules={[{ required: true, message: '请输入数量' }]}
@@ -106,7 +109,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
       />
 
       <ProFormDatePicker
-        name="remindTime"
+        name="consumeDate"
         placeholder="请选择消费时间"
         label="消费时间"
       />
@@ -118,11 +121,8 @@ export function useConsumeDrawer(onSuccess: () => void) {
     </DrawerForm>
   );
 
-  const openConsumeDrawer = (
-    consumeId: number,
-    notice?: ORDER.OrderConsume,
-  ) => {
-    setConsumeId(consumeId);
+  const openConsumeDrawer = (orderId: number, notice?: ORDER.OrderConsume) => {
+    setOrderId(orderId);
     setVisible(true);
     setConsume(notice);
   };

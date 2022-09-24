@@ -85,11 +85,27 @@ declare namespace ORDER {
 
   interface OrderConsume {
     id: number;
+    orderId: number;
+    storeId?: number;
     remark: string;
     consumeDate: string;
     consumptionSetId: number;
     consumptionSetName: string;
     count: number;
     price: number;
+  }
+
+  interface OrderPayOrRefund {
+    id: number;
+    storeId?: number;
+    orderId?: number;
+    type: 0 | 1 | 2 | 3 | 4; // 1-收款 2-收押金 3-退款 4-退押金
+    remark: string;
+    // date: string;
+    feeDate: string;
+    // paymentTypeId: number;
+    feeConfigId: number;
+    // price: number;
+    amount: number;
   }
 }

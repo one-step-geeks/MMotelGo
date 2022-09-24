@@ -10,11 +10,15 @@ import {
   OrderState,
   OperationType,
   OrderStateText,
+  queryPayOrRefundList,
 } from '@/services/OrderController';
 import moment from 'moment';
 import { OrderStateOptions } from '@/services/OrderController';
 import { useNoticeDrawer } from '../NoticeDrawer';
 import { useConsumeDrawer } from '../ConsumeDrawer';
+import { usePayOrRefundDrawer } from '../PayDrawer';
+
+// ConsumeDrawer
 
 interface Props {
   id: number;
@@ -46,6 +50,15 @@ export default (props: Props) => {
     { refreshDeps: [props.id] },
   );
 
+  const { data: payOrRefundList, run: queryPayOrRefundList } = useRequest(
+    () => {
+      if (props.id) {
+        return services.OrderController.queryPayOrRefundList(props.id);
+      }
+      return Promise.resolve([]);
+    },
+    { refreshDeps: [props.id] },
+  );
   const { NoticeDrawer, openNoticeDrawer } = useNoticeDrawer(() => {
     queryNoticeList();
   });
@@ -53,6 +66,12 @@ export default (props: Props) => {
   const { ConsumeDrawer, openConsumeDrawer } = useConsumeDrawer(() => {
     queryConsumeList();
   });
+
+  const { PayOrRefundDrawer, openPayOrRefundDrawer } = usePayOrRefundDrawer(
+    () => {
+      queryPayOrRefundList();
+    },
+  );
 
   const { data: channelList } = useRequest(() => {
     return services.ChannelController.queryChannels();
@@ -128,11 +147,11 @@ export default (props: Props) => {
       key: 'creator',
     },
     {
-      title: '消费时间',
-      dataIndex: 'consumeTime',
-      key: 'consumeTime',
+      title: '消费日期',
+      dataIndex: 'consumeDate',
+      key: 'consumeDate',
       render(value, record, index) {
-        return moment(value).format('YYYY-MM-DD hh:mm');
+        return moment(value).format('MM-DD');
       },
     },
     {
@@ -145,15 +164,66 @@ export default (props: Props) => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined
+          {/* <EditOutlined
             onClick={() => {
               openConsumeDrawer(props.id, record);
             }}
-          />
+          /> */}
           <DeleteOutlined
             onClick={async () => {
               await services.OrderController.deleteConsume(record.id);
               queryConsumeList();
+              message.success('删除成功');
+            }}
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  const payOrRefundColumns: ColumnsType<ORDER.OrderPayOrRefund> = [
+    {
+      title: '项目',
+      dataIndex: 'type',
+      key: 'type',
+    },
+    {
+      title: '支付方式',
+      dataIndex: 'feeConfigId',
+      key: 'feeConfigId',
+    },
+    {
+      title: '金额',
+      dataIndex: 'amount',
+      key: 'amount',
+    },
+    {
+      title: '日期',
+      dataIndex: 'feeDate',
+      key: 'feeDate',
+      render(value, record, index) {
+        return moment(value).format('MM-DD');
+      },
+    },
+    {
+      title: '备注',
+      dataIndex: 'remark',
+      key: 'remark',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          {/* <EditOutlined
+            onClick={() => {
+              openPayOrRefundDrawer(props.id);
+            }}
+          /> */}
+          <DeleteOutlined
+            onClick={async () => {
+              await services.OrderController.deletePayOrRefund(record.id);
+              queryPayOrRefundList(props.id);
               message.success('删除成功');
             }}
           />
@@ -370,6 +440,54 @@ export default (props: Props) => {
           />
         </ProCard>
         <ProCard
+          title="消费信息"
+          extra={
+            <>
+              <PlusOutlined />
+              <Button
+                type="link"
+                onClick={() => {
+                  openConsumeDrawer(props.id);
+                }}
+              >
+                添加消费
+              </Button>
+            </>
+          }
+        >
+          <Table
+            bordered
+            row-key="roomId"
+            columns={consumeColumns}
+            dataSource={consumeList || []}
+            pagination={false}
+          />
+        </ProCard>
+        <ProCard
+          title="收退款信息"
+          extra={
+            <>
+              <PlusOutlined />
+              <Button
+                type="link"
+                onClick={() => {
+                  openPayOrRefundDrawer(props.id);
+                }}
+              >
+                添加收退款
+              </Button>
+            </>
+          }
+        >
+          <Table
+            bordered
+            row-key="roomId"
+            columns={payOrRefundColumns}
+            dataSource={payOrRefundList || []}
+            pagination={false}
+          />
+        </ProCard>
+        <ProCard
           title="提醒信息"
           extra={
             <>
@@ -394,32 +512,6 @@ export default (props: Props) => {
             showHeader={false}
           />
         </ProCard>
-        <ProCard
-          title="消费信息"
-          extra={
-            <>
-              <PlusOutlined />
-              <Button
-                type="link"
-                onClick={() => {
-                  openConsumeDrawer(props.id);
-                }}
-              >
-                添加消费
-              </Button>
-            </>
-          }
-        >
-          <Table
-            bordered
-            row-key="roomId"
-            columns={consumeColumns}
-            dataSource={consumeList || []}
-            pagination={false}
-            showHeader={false}
-          />
-        </ProCard>
-
         <ProCard>
           <div className="custom-form-item">
             <label>备注：</label>
@@ -434,6 +526,7 @@ export default (props: Props) => {
 
       {NoticeDrawer}
       {ConsumeDrawer}
+      {PayOrRefundDrawer}
     </>
   );
 };

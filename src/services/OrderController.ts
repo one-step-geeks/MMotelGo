@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import moment from 'moment';
+import Cookie from 'js-cookie';
 
 export enum OrderState {
   IS_ORDERED = 1,
@@ -163,37 +164,80 @@ export async function deleteNotice(id: number) {
   });
 }
 
+/**************************  消费项  **************************/
+
 /** 新增订单消费项 */
 export async function addConsume(params: Record<string, any>) {
-  return request<API.Result>('/motel/order/consume/add', {
+  return request<API.Result>('/motel/orderConsumeItem/save', {
     method: 'POST',
-    data: params,
+    data: {
+      storeId: Cookie.get('storeId') as number,
+      ...params,
+    },
   });
 }
 
 /** 修改订单消费项 */
-export async function updateConsume(params: Record<string, any>) {
-  return request<API.Result>('/motel/order/consume/update', {
-    method: 'POST',
-    data: params,
-  });
-}
+// export async function updateConsume(params: Record<string, any>) {
+//   return request<API.Result>('/motel/orderConsumeItem/save', {
+//     method: 'POST',
+//     data: params,
+//   });
+// }
 
 /** 查询订单消费项 */
 export async function queryConsumeList(orderId: number) {
   return request<API.Result_List_ALL_<ORDER.OrderConsume>>(
-    '/motel/order/consume/list',
+    '/motel/orderConsumeItem/list',
     {
-      method: 'GET',
-      params: { orderId },
+      method: 'POST',
+      data: {
+        orderId,
+        storeId: Cookie.get('storeId') as number,
+      },
     },
   );
 }
 
 /** 删除订单消费项 */
 export async function deleteConsume(id: number) {
-  return request<API.Result>('/motel/order/consume/delete', {
-    method: 'GET',
-    params: { id },
+  return request<API.Result>('/motel/orderConsumeItem/delete', {
+    method: 'POST',
+    data: { id },
+  });
+}
+
+/**************************  收退款  **************************/
+
+/** 新增订单收退款 */
+export async function addPayOrRefund(params: Record<string, any>) {
+  return request<API.Result>('/motel/orderFeeItem/save', {
+    method: 'POST',
+    data: {
+      storeId: Cookie.get('storeId') as number,
+      ...params,
+    },
+  });
+}
+
+/** 查询订单收退款 */
+export async function queryPayOrRefundList(orderId: number) {
+  return request<API.Result_List_ALL_<ORDER.OrderPayOrRefund>>(
+    '/motel/orderFeeItem/list',
+    {
+      method: 'POST',
+      data: {
+        orderId,
+        storeId: Cookie.get('storeId') as number,
+      },
+    },
+  );
+}
+
+/** 删除订单收退款 */
+export async function deletePayOrRefund(id: number) {
+  return request<API.Result>('/motel/orderFeeItem/delete', {
+    method: 'POST',
+    data: { feeItemId: id },
   });
 }
