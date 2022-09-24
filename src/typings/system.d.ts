@@ -2,8 +2,8 @@
 declare namespace SYSTEM {
   type InitialState =
     | {
-        token?: string;
-        storeList?: StoreListInfo[];
+        menuAuthorityList: ACCOUNT.MenuAuthorityModule[];
+        overAllAuthorityList: ACCOUNT.OverallAuthorityModule[];
       }
     | undefined;
 
