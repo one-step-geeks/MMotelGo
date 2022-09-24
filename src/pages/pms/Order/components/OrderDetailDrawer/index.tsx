@@ -16,7 +16,7 @@ import moment from 'moment';
 import { OrderStateOptions } from '@/services/OrderController';
 import { useNoticeDrawer } from '../NoticeDrawer';
 import { useConsumeDrawer } from '../ConsumeDrawer';
-import { usePayOrRefundDrawer } from '../PayDrawer';
+import { usePayOrRefundDrawer, payOrRefundOptions } from '../PayDrawer';
 
 // ConsumeDrawer
 
@@ -138,7 +138,7 @@ export default (props: Props) => {
       dataIndex: 'price',
       key: 'price',
       render(value, record, index) {
-        return record.price * record.count;
+        return `A$ ${record.price * record.count}`;
       },
     },
     {
@@ -186,6 +186,12 @@ export default (props: Props) => {
       title: '项目',
       dataIndex: 'type',
       key: 'type',
+      render(value, record, index) {
+        const option = payOrRefundOptions.find(
+          (option) => option.value === value,
+        );
+        return option?.label;
+      },
     },
     {
       title: '支付方式',
@@ -196,6 +202,9 @@ export default (props: Props) => {
       title: '金额',
       dataIndex: 'amount',
       key: 'amount',
+      render(value, record, index) {
+        return `A$ ${value}`;
+      },
     },
     {
       title: '日期',
@@ -440,7 +449,19 @@ export default (props: Props) => {
           />
         </ProCard>
         <ProCard
-          title="消费信息"
+          title={
+            <>
+              消费信息：
+              <span
+                style={{ color: 'red', fontWeight: 'normal', fontSize: '12px' }}
+              >
+                A${' '}
+                {consumeList?.reduce((acc: number, cur: ORDER.OrderConsume) => {
+                  return acc + cur.price * cur.count;
+                }, 0)}
+              </span>
+            </>
+          }
           extra={
             <>
               <PlusOutlined />
@@ -464,7 +485,48 @@ export default (props: Props) => {
           />
         </ProCard>
         <ProCard
-          title="收退款信息"
+          title={
+            <>
+              收退款信息：
+              <Space>
+                <span
+                  style={{
+                    color: 'green',
+                    fontWeight: 'normal',
+                    fontSize: '12px',
+                  }}
+                >
+                  收款：A$
+                  {payOrRefundList
+                    ?.filter(
+                      (c: ORDER.OrderPayOrRefund) =>
+                        c.type === 1 || c.type === 2,
+                    )
+                    .reduce((acc: number, cur: ORDER.OrderPayOrRefund) => {
+                      return acc + cur.amount;
+                    }, 0)}
+                </span>
+
+                <span
+                  style={{
+                    color: 'red',
+                    fontWeight: 'normal',
+                    fontSize: '12px',
+                  }}
+                >
+                  收款：A$
+                  {payOrRefundList
+                    ?.filter(
+                      (c: ORDER.OrderPayOrRefund) =>
+                        c.type === 3 || c.type === 4,
+                    )
+                    .reduce((acc: number, cur: ORDER.OrderPayOrRefund) => {
+                      return acc + cur.amount;
+                    }, 0)}
+                </span>
+              </Space>
+            </>
+          }
           extra={
             <>
               <PlusOutlined />

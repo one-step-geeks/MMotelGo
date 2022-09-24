@@ -34,6 +34,9 @@ export function useConsumeDrawer(onSuccess: () => void) {
       grid
       autoFocusFirstInput
       visible={visible}
+      labelCol={{
+        md: 4,
+      }}
       drawerProps={{
         width: 540,
         closeIcon: (
@@ -70,7 +73,6 @@ export function useConsumeDrawer(onSuccess: () => void) {
       }}
     >
       <ProFormSelect
-        colProps={{ md: 12 }}
         label="项目"
         rules={[{ required: true, message: '请选择项目' }]}
         name="consumptionSetId"
