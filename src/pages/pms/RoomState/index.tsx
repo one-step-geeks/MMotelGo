@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect, useMemo } from 'react';
 import { useIntl, useRequest, useHistory, useModel } from 'umi';
 import { ColumnsType } from 'antd/lib/table';
 import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
@@ -47,7 +47,10 @@ const RoomStatePage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
-  const openOrCloseList = processRoomParams(selectedRooms);
+  const openOrCloseList = useMemo(
+    () => processRoomParams(selectedRooms),
+    [selectedRooms],
+  );
 
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
