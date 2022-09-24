@@ -154,3 +154,14 @@ export async function batchOpenRooms(params?: {
     data: params,
   });
 }
+
+/** 脏房 | 净房转换 */
+export async function changeRoomStatus(params?: {
+  roomId?: Key;
+  status: number;
+}) {
+  return request<API.Result>('/motel/roomState/calendar/roomStatusChange', {
+    method: 'POST',
+    data: params,
+  });
+}

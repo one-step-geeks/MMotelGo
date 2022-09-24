@@ -310,12 +310,7 @@ const RoomStatePage: React.FC = () => {
             if (expand) {
               return '剩余';
             }
-            return (
-              <RoomCodeBox
-                code={record.roomCode}
-                isDirty={record.roomStatus === 1}
-              />
-            );
+            return <RoomCodeBox room={record} />;
           },
         },
       ],
