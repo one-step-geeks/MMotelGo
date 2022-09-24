@@ -147,10 +147,7 @@ export async function batchCloseRooms(params?: {
 
 /** 批量开房 */
 export async function batchOpenRooms(params?: {
-  stateList: {
-    dateList: string[];
-    roomId: string;
-  }[];
+  stateList: ROOM_STATE.CloseRoomInfo[];
 }) {
   return request<API.Result>('/motel/roomState/calendar/batchOpen', {
     method: 'POST',

@@ -47,6 +47,8 @@ const RoomStatePage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
+  const openOrCloseList = processRoomParams(selectedRooms);
+
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
@@ -57,7 +59,12 @@ const RoomStatePage: React.FC = () => {
           setCloseVisible(true);
           break;
         case 'OPEN_ROOM':
-          // setCloseVisible(true);
+          services.RoomStateController.batchOpenRooms({
+            stateList: openOrCloseList,
+          });
+          setSelectedRooms([]);
+          selectService.sendCancelInfo();
+          refreshAllState();
           break;
         default:
           break;
@@ -67,7 +74,7 @@ const RoomStatePage: React.FC = () => {
     return () => {
       subs.unsubscribe();
     };
-  }, []);
+  }, [openOrCloseList]);
 
   // 生成房态日历-columns
   const [calendarList, setCalendarList] = useState(() => {
@@ -385,7 +392,7 @@ const RoomStatePage: React.FC = () => {
       />
       <CloseRoomModal
         visible={closeVisible}
-        stateList={processRoomParams(selectedRooms)}
+        stateList={openOrCloseList}
         onSubmit={() => {
           setSelectedRooms([]);
           selectService.sendCancelInfo();

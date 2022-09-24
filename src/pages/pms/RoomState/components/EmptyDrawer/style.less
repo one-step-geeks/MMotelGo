@@ -69,6 +69,17 @@
     & .checkbox {
       display: block;
     }
+
+    &::after {
+      content: '';
+      background: transparent;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      border: 1px solid #053dc8;
+    }
   }
 
   & .icon {
@@ -77,6 +88,7 @@
 
   & .text {
     font-size: 12px;
+    user-select: none;
   }
 
   & .checkbox {
