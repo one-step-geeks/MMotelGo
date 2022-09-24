@@ -22,5 +22,9 @@ export const selectService = {
     subject.next({
       type: 'CLOSE_ROOM',
     }),
+  sendOpenRoom: () =>
+    subject.next({
+      type: 'OPEN_ROOM',
+    }),
   getSelectedInfo: () => subject.asObservable(),
 };
