@@ -45,14 +45,46 @@
   justify-content: center;
   background: rgba(140, 140, 236, 0.4);
 
-  &::after {
-    content: '';
-    display: block;
-    width: 24px;
-    height: 24px;
-    background-image: url('~@/assets/images/selected.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
+  & .icon {
+    color: #fff;
+    font-size: 24px;
+  }
+}
+
+.room-closed-box {
+  position: relative;
+  display: flex;
+  height: 52px;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ccc;
+  color: #666;
+  border-radius: 2px;
+  box-sizing: border-box;
+
+  &.selected {
+    // border: 1px solid #053dc8;
+    & .checkbox {
+      display: block;
+    }
+  }
+
+  & .icon {
+    padding: 2px 0;
+  }
+
+  & .text {
+    font-size: 12px;
+  }
+
+  & .checkbox {
+    color: #053dc8;
+    font-size: 16px;
+    display: none;
+    position: absolute;
+    right: 2px;
+    top: 2px;
   }
 }

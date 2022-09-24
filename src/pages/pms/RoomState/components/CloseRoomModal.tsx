@@ -7,7 +7,9 @@ const FormItem = Form.Item;
 
 interface Props {
   onClose?: () => void;
+  onSubmit?: () => void;
   visible: boolean;
+  stateList?: ROOM_STATE.CloseRoomInfo[];
 }
 
 const layoutConfig = {
@@ -15,31 +17,8 @@ const layoutConfig = {
   wrapperCol: { span: 14 },
 };
 
-interface CloseRoomInfo {
-  dateList: string[];
-  roomId: Key;
-}
-
-function processRoomParams(list: ROOM_STATE.SelectTableData[]) {
-  const result: CloseRoomInfo[] = [];
-  for (let i = 0; i < list.length; i++) {
-    const state = list[i];
-    const finded = result.find((item) => item.roomId === state.roomId);
-    if (finded) {
-      finded.dateList = [...finded?.dateList, state.date];
-    } else {
-      result.push({
-        roomId: state.roomId,
-        dateList: [state.date],
-      });
-    }
-  }
-  return result;
-}
-
 const CloseRoomModal: React.FC<Props> = (props) => {
-  const { visible, onClose } = props;
-  const { selectedRooms, setSelectedRooms } = useModel('state');
+  const { visible, onClose, onSubmit, stateList } = props;
   const [form] = Form.useForm();
 
   return (
@@ -51,27 +30,25 @@ const CloseRoomModal: React.FC<Props> = (props) => {
       title="批量关房"
       onOk={async () => {
         const formData = await form.validateFields();
-        await services.RoomStateController.batchCloseOrOpenRooms({
+        await services.RoomStateController.batchCloseRooms({
           ...formData,
-          stateList: processRoomParams(selectedRooms),
+          stateList,
         });
-        setSelectedRooms([]);
-        selectService.sendCancelInfo();
-        onClose?.();
+        onSubmit?.();
       }}
       onCancel={onClose}
     >
-      <Form {...layoutConfig} form={form}>
+      <Form {...layoutConfig} form={form} preserve={false}>
         <FormItem
           label="关房类型"
           name="status"
-          initialValue={1}
+          initialValue={10}
           rules={[{ required: true, message: '必填项' }]}
         >
           <Radio.Group>
-            <Radio value={1}>停用房</Radio>
-            <Radio value={2}>维修房</Radio>
-            <Radio value={3}>保留房</Radio>
+            <Radio value={10}>停用房</Radio>
+            <Radio value={9}>维修房</Radio>
+            <Radio value={11}>保留房</Radio>
           </Radio.Group>
         </FormItem>
         <FormItem label="备注" name="remark">

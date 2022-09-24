@@ -31,12 +31,15 @@ export async function getAllRoomType(params: {
 }
 
 /** 查询房间订单 */
-export async function getAllRoomOrder(params: { date: string; days: number }) {
+export async function getAllRoomOrder(params: {
+  startDate: string;
+  endDate: string;
+}) {
   return request<API.Result_RoomState_OrderList_>(
-    '/api/config/roomState/allStateRoomOrder',
+    '/motel/roomState/calendar/allStateOrder',
     {
-      method: 'GET',
-      params,
+      method: 'POST',
+      data: params,
     },
   );
 }
@@ -127,8 +130,8 @@ export async function getRoomStatusEnum(params?: {}) {
   );
 }
 
-/** 批量开房 / 关房 */
-export async function batchCloseOrOpenRooms(params?: {
+/** 批量关房 */
+export async function batchCloseRooms(params?: {
   remark?: string;
   status?: number;
   stateList: {
@@ -136,11 +139,21 @@ export async function batchCloseOrOpenRooms(params?: {
     roomId: string;
   }[];
 }) {
-  return request<API.Result>(
-    '/motel/roomState/calendar/batchCloseOrOpenState',
-    {
-      method: 'POST',
-      data: params,
-    },
-  );
+  return request<API.Result>('/motel/roomState/calendar/batchClose', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/** 批量开房 */
+export async function batchOpenRooms(params?: {
+  stateList: {
+    dateList: string[];
+    roomId: string;
+  }[];
+}) {
+  return request<API.Result>('/motel/roomState/calendar/batchOpen', {
+    method: 'POST',
+    data: params,
+  });
 }

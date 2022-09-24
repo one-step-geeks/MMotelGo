@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Popover, Space, Typography } from 'antd';
+import {
+  MinusCircleFilled,
+  CheckSquareFilled,
+  CheckOutlined,
+  ToolFilled,
+  CarryOutFilled,
+} from '@ant-design/icons';
 import { useModel, useIntl } from 'umi';
 import { selectService } from '../service';
 import moment from 'moment';
@@ -14,6 +21,7 @@ interface Props {
 
 const EmptyBox: React.FC<Props> = (props) => {
   const { record, date } = props;
+
   const intl = useIntl();
 
   const { selectedRooms, setSelectedRooms } = useModel('state');
@@ -44,11 +52,13 @@ const EmptyBox: React.FC<Props> = (props) => {
     };
   }, []);
 
-  const price = record?.dateList?.find((d) =>
+  const boxData = record?.dateList?.find((d) =>
     moment(d.date).isSame(date, 'day'),
-  )?.price;
+  );
 
-  return (
+  const { price, status } = boxData || {};
+
+  return ![9, 10, 11].includes(status!) ? (
     <Popover
       content={
         <Space direction="vertical" size={12}>
@@ -115,13 +125,110 @@ const EmptyBox: React.FC<Props> = (props) => {
         <div
           className="room-empty-box-checked"
           onClick={() => {
-            setSelectedRooms(
-              selectedRooms.filter((item) => item.roomId !== record.id),
+            const filteredRooms = selectedRooms.filter(
+              (item) => item.roomId !== record.id,
             );
+            setSelectedRooms(filteredRooms);
+            if (!filteredRooms?.length) {
+              selectService.sendCancelInfo();
+            }
             setSelected(false);
           }}
-        ></div>
+        >
+          <CheckOutlined className="icon" />
+        </div>
       )}
+    </Popover>
+  ) : (
+    <Popover
+      content={
+        <Space direction="vertical" size={12}>
+          <Text
+            type="secondary"
+            className="btn"
+            onClick={() => {
+              setSelectedRooms([]);
+              selectService.sendCancelInfo();
+            }}
+          >
+            {intl.formatMessage({ id: '取消' })}
+          </Text>
+          <Text
+            type="secondary"
+            className="btn"
+            onClick={selectService.sendOpenRoom}
+          >
+            {intl.formatMessage({ id: '开房' })}
+          </Text>
+          <Text
+            type="secondary"
+            className="btn"
+            onClick={selectService.sendAddOrder}
+          >
+            {intl.formatMessage({ id: '预订' })}
+          </Text>
+        </Space>
+      }
+      overlayClassName="room-box-action-popover"
+      placement="leftBottom"
+      getPopupContainer={(p) => p}
+      visible={visible}
+    >
+      <div
+        className={selected ? 'room-closed-box selected' : 'room-closed-box'}
+        onClick={() => {
+          const info = {
+            date,
+            roomId: record.id,
+            roomCode: record.roomCode,
+            roomTypeId: record.roomTypeId,
+            roomTypeName: record.roomTypeName,
+            price,
+          };
+          if (!selected) {
+            setVisible(true);
+            setSelected(true);
+            setSelectedRooms([...selectedRooms, info]);
+            selectService.sendSelectedInfo(info);
+          } else {
+            const filteredRooms = selectedRooms.filter(
+              (item) => item.roomId !== record.id,
+            );
+            setSelectedRooms(filteredRooms);
+            if (!filteredRooms?.length) {
+              selectService.sendCancelInfo();
+            }
+            setSelected(false);
+          }
+        }}
+      >
+        {status === 9 ? (
+          <>
+            <ToolFilled className="icon" />
+            <Text type="secondary" className="text">
+              维修
+            </Text>
+          </>
+        ) : null}
+        {status === 10 ? (
+          <>
+            <MinusCircleFilled className="icon" />
+            <Text type="secondary" className="text">
+              停用
+            </Text>
+          </>
+        ) : null}
+        {status === 11 ? (
+          <>
+            <CarryOutFilled className="icon" />
+            <Text type="secondary" className="text">
+              保留
+            </Text>
+          </>
+        ) : null}
+
+        <CheckSquareFilled className="checkbox" />
+      </div>
     </Popover>
   );
 };

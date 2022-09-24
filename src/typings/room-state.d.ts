@@ -36,20 +36,19 @@ declare namespace ROOM_STATE {
     rowSpan?: number;
     colSpan?: number;
     dateList?: {
-      date?: string;
+      date: string;
       price?: number;
-      defaultPrice?: number;
-      remainCount?: number;
+      status?: number;
     }[];
   }
 
   interface SelectTableData {
     date: string;
-    roomId: Key;
+    roomId?: Key;
     roomCode?: string;
     price?: number;
-    roomTypeId: number;
-    roomTypeName: string;
+    roomTypeId?: number;
+    roomTypeName?: string;
   }
 
   interface RoomCondition {
@@ -104,5 +103,10 @@ declare namespace ROOM_STATE {
       channelName: string; //订单来源渠道，可为空
       remark: string; //备注，可为空
     }[];
+  }
+
+  interface CloseRoomInfo {
+    dateList: string[];
+    roomId: Key;
   }
 }

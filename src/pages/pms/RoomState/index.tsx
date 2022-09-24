@@ -1,11 +1,11 @@
 import React, { ReactNode, useState, useEffect } from 'react';
-import { useIntl, useRequest, useHistory } from 'umi';
+import { useIntl, useRequest, useHistory, useModel } from 'umi';
 import { ColumnsType } from 'antd/lib/table';
 import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
 import { getWeekDay, getCalendarDate } from '@/utils';
 import OrderDrawer from './components/OrderDrawer';
 import EmptyDrawer from './components/EmptyDrawer';
-import AddOrderDrawer from './components/AddOrderDrawer';
+// import AddOrderDrawer from './components/AddOrderDrawer';
 import CloseRoomModal from './components/CloseRoomModal';
 import RoomCodeBox from './components/RoomCodeBox';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
@@ -18,6 +18,23 @@ import services from '@/services';
 import moment from 'moment';
 import './style.less';
 
+function processRoomParams(list: ROOM_STATE.SelectTableData[]) {
+  const result: ROOM_STATE.CloseRoomInfo[] = [];
+  for (let i = 0; i < list.length; i++) {
+    const state = list[i];
+    const finded = result.find((item) => item.roomId === state.roomId);
+    if (finded) {
+      finded.dateList = [...finded?.dateList, state.date];
+    } else {
+      result.push({
+        roomId: state.roomId!,
+        dateList: [state.date],
+      });
+    }
+  }
+  return result;
+}
+
 type AlignType = 'left' | 'center' | 'right';
 
 const RoomStatePage: React.FC = () => {
@@ -28,6 +45,7 @@ const RoomStatePage: React.FC = () => {
   const [closeVisible, setCloseVisible] = useState(false);
   const [duration, setDuration] = useState(7);
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
+  const { selectedRooms, setSelectedRooms } = useModel('state');
 
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
@@ -37,6 +55,9 @@ const RoomStatePage: React.FC = () => {
           break;
         case 'CLOSE_ROOM':
           setCloseVisible(true);
+          break;
+        case 'OPEN_ROOM':
+          // setCloseVisible(true);
           break;
         default:
           break;
@@ -54,7 +75,11 @@ const RoomStatePage: React.FC = () => {
   });
 
   // 获取房态房间列表-rows
-  const { data: rowData, loading: rowLoading } = useRequest(
+  const {
+    data: rowData,
+    loading: rowLoading,
+    run: refreshAllState,
+  } = useRequest(
     async () => {
       return services.RoomStateController.getAllRoomType({
         startDate: selectedDate.clone().format('YYYY-MM-DD'),
@@ -85,8 +110,8 @@ const RoomStatePage: React.FC = () => {
   const { data: orderData, loading: orderLoading } = useRequest(
     async () => {
       return services.RoomStateController.getAllRoomOrder({
-        date: selectedDate.clone().format('YYYY-MM-DD'),
-        days: duration,
+        startDate: selectedDate.clone().format('YYYY-MM-DD'),
+        endDate: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
       });
     },
     {
@@ -360,6 +385,13 @@ const RoomStatePage: React.FC = () => {
       />
       <CloseRoomModal
         visible={closeVisible}
+        stateList={processRoomParams(selectedRooms)}
+        onSubmit={() => {
+          setSelectedRooms([]);
+          selectService.sendCancelInfo();
+          setCloseVisible(false);
+          refreshAllState();
+        }}
         onClose={() => {
           setCloseVisible(false);
         }}
