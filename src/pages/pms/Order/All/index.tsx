@@ -97,6 +97,7 @@ const OrderContainer: React.FC = (props) => {
       search: false,
       width: 200,
       align: 'center',
+      fixed: 'left',
       render: (_, record) => {
         return (
           <Button
@@ -121,6 +122,7 @@ const OrderContainer: React.FC = (props) => {
       key: 'channelType',
       dataIndex: 'channelType',
       order: 6 - 4,
+      width: 100,
       valueEnum: convertOptionToEnums(channelOptions),
       render: (_, record) => {
         const option = channelOptions.find(
@@ -136,6 +138,7 @@ const OrderContainer: React.FC = (props) => {
       title: '联系人',
       key: 'reserveName',
       dataIndex: 'reserveName',
+      width: 120,
       search: false,
       onCell: (_) => {
         return { rowSpan: _.rowSpan };
@@ -157,12 +160,14 @@ const OrderContainer: React.FC = (props) => {
       key: 'roomTypeName',
       valueEnum: convertOptionToEnums(roomTypeOptions),
       order: 6 - 2,
+      width: 100,
     },
     {
       title: '房间号',
       dataIndex: 'roomCode',
       key: 'roomCode',
       search: false,
+      width: 100,
     },
     {
       title: '入住时间',
@@ -170,6 +175,7 @@ const OrderContainer: React.FC = (props) => {
       key: 'startDate',
       valueType: 'date',
       hideInSearch: true,
+      width: 120,
     },
     {
       title: '日期选择',
@@ -216,12 +222,14 @@ const OrderContainer: React.FC = (props) => {
       dataIndex: 'endDate',
       key: 'endDate',
       valueType: 'date',
+      width: 120,
       search: false,
     },
     {
       title: '订单状态',
       dataIndex: 'status',
       key: 'status',
+      width: 100,
       order: 6 - 3,
       valueEnum: convertOptionToEnums(OrderStateOptions),
       renderText: (value) => {
@@ -235,6 +243,7 @@ const OrderContainer: React.FC = (props) => {
       title: '房费',
       dataIndex: 'roomPrice',
       key: 'roomPrice',
+      width: 120,
       search: false,
       renderText(_) {
         return `A$ ${_}`;
@@ -244,6 +253,7 @@ const OrderContainer: React.FC = (props) => {
       title: '订单总金额',
       dataIndex: 'totalAmount',
       key: 'totalAmount',
+      width: 120,
       search: false,
       renderText(_) {
         return `A$ ${_}`;
@@ -256,6 +266,7 @@ const OrderContainer: React.FC = (props) => {
       title: '结账状态',
       dataIndex: 'payStatus',
       key: 'payStatus',
+      width: 120,
       order: 6 - 5,
       valueEnum: convertOptionToEnums(OrderPayOptions),
       renderText(_, record) {
