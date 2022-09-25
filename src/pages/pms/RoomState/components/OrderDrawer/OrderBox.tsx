@@ -17,8 +17,8 @@ const OrderBox: React.FC<Props> = (props) => {
 
   return (
     <div className={className}>
-      <Text>{order?.customer}</Text>
-      <Text className="orgin-source">{order?.origin}</Text>
+      <Text>{order?.reserveName || 'none'}</Text>
+      <Text className="orgin-source">{order?.channelTypeName || '自来客'}</Text>
     </div>
   );
 };

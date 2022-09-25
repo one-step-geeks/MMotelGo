@@ -47,7 +47,7 @@ declare namespace ROOM_STATE {
     date: string;
     roomId?: Key;
     roomCode?: string;
-    price: number;
+    price?: number;
     roomTypeId?: number;
     roomTypeName?: string;
   }
