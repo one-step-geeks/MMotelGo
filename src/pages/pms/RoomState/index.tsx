@@ -454,7 +454,10 @@ const RoomStatePage: React.FC = () => {
           setAddVisible(v);
         }}
         rooms={processOrderRoom(selectedRooms)}
-        onSubmited={() => {}}
+        onSubmited={() => {
+          selectService.sendCancelInfo();
+          setAddVisible(false);
+        }}
       />
       <CloseRoomModal
         visible={closeVisible}
