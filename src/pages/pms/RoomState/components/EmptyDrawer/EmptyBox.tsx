@@ -84,7 +84,7 @@ const EmptyBox: React.FC<Props> = (props) => {
             className="btn"
             onClick={selectService.sendAddOrder}
           >
-            {intl.formatMessage({ id: '入住' })}
+            {intl.formatMessage({ id: '预订' })}
           </Text>
         </Space>
       }

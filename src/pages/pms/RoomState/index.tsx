@@ -389,7 +389,12 @@ const RoomStatePage: React.FC = () => {
       />
       <OrderFormDrawer
         visible={addVisible}
-        onVisibleChange={setAddVisible}
+        onVisibleChange={(v) => {
+          if (!v) {
+            selectService.sendCancelInfo();
+          }
+          setAddVisible(v);
+        }}
         rooms={[
           {
             roomId: 452,
