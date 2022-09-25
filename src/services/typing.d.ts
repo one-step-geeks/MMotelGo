@@ -54,7 +54,9 @@ declare namespace API {
   type Result_Setting_ConsumerItemList_ = Result_List_<SETTING.ConsumerItem>;
 
   // 房态看板
-  type Result_RoomState_OrderList_ = Result_List_<ORDER.OrderData>;
+  type Result_RoomState_OrderList_ = Result<{
+    orderList: ORDER.OrderData[];
+  }>;
   type Result_RoomState_RoomTypeList_ = Result_List_<ROOM_STATE.RoomType>;
   type Result_RoomState_StockList_ = Result_List_<ROOM_STATE.StockData>;
   type Result_RoomState_SingleDayList_ = Result_List_<ROOM_STATE.SingleDayData>;

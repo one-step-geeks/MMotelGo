@@ -11,7 +11,7 @@ declare namespace ROOM_STATE {
   }
 
   interface Room {
-    roomId?: string;
+    roomId?: number;
     roomCode?: string;
     roomStatus?: number;
   }

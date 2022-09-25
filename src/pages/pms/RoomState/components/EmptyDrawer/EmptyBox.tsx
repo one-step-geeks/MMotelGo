@@ -126,7 +126,11 @@ const EmptyBox: React.FC<Props> = (props) => {
           className="room-empty-box-checked"
           onClick={() => {
             const filteredRooms = selectedRooms.filter(
-              (item) => item.roomId !== record.id,
+              (item) =>
+                !(
+                  item.roomId === record.id &&
+                  moment(item.date).isSame(date, 'day')
+                ),
             );
             setSelectedRooms(filteredRooms);
             if (!filteredRooms?.length) {
@@ -192,7 +196,11 @@ const EmptyBox: React.FC<Props> = (props) => {
             selectService.sendSelectedInfo(info);
           } else {
             const filteredRooms = selectedRooms.filter(
-              (item) => item.roomId !== record.id,
+              (item) =>
+                !(
+                  item.roomId === record.id &&
+                  moment(item.date).isSame(date, 'day')
+                ),
             );
             setSelectedRooms(filteredRooms);
             if (!filteredRooms?.length) {

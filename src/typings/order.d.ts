@@ -1,19 +1,19 @@
 /** 订单 */
 declare namespace ORDER {
   interface OrderData {
-    checkinTime?: string;
-    checkinType?: number;
-    checkoutTime?: string;
-    customer?: string;
-    needPayAmount?: number;
-    orderId?: string;
-    origin?: string;
-    phone?: string;
-    remark?: string;
-    roomId?: string;
-    serviceId?: string;
-    status?: number;
+    orderId: number;
+    paidAmount?: number;
+    remainAmount?: number;
+    channelTypeName?: number;
+    reserveEmail?: string;
+    reserveName?: string;
     totalAmount?: number;
+    roomList: {
+      roomCode: string;
+      roomId: number;
+      startDate?: string;
+      endDate?: string;
+    }[];
   }
 
   interface OrderBase {
@@ -65,14 +65,14 @@ declare namespace ORDER {
   interface OrderRoom {
     key: string | number;
     id?: number;
-    roomId: number;
-    roomTypeName: string;
-    roomCode: string;
+    roomId?: number;
+    roomTypeName?: string;
+    roomCode?: string;
     roomDesc: string; // 房型-房号
     startDate: moment.Moment | string;
     checkInDays: number;
-    roomPrice: number;
-    totalAmount: number;
+    roomPrice?: number;
+    totalAmount?: number;
     checkInPersonCount?: number;
     status?: number;
   }

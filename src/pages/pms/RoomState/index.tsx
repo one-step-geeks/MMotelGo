@@ -18,13 +18,13 @@ import services from '@/services';
 import moment from 'moment';
 import './style.less';
 
-function processRoomParams(list: ROOM_STATE.SelectTableData[]) {
+function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
   const result: ROOM_STATE.CloseRoomInfo[] = [];
   for (let i = 0; i < list.length; i++) {
     const state = list[i];
     const finded = result.find((item) => item.roomId === state.roomId);
     if (finded) {
-      finded.dateList = [...finded?.dateList, state.date];
+      finded.dateList.push(state.date);
     } else {
       result.push({
         roomId: state.roomId!,
@@ -33,6 +33,48 @@ function processRoomParams(list: ROOM_STATE.SelectTableData[]) {
     }
   }
   return result;
+}
+
+function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
+  const result: (Partial<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>> & {
+    dateList: string[];
+  })[] = [];
+  for (let i = 0; i < list.length; i++) {
+    const state = list[i];
+    const finded = result.find((item) => item.roomId === state.roomId);
+    if (finded) {
+      finded.dateList = [...finded.dateList, state.date].sort();
+    } else {
+      result.push({
+        dateList: [state.date],
+        roomId: state.roomId as number,
+        roomTypeName: state.roomTypeName,
+        roomCode: state.roomCode,
+        roomPrice: state.price,
+      });
+    }
+  }
+
+  const trueResult: Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>[] = [];
+  for (let i = 0; i < result.length; i++) {
+    const ele = result[i];
+    const { dateList, ...rest } = ele;
+    for (let j = 0; j < dateList.length; j++) {
+      if (j === 0 || moment(dateList[j]).diff(dateList[j - 1], 'days') !== 1) {
+        trueResult.push({
+          ...rest,
+          startDate: moment(dateList[j]),
+          checkInDays: 1,
+          totalAmount: rest.roomPrice,
+        });
+      } else {
+        trueResult[trueResult.length - 1].checkInDays! += 1;
+        trueResult[trueResult.length - 1].totalAmount! += rest.roomPrice || 0;
+      }
+    }
+  }
+
+  return trueResult;
 }
 
 type AlignType = 'left' | 'center' | 'right';
@@ -48,7 +90,7 @@ const RoomStatePage: React.FC = () => {
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
   const openOrCloseList = useMemo(
-    () => processRoomParams(selectedRooms),
+    () => processOpenAndClose(selectedRooms),
     [selectedRooms],
   );
 
@@ -137,13 +179,26 @@ const RoomStatePage: React.FC = () => {
   );
 
   function findOrderByRecord(record: ROOM_STATE.StateTableData, date?: string) {
+    const splitOrders = [];
+    const orderList = orderData?.orderList || [];
+    for (let i = 0; i < orderList.length; i++) {
+      const curOrder = orderList[i];
+      const roomList = curOrder?.roomList || [];
+      for (let j = 0; j < roomList.length; j++) {
+        splitOrders.push({
+          ...curOrder,
+          ...roomList[j],
+        });
+      }
+    }
+
     const recDate = moment(date);
-    return orderData?.list?.find((o) => {
-      if (o.roomId !== record.roomId || !o.checkinTime || !o.checkoutTime) {
+    return splitOrders?.find((o) => {
+      if (o.roomId !== record.roomId || !o.startDate || !o.endDate) {
         return false;
       }
-      const checkinTime = moment(o.checkinTime);
-      const checkoutTime = moment(o.checkoutTime);
+      const checkinTime = moment(o.startDate);
+      const checkoutTime = moment(o.endDate);
       if (recDate.isBetween(checkinTime, checkoutTime, null, '[]')) {
         return true;
       }
@@ -193,8 +248,8 @@ const RoomStatePage: React.FC = () => {
               onCell: (record: ROOM_STATE.StateTableData) => {
                 const order = findOrderByRecord(record, item.date);
                 if (order) {
-                  const checkinTime = moment(order.checkinTime);
-                  const checkoutTime = moment(order.checkoutTime);
+                  const checkinTime = moment(order.startDate);
+                  const checkoutTime = moment(order.endDate);
 
                   if (checkinTime.isSame(d)) {
                     const days = checkoutTime.diff(checkinTime, 'days');
@@ -395,17 +450,7 @@ const RoomStatePage: React.FC = () => {
           }
           setAddVisible(v);
         }}
-        rooms={[
-          {
-            roomId: 452,
-            startDate: moment(),
-            checkInDays: 2,
-            roomTypeName: '大套房',
-            roomCode: '206',
-            roomPrice: 200,
-            totalAmount: 200 * 2,
-          },
-        ]}
+        rooms={processOrderRoom(selectedRooms)}
         onSubmited={() => {}}
       />
       <CloseRoomModal
