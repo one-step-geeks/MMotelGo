@@ -147,13 +147,32 @@ export async function batchCloseRooms(params?: {
 
 /** 批量开房 */
 export async function batchOpenRooms(params?: {
-  stateList: {
-    dateList: string[];
-    roomId: string;
-  }[];
+  stateList: ROOM_STATE.CloseRoomInfo[];
 }) {
   return request<API.Result>('/motel/roomState/calendar/batchOpen', {
     method: 'POST',
     data: params,
   });
+}
+
+/** 脏房 | 净房转换 */
+export async function changeRoomStatus(params?: {
+  roomId?: Key;
+  status: number;
+}) {
+  return request<API.Result>('/motel/roomState/calendar/roomStatusChange', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/** 房间状态（脏房 | 净房） */
+export async function getRoomStatusList(params?: { roomTypeIdList: number[] }) {
+  return request<API.Result_RoomState_RoomTypeStatusList_>(
+    '/motel/roomState/calendar/roomStatusList',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }

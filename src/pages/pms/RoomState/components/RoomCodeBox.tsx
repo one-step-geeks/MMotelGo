@@ -1,15 +1,23 @@
 // import { Button } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import services from '@/services';
 import './room-code.less';
 
 interface Props {
-  code?: string;
-  isDirty?: boolean;
+  room: ROOM_STATE.StateTableData;
+  roomList?: ROOM_STATE.Room[];
 }
 
 const RoomCodeBox: React.FC<Props> = (props) => {
-  const { code, isDirty } = props;
-  const [dirty, setDirty] = useState(isDirty);
+  const { room, roomList } = props;
+
+  const [dirty, setDirty] = useState(false);
+
+  useEffect(() => {
+    const isDirty =
+      roomList?.find((item) => item.roomId === room.roomId)?.roomStatus === 14;
+    setDirty(isDirty);
+  }, [roomList]);
 
   let className = 'room-code-box';
   let hoverText = '转为脏房';
@@ -22,10 +30,15 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   return (
     <div
       className={className}
-      data-text={code}
+      data-text={room?.roomCode}
       data-hover-text={hoverText}
-      onClick={() => {
+      onClick={async () => {
         setDirty(!dirty);
+        const status = dirty ? 15 : 14;
+        await services.RoomStateController.changeRoomStatus({
+          roomId: room.roomId,
+          status,
+        });
       }}
     ></div>
   );

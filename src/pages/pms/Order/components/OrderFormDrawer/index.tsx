@@ -143,6 +143,7 @@ export default (props: Props) => {
       grid
       autoFocusFirstInput
       visible={props.visible}
+      preserve={false}
       drawerProps={{
         width: 540,
         destroyOnClose: true,

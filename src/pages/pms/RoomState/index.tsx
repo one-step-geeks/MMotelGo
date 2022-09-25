@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect, useMemo } from 'react';
 import { useIntl, useRequest, useHistory, useModel } from 'umi';
 import { ColumnsType } from 'antd/lib/table';
 import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
@@ -18,13 +18,13 @@ import services from '@/services';
 import moment from 'moment';
 import './style.less';
 
-function processRoomParams(list: ROOM_STATE.SelectTableData[]) {
+function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
   const result: ROOM_STATE.CloseRoomInfo[] = [];
   for (let i = 0; i < list.length; i++) {
     const state = list[i];
     const finded = result.find((item) => item.roomId === state.roomId);
     if (finded) {
-      finded.dateList = [...finded?.dateList, state.date];
+      finded.dateList.push(state.date);
     } else {
       result.push({
         roomId: state.roomId!,
@@ -33,6 +33,51 @@ function processRoomParams(list: ROOM_STATE.SelectTableData[]) {
     }
   }
   return result;
+}
+
+function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
+  const result: (Partial<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>> & {
+    dateList: string[];
+    priceList: number[];
+  })[] = [];
+  for (let i = 0; i < list.length; i++) {
+    const state = list[i];
+    const finded = result.find((item) => item.roomId === state.roomId);
+    if (finded) {
+      finded.dateList = [...finded.dateList, state.date].sort();
+      finded.priceList = [...finded.priceList, state.price];
+    } else {
+      result.push({
+        dateList: [state.date],
+        roomId: state.roomId as number,
+        roomTypeName: state.roomTypeName,
+        roomCode: state.roomCode,
+        priceList: [state.price],
+      });
+    }
+  }
+
+  const trueResult: Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>[] = [];
+  for (let i = 0; i < result.length; i++) {
+    const ele = result[i];
+    const { dateList, ...rest } = ele;
+    for (let j = 0; j < dateList.length; j++) {
+      if (j === 0 || moment(dateList[j]).diff(dateList[j - 1], 'days') !== 1) {
+        trueResult.push({
+          ...rest,
+          startDate: moment(dateList[j]),
+          checkInDays: 1,
+          totalAmount: rest.priceList[j],
+        });
+      } else {
+        trueResult[trueResult.length - 1].checkInDays! += 1;
+        trueResult[trueResult.length - 1].totalAmount! +=
+          rest.priceList[j] || 0;
+      }
+    }
+  }
+
+  return trueResult;
 }
 
 type AlignType = 'left' | 'center' | 'right';
@@ -47,6 +92,11 @@ const RoomStatePage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
+  const openOrCloseList = useMemo(
+    () => processOpenAndClose(selectedRooms),
+    [selectedRooms],
+  );
+
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
@@ -57,7 +107,12 @@ const RoomStatePage: React.FC = () => {
           setCloseVisible(true);
           break;
         case 'OPEN_ROOM':
-          // setCloseVisible(true);
+          services.RoomStateController.batchOpenRooms({
+            stateList: openOrCloseList,
+          });
+          setSelectedRooms([]);
+          selectService.sendCancelInfo();
+          refreshAllState();
           break;
         default:
           break;
@@ -67,7 +122,7 @@ const RoomStatePage: React.FC = () => {
     return () => {
       subs.unsubscribe();
     };
-  }, []);
+  }, [openOrCloseList]);
 
   // 生成房态日历-columns
   const [calendarList, setCalendarList] = useState(() => {
@@ -91,6 +146,13 @@ const RoomStatePage: React.FC = () => {
       refreshDeps: [selectedDate, duration],
     },
   );
+
+  // 获取房态列表
+  const { data: statusData, loading: statusLoading } = useRequest(async () => {
+    return services.RoomStateController.getRoomStatusList({
+      roomTypeIdList: [],
+    });
+  });
 
   // 获取房态剩余房间-rows
   const { data: stockData, loading: stockLoading } = useRequest(
@@ -120,13 +182,26 @@ const RoomStatePage: React.FC = () => {
   );
 
   function findOrderByRecord(record: ROOM_STATE.StateTableData, date?: string) {
+    const splitOrders = [];
+    const orderList = orderData?.orderList || [];
+    for (let i = 0; i < orderList.length; i++) {
+      const curOrder = orderList[i];
+      const roomList = curOrder?.roomList || [];
+      for (let j = 0; j < roomList.length; j++) {
+        splitOrders.push({
+          ...curOrder,
+          ...roomList[j],
+        });
+      }
+    }
+
     const recDate = moment(date);
-    return orderData?.list?.find((o) => {
-      if (o.roomId !== record.roomId || !o.checkinTime || !o.checkoutTime) {
+    return splitOrders?.find((o) => {
+      if (o.roomId !== record.roomId || !o.startDate || !o.endDate) {
         return false;
       }
-      const checkinTime = moment(o.checkinTime);
-      const checkoutTime = moment(o.checkoutTime);
+      const checkinTime = moment(o.startDate);
+      const checkoutTime = moment(o.endDate);
       if (recDate.isBetween(checkinTime, checkoutTime, null, '[]')) {
         return true;
       }
@@ -176,8 +251,8 @@ const RoomStatePage: React.FC = () => {
               onCell: (record: ROOM_STATE.StateTableData) => {
                 const order = findOrderByRecord(record, item.date);
                 if (order) {
-                  const checkinTime = moment(order.checkinTime);
-                  const checkoutTime = moment(order.checkoutTime);
+                  const checkinTime = moment(order.startDate);
+                  const checkoutTime = moment(order.endDate);
 
                   if (checkinTime.isSame(d)) {
                     const days = checkoutTime.diff(checkinTime, 'days');
@@ -302,8 +377,11 @@ const RoomStatePage: React.FC = () => {
             }
             return (
               <RoomCodeBox
-                code={record.roomCode}
-                isDirty={record.roomStatus === 1}
+                room={record}
+                roomList={statusData?.roomTypeList?.reduce(
+                  (all, rt) => [...all, ...rt.roomList!],
+                  [] as ROOM_STATE.Room[],
+                )}
               />
             );
           },
@@ -358,7 +436,7 @@ const RoomStatePage: React.FC = () => {
         bordered
         size="small"
         sticky={{ offsetHeader: 48 }}
-        loading={rowLoading || orderLoading || stockLoading}
+        loading={rowLoading || orderLoading || stockLoading || statusLoading}
         className="roome-state-calendar-table"
         rowClassName="state-table-row"
         scroll={{ x: 'scroll' }}
@@ -369,23 +447,21 @@ const RoomStatePage: React.FC = () => {
       />
       <OrderFormDrawer
         visible={addVisible}
-        onVisibleChange={setAddVisible}
-        rooms={[
-          {
-            roomId: 452,
-            startDate: moment(),
-            checkInDays: 2,
-            roomTypeName: '大套房',
-            roomCode: '206',
-            roomPrice: 200,
-            totalAmount: 200 * 2,
-          },
-        ]}
-        onSubmited={() => {}}
+        onVisibleChange={(v) => {
+          if (!v) {
+            selectService.sendCancelInfo();
+          }
+          setAddVisible(v);
+        }}
+        rooms={processOrderRoom(selectedRooms)}
+        onSubmited={() => {
+          selectService.sendCancelInfo();
+          setAddVisible(false);
+        }}
       />
       <CloseRoomModal
         visible={closeVisible}
-        stateList={processRoomParams(selectedRooms)}
+        stateList={openOrCloseList}
         onSubmit={() => {
           setSelectedRooms([]);
           selectService.sendCancelInfo();

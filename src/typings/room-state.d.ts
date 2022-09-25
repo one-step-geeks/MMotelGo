@@ -11,13 +11,14 @@ declare namespace ROOM_STATE {
   }
 
   interface Room {
-    roomId?: string;
+    roomId?: number;
     roomCode?: string;
-    roomStatus?: 0 | 1;
+    roomStatus?: number;
   }
 
   interface RoomType {
     id?: number;
+    roomTypeId?: number;
     roomTypeName?: string;
     roomTypeShortName?: string;
     defaultPriceType?: 1 | 2; // 1-不区分；2-区分
@@ -46,7 +47,7 @@ declare namespace ROOM_STATE {
     date: string;
     roomId?: Key;
     roomCode?: string;
-    price?: number;
+    price: number;
     roomTypeId?: number;
     roomTypeName?: string;
   }
