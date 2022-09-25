@@ -18,6 +18,7 @@ declare namespace ROOM_STATE {
 
   interface RoomType {
     id?: number;
+    roomTypeId?: number;
     roomTypeName?: string;
     roomTypeShortName?: string;
     defaultPriceType?: 1 | 2; // 1-不区分；2-区分

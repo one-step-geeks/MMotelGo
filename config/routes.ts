@@ -13,7 +13,7 @@ export default [
     name: '房态',
     path: 'pms/room-state/calendar',
     component: 'pms/RoomState',
-    access: 'canSeeRouter',
+    // access: 'canSeeRouter',
     mainMenuId: 1,
   },
   {

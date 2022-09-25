@@ -165,3 +165,14 @@ export async function changeRoomStatus(params?: {
     data: params,
   });
 }
+
+/** 房间状态（脏房 | 净房） */
+export async function getRoomStatusList(params?: { roomTypeIdList: number[] }) {
+  return request<API.Result_RoomState_RoomTypeStatusList_>(
+    '/motel/roomState/calendar/roomStatusList',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
+}

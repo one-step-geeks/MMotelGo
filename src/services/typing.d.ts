@@ -58,10 +58,16 @@ declare namespace API {
   type Result_RoomState_RoomTypeList_ = Result_List_<ROOM_STATE.RoomType>;
   type Result_RoomState_StockList_ = Result_List_<ROOM_STATE.StockData>;
   type Result_RoomState_SingleDayList_ = Result_List_<ROOM_STATE.SingleDayData>;
-  type Result_RoomState_RoomConditionList_ = Result_List_<ROOM_STATE.RoomCondition>;
-  type Result_RoomState_RoomOverviewList_ = Result_List_<ROOM_STATE.RoomOverview>;
-  type Result_RoomState_ChangeLogList_ = Result_List_<ROOM_STATE.StateChangeLog>;
+  type Result_RoomState_RoomConditionList_ =
+    Result_List_<ROOM_STATE.RoomCondition>;
+  type Result_RoomState_RoomOverviewList_ =
+    Result_List_<ROOM_STATE.RoomOverview>;
+  type Result_RoomState_ChangeLogList_ =
+    Result_List_<ROOM_STATE.StateChangeLog>;
   type Result_RoomState_StatusEnum_ = Result_List_<ROOM_STATE.StatusEnum>;
+  type Result_RoomState_RoomTypeStatusList_ = Result<{
+    roomTypeList: ROOM_STATE.RoomType[];
+  }>;
 
   // 用户注册，登录，修改密码相关
   type Result_LoginInfo_ = Result<{

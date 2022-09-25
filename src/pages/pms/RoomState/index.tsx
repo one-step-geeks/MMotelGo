@@ -102,6 +102,13 @@ const RoomStatePage: React.FC = () => {
     },
   );
 
+  // 获取房态列表
+  const { data: statusData, loading: statusLoading } = useRequest(async () => {
+    return services.RoomStateController.getRoomStatusList({
+      roomTypeIdList: [],
+    });
+  });
+
   // 获取房态剩余房间-rows
   const { data: stockData, loading: stockLoading } = useRequest(
     async () => {
@@ -310,7 +317,15 @@ const RoomStatePage: React.FC = () => {
             if (expand) {
               return '剩余';
             }
-            return <RoomCodeBox room={record} />;
+            return (
+              <RoomCodeBox
+                room={record}
+                roomList={statusData?.roomTypeList?.reduce(
+                  (all, rt) => [...all, ...rt.roomList!],
+                  [] as ROOM_STATE.Room[],
+                )}
+              />
+            );
           },
         },
       ],
@@ -363,7 +378,7 @@ const RoomStatePage: React.FC = () => {
         bordered
         size="small"
         sticky={{ offsetHeader: 48 }}
-        loading={rowLoading || orderLoading || stockLoading}
+        loading={rowLoading || orderLoading || stockLoading || statusLoading}
         className="roome-state-calendar-table"
         rowClassName="state-table-row"
         scroll={{ x: 'scroll' }}
