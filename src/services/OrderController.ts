@@ -241,3 +241,22 @@ export async function deletePayOrRefund(id: number) {
     data: { feeItemId: id },
   });
 }
+
+/** 更细订单房间入住人 */
+export async function updateOccupants(params: any) {
+  return request<API.Result>('/motel/order/roomPerson/batchSave', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+/** 查询订单房间入住人 */
+export async function queryOccupants(params: Record<string, any>) {
+  return request<API.Result<{ list: Array<ORDER.OrderRoomPerson> }>>(
+    '/motel/order/roomPerson/list',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
+}

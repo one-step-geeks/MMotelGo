@@ -113,7 +113,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
       <ProFormSelect
         label="支付方式"
         rules={[{ required: true, message: '请选择支付方式' }]}
-        name="paymentTypeId"
+        name="feeConfigId"
         request={async () => {
           const { data } = await services.FinanceController.queryPaymentTypes();
           return data?.map((row) => ({

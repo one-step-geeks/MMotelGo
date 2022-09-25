@@ -10,12 +10,12 @@ import {
   OrderState,
   OperationType,
   OrderStateText,
-  queryPayOrRefundList,
 } from '@/services/OrderController';
 import moment from 'moment';
 import { OrderStateOptions } from '@/services/OrderController';
 import { useNoticeDrawer } from '../NoticeDrawer';
 import { useConsumeDrawer } from '../ConsumeDrawer';
+import { useOccupantDrawer } from '../PersonDrawer';
 import { usePayOrRefundDrawer, payOrRefundOptions } from '../PayDrawer';
 
 // ConsumeDrawer
@@ -65,6 +65,10 @@ export default (props: Props) => {
 
   const { ConsumeDrawer, openConsumeDrawer } = useConsumeDrawer(() => {
     queryConsumeList();
+  });
+
+  const { OccupantDrawer, openOccupantDrawer } = useOccupantDrawer(() => {
+    executeQuery();
   });
 
   const { PayOrRefundDrawer, openPayOrRefundDrawer } = usePayOrRefundDrawer(
@@ -195,8 +199,8 @@ export default (props: Props) => {
     },
     {
       title: '支付方式',
-      dataIndex: 'feeConfigId',
-      key: 'feeConfigId',
+      dataIndex: 'feeConfigName',
+      key: 'feeConfigName',
     },
     {
       title: '金额',
@@ -245,18 +249,21 @@ export default (props: Props) => {
       title: '入住日期',
       dataIndex: 'startDate',
       key: 'startDate',
+      width: 100,
       render(value, record, index) {
         return moment(value).format('YYYY-MM-DD');
       },
     },
     {
       title: '间夜',
+      width: 40,
       dataIndex: 'checkInDays',
       key: 'checkInDays',
       render: (value) => `${value}夜`,
     },
     {
       title: '房价',
+      width: 40,
       dataIndex: 'roomPrice',
       key: 'roomPrice',
       render: (value) => {
@@ -265,12 +272,14 @@ export default (props: Props) => {
     },
     {
       title: '入住人数',
+      width: 100,
       dataIndex: 'checkInPersonCount',
       key: 'checkInPersonCount',
     },
     {
       title: '客房状态',
       dataIndex: 'status',
+      width: 100,
       key: 'status',
       render(value, record, index) {
         const option = OrderStateOptions.find(
@@ -278,6 +287,35 @@ export default (props: Props) => {
         );
         return option && option.label;
       },
+    },
+    {
+      title: '入住人',
+      width: 100,
+      dataIndex: 'checkInPersonName',
+      key: 'checkInPersonName',
+    },
+    {
+      title: '联系方式',
+      width: 100,
+      dataIndex: 'checkInPersonPhoneNo',
+      key: 'checkInPersonPhoneNo',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_, record) => (
+        <>
+          <Button
+            type="link"
+            onClick={() => {
+              openOccupantDrawer(props.id, record);
+            }}
+          >
+            <PlusOutlined />
+            新增入住人
+          </Button>
+        </>
+      ),
     },
   ];
 
@@ -376,7 +414,7 @@ export default (props: Props) => {
   return (
     <>
       <Drawer
-        width={540}
+        width={640}
         destroyOnClose
         maskClosable={false}
         title="订单详情"
@@ -589,6 +627,7 @@ export default (props: Props) => {
       {NoticeDrawer}
       {ConsumeDrawer}
       {PayOrRefundDrawer}
+      {OccupantDrawer}
     </>
   );
 };

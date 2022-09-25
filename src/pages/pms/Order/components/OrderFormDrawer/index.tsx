@@ -154,7 +154,6 @@ export default (props: Props) => {
       }}
       submitTimeout={2000}
       onFinish={async (values) => {
-        // const { room, order } = props;
         const { orderRoomList, ...rest } = values;
         const status = props?.status;
         const submitData = {
@@ -375,6 +374,60 @@ export default (props: Props) => {
                           }}
                         ></DeleteOutlined>
                       ) : null}
+
+                      {/* sub fields start */}
+
+                      <Form.List name={[field.name, 'orderRoomPersonList']}>
+                        {(
+                          personFields,
+                          { add: add2, remove: remove2 },
+                          { errors },
+                        ) => (
+                          <>
+                            {personFields.map((personField, index) => {
+                              return (
+                                <Form.Item
+                                  className="person-row"
+                                  key={personField.key}
+                                >
+                                  <Input.Group compact>
+                                    <ProFormText
+                                      name={[personField.name, 'name']}
+                                      placeholder="入住人姓名"
+                                    ></ProFormText>
+                                    <ProFormText
+                                      name={[personField.name, 'phoneNo']}
+                                      placeholder="联系方式"
+                                    ></ProFormText>
+                                    <DeleteOutlined
+                                      style={{
+                                        padding: '10px 5px',
+                                      }}
+                                      onClick={() => {
+                                        remove2(field.name);
+                                      }}
+                                    ></DeleteOutlined>
+                                  </Input.Group>
+                                </Form.Item>
+                              );
+                            })}
+
+                            <Form.Item>
+                              <Button
+                                type="link"
+                                onClick={() => {
+                                  add2();
+                                }}
+                                icon={<PlusOutlined />}
+                              >
+                                添加入住人
+                              </Button>
+                            </Form.Item>
+                          </>
+                        )}
+                      </Form.List>
+
+                      {/* sub  fields end */}
                     </Input.Group>
                   </Form.Item>
                 );

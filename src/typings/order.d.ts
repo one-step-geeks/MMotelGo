@@ -108,4 +108,10 @@ declare namespace ORDER {
     // price: number;
     amount: number;
   }
+
+  interface OrderRoomPerson {
+    id?: number;
+    nickName: string;
+    phoneNo: string;
+  }
 }
