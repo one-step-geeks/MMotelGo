@@ -38,19 +38,21 @@ function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
 function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
   const result: (Partial<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>> & {
     dateList: string[];
+    priceList: number[];
   })[] = [];
   for (let i = 0; i < list.length; i++) {
     const state = list[i];
     const finded = result.find((item) => item.roomId === state.roomId);
     if (finded) {
       finded.dateList = [...finded.dateList, state.date].sort();
+      finded.priceList = [...finded.priceList, state.price];
     } else {
       result.push({
         dateList: [state.date],
         roomId: state.roomId as number,
         roomTypeName: state.roomTypeName,
         roomCode: state.roomCode,
-        roomPrice: state.price,
+        priceList: [state.price],
       });
     }
   }
@@ -65,11 +67,12 @@ function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
           ...rest,
           startDate: moment(dateList[j]),
           checkInDays: 1,
-          totalAmount: rest.roomPrice,
+          totalAmount: rest.priceList[j],
         });
       } else {
         trueResult[trueResult.length - 1].checkInDays! += 1;
-        trueResult[trueResult.length - 1].totalAmount! += rest.roomPrice || 0;
+        trueResult[trueResult.length - 1].totalAmount! +=
+          rest.priceList[j] || 0;
       }
     }
   }
