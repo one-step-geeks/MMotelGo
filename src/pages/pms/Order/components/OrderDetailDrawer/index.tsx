@@ -26,7 +26,7 @@ interface Props {
   onVisibleChange: (value: boolean) => void;
   gotoEdit: (orderBase: ORDER.OrderBase) => void;
   gotoOperate: (data: any) => void;
-  openNotice: () => void;
+  openNotice?: () => void;
 }
 
 // const App: React.FC =
@@ -256,14 +256,14 @@ export default (props: Props) => {
     },
     {
       title: '间夜',
-      width: 40,
+      width: 100,
       dataIndex: 'checkInDays',
       key: 'checkInDays',
       render: (value) => `${value}夜`,
     },
     {
       title: '房价',
-      width: 40,
+      width: 100,
       dataIndex: 'roomPrice',
       key: 'roomPrice',
       render: (value) => {
@@ -272,14 +272,14 @@ export default (props: Props) => {
     },
     {
       title: '入住人数',
-      width: 100,
+      width: 140,
       dataIndex: 'checkInPersonCount',
       key: 'checkInPersonCount',
     },
     {
       title: '客房状态',
       dataIndex: 'status',
-      width: 100,
+      width: 140,
       key: 'status',
       render(value, record, index) {
         const option = OrderStateOptions.find(
@@ -290,18 +290,20 @@ export default (props: Props) => {
     },
     {
       title: '入住人',
-      width: 100,
+      width: 120,
       dataIndex: 'checkInPersonName',
       key: 'checkInPersonName',
     },
     {
       title: '联系方式',
-      width: 100,
+      width: 140,
       dataIndex: 'checkInPersonPhoneNo',
       key: 'checkInPersonPhoneNo',
     },
     {
       title: '操作',
+      width: 180,
+      fixed: 'right',
       key: 'action',
       render: (_, record) => (
         <>
@@ -481,6 +483,7 @@ export default (props: Props) => {
           <Table
             bordered
             row-key="roomId"
+            scroll={{ x: 'scroll' }}
             columns={columns}
             dataSource={data?.orderRoomList || []}
             pagination={false}

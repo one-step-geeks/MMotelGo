@@ -45,14 +45,14 @@ function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
     const finded = result.find((item) => item.roomId === state.roomId);
     if (finded) {
       finded.dateList = [...finded.dateList, state.date].sort();
-      finded.priceList = [...finded.priceList, state.price];
+      finded.priceList = [...finded.priceList, state.price!];
     } else {
       result.push({
         dateList: [state.date],
         roomId: state.roomId as number,
         roomTypeName: state.roomTypeName,
         roomCode: state.roomCode,
-        priceList: [state.price],
+        priceList: [state.price!],
       });
     }
   }
