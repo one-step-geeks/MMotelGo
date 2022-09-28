@@ -40,7 +40,6 @@ const SingleDay: React.FC = () => {
     () => {
       return services.RoomStateController.getSingleDayRoomState({
         stateDate: selectedDate.format('YYYY-MM-DD'),
-        roomTypeId: 0,
         sortType,
         statusList,
       });
