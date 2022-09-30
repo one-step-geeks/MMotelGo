@@ -169,7 +169,11 @@ const RoomStatePage: React.FC = () => {
   );
 
   // 获取房间订单-渲染订单单元格
-  const { data: orderData, loading: orderLoading } = useRequest(
+  const {
+    data: orderData,
+    loading: orderLoading,
+    run: refreshAllOrder,
+  } = useRequest(
     async () => {
       return services.RoomStateController.getAllRoomOrder({
         startDate: selectedDate.clone().format('YYYY-MM-DD'),
@@ -457,6 +461,7 @@ const RoomStatePage: React.FC = () => {
         onSubmited={() => {
           selectService.sendCancelInfo();
           setAddVisible(false);
+          refreshAllOrder();
         }}
       />
       <CloseRoomModal
