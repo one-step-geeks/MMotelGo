@@ -29,7 +29,6 @@ import { OrderState } from '@/services/OrderController';
 interface Props {
   id?: number;
   rooms?: Array<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>>;
-  status?: number;
   visible: boolean;
   onVisibleChange: (value: boolean) => void;
   onSubmited: () => void;
@@ -40,7 +39,6 @@ export interface FormOrder extends ORDER.OrderBase {
 }
 
 export default (props: Props) => {
-  // const [orderStatus, setOrderStatus] = useState<1|2|3|4>();
   const [form] = Form.useForm<FormOrder>();
   const [treeData, setTreeData] = useState<Omit<DefaultOptionType, 'label'>[]>(
     [],
@@ -134,7 +132,6 @@ export default (props: Props) => {
 
   const isEdit = !!props?.id;
   // | 'orderStatus'>
-  console.log('props.status', props.status);
   return (
     <DrawerForm<Omit<FormOrder, 'id' | 'status'>>
       title={isEdit ? '编辑订单' : '新建订单'}
@@ -156,11 +153,10 @@ export default (props: Props) => {
       submitTimeout={2000}
       onFinish={async (values) => {
         const { orderRoomList, ...rest } = values;
-        const status = props?.status;
         const submitData = {
           order: {
             id: props?.id,
-            status,
+            status: OrderState.IS_ORDERED,
             ...rest,
           },
           orderRoomList: orderRoomList.map((orderRoom) => {

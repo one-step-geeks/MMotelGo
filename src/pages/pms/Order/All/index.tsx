@@ -515,7 +515,6 @@ const OrderContainer: React.FC = (props) => {
               totalAmount: 2 * 1,
             },
           ]}
-          status={orderStatus}
           onSubmited={() => {
             ref.current?.submit();
             setEditDrawerVisible(false);
