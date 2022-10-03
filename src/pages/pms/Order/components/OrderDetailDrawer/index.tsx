@@ -99,6 +99,7 @@ export default (props: Props) => {
     {
       title: '提醒时间',
       dataIndex: 'remindTime',
+      align: 'center',
       key: 'remindTime',
       render(value, record, index) {
         return moment(value).format('YYYY-MM-DD hh:mm');
@@ -112,6 +113,7 @@ export default (props: Props) => {
     {
       title: '操作',
       key: 'action',
+      align: 'center',
       render: (_, record) => (
         <Space size="middle">
           <EditOutlined
@@ -135,11 +137,13 @@ export default (props: Props) => {
     {
       title: '消费项目',
       dataIndex: 'consumptionSetName',
+      align: 'center',
       key: 'consumptionSetName',
     },
     {
       title: '消费金额',
       dataIndex: 'price',
+      align: 'center',
       key: 'price',
       render(value, record, index) {
         return `A$ ${record.price * record.count}`;
@@ -148,11 +152,13 @@ export default (props: Props) => {
     {
       title: '录入人',
       dataIndex: 'creator',
+      align: 'center',
       key: 'creator',
     },
     {
       title: '消费日期',
       dataIndex: 'consumeDate',
+      align: 'center',
       key: 'consumeDate',
       render(value, record, index) {
         return moment(value).format('MM-DD');
@@ -160,12 +166,14 @@ export default (props: Props) => {
     },
     {
       title: '备注',
+      align: 'center',
       dataIndex: 'remark',
       key: 'remark',
     },
     {
       title: '操作',
       key: 'action',
+      align: 'center',
       render: (_, record) => (
         <Space size="middle">
           {/* <EditOutlined
@@ -190,6 +198,7 @@ export default (props: Props) => {
       title: '项目',
       dataIndex: 'type',
       key: 'type',
+      align: 'center',
       render(value, record, index) {
         const option = payOrRefundOptions.find(
           (option) => option.value === value,
@@ -199,12 +208,14 @@ export default (props: Props) => {
     },
     {
       title: '支付方式',
+      align: 'center',
       dataIndex: 'feeConfigName',
       key: 'feeConfigName',
     },
     {
       title: '金额',
       dataIndex: 'amount',
+      align: 'center',
       key: 'amount',
       render(value, record, index) {
         return `A$ ${value}`;
@@ -213,6 +224,7 @@ export default (props: Props) => {
     {
       title: '日期',
       dataIndex: 'feeDate',
+      align: 'center',
       key: 'feeDate',
       render(value, record, index) {
         return moment(value).format('MM-DD');
@@ -221,11 +233,13 @@ export default (props: Props) => {
     {
       title: '备注',
       dataIndex: 'remark',
+      align: 'center',
       key: 'remark',
     },
     {
       title: '操作',
       key: 'action',
+      align: 'center',
       render: (_, record) => (
         <Space size="middle">
           {/* <EditOutlined
@@ -244,26 +258,29 @@ export default (props: Props) => {
       ),
     },
   ];
-  const columns: ColumnsType<ORDER.OrderRoom> = [
+  const roomColumns: ColumnsType<ORDER.OrderRoom> = [
     {
       title: '入住日期',
       dataIndex: 'startDate',
       key: 'startDate',
-      width: 100,
+      align: 'center',
+      width: 112,
       render(value, record, index) {
         return moment(value).format('YYYY-MM-DD');
       },
     },
     {
       title: '间夜',
-      width: 100,
+      width: 62,
+      align: 'center',
       dataIndex: 'checkInDays',
       key: 'checkInDays',
       render: (value) => `${value}夜`,
     },
     {
       title: '房价',
-      width: 100,
+      width: 82,
+      align: 'center',
       dataIndex: 'roomPrice',
       key: 'roomPrice',
       render: (value) => {
@@ -272,14 +289,16 @@ export default (props: Props) => {
     },
     {
       title: '入住人数',
-      width: 140,
+      width: 82,
+      align: 'center',
       dataIndex: 'checkInPersonCount',
       key: 'checkInPersonCount',
     },
     {
       title: '客房状态',
       dataIndex: 'status',
-      width: 140,
+      width: 82,
+      align: 'center',
       key: 'status',
       render(value, record, index) {
         const option = OrderStateOptions.find(
@@ -290,19 +309,23 @@ export default (props: Props) => {
     },
     {
       title: '入住人',
-      width: 120,
+      width: 82,
+      align: 'center',
       dataIndex: 'checkInPersonName',
       key: 'checkInPersonName',
     },
     {
       title: '联系方式',
-      width: 140,
+      ellipsis: true,
+      width: 120,
+      align: 'center',
       dataIndex: 'checkInPersonPhoneNo',
       key: 'checkInPersonPhoneNo',
     },
     {
       title: '操作',
-      width: 180,
+      width: 125,
+      align: 'center',
       fixed: 'right',
       key: 'action',
       render: (_, record) => (
@@ -313,8 +336,7 @@ export default (props: Props) => {
               openOccupantDrawer(props.id, record);
             }}
           >
-            <PlusOutlined />
-            新增入住人
+            {/* <PlusOutlined /> */}+ 新增入住人
           </Button>
         </>
       ),
@@ -484,7 +506,8 @@ export default (props: Props) => {
             bordered
             row-key="roomId"
             scroll={{ x: 'scroll' }}
-            columns={columns}
+            size="small"
+            columns={roomColumns}
             dataSource={data?.orderRoomList || []}
             pagination={false}
           />
@@ -505,20 +528,20 @@ export default (props: Props) => {
           }
           extra={
             <>
-              <PlusOutlined />
               <Button
                 type="link"
                 onClick={() => {
                   openConsumeDrawer(props.id);
                 }}
               >
-                添加消费
+                + 添加消费
               </Button>
             </>
           }
         >
           <Table
             bordered
+            size="small"
             row-key="roomId"
             columns={consumeColumns}
             dataSource={consumeList || []}
@@ -570,20 +593,20 @@ export default (props: Props) => {
           }
           extra={
             <>
-              <PlusOutlined />
               <Button
                 type="link"
                 onClick={() => {
                   openPayOrRefundDrawer(props.id);
                 }}
               >
-                添加收退款
+                + 添加收退款
               </Button>
             </>
           }
         >
           <Table
             bordered
+            size="small"
             row-key="roomId"
             columns={payOrRefundColumns}
             dataSource={payOrRefundList || []}
@@ -594,14 +617,13 @@ export default (props: Props) => {
           title="提醒信息"
           extra={
             <>
-              <PlusOutlined />
               <Button
                 type="link"
                 onClick={() => {
                   openNoticeDrawer(props.id);
                 }}
               >
-                添加提醒
+                + 添加提醒
               </Button>
             </>
           }
@@ -609,6 +631,7 @@ export default (props: Props) => {
           <Table
             bordered
             row-key="roomId"
+            size="small"
             columns={noticeColumns}
             dataSource={noticeList || []}
             pagination={false}

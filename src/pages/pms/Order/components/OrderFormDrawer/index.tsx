@@ -166,7 +166,7 @@ export default (props: Props) => {
               roomId,
               startDate: moment(startDate).format('YYYY-MM-DD'),
               // // 房间状态可能和订单状态有差异，新增时候保持一致
-              status,
+              status: OrderState.IS_ORDERED,
               checkInPersonCount: 0,
               ...rest,
             };
