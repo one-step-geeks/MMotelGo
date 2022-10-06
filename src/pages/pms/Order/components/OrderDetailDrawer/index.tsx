@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Drawer, Table, message, Space, Tag } from 'antd';
+import { Button, Drawer, Table, message, Space, Tabs, Tag } from 'antd';
+
 import services from '@/services';
 import { useRequest } from 'umi';
 import type { ColumnsType } from 'antd/es/table';
@@ -17,6 +18,7 @@ import { useNoticeDrawer } from '../NoticeDrawer';
 import { useConsumeDrawer } from '../ConsumeDrawer';
 import { useOccupantDrawer } from '../PersonDrawer';
 import { usePayOrRefundDrawer, payOrRefundOptions } from '../PayDrawer';
+import OperatinoLog from './OperationLog';
 
 interface Props {
   id: number;
@@ -33,10 +35,12 @@ export function useOrderDetailDrawer(
 ) {
   const [orderId, setOrderId] = useState<number | undefined>();
   const [visible, setVisible] = useState(false);
+  const [activeTabKey, setActiveTabKey] = useState('orderDetail');
 
   const openOrderDetailDrawer = (orderId: number) => {
     setOrderId(orderId);
     setVisible(true);
+    setActiveTabKey('orderDetail');
   };
 
   const { data: noticeList, run: queryNoticeList } = useRequest(
@@ -341,7 +345,7 @@ export function useOrderDetailDrawer(
           <Button
             type="link"
             onClick={() => {
-              openOccupantDrawer(props.id, record);
+              openOccupantDrawer(orderId as number, record);
             }}
           >
             {/* <PlusOutlined /> */}+ 新增入住人
@@ -370,7 +374,9 @@ export function useOrderDetailDrawer(
     gotoOperate?.({ operationType, ...data });
   };
 
-  if (
+  if (activeTabKey === 'operationLog') {
+    footerOperations = null;
+  } else if (
     orderStatus &&
     [OrderState.IS_CANCELED, OrderState.IS_CHECKOUT].includes(orderStatus)
   ) {
@@ -461,201 +467,220 @@ export function useOrderDetailDrawer(
         }}
         footer={<>{footerOperations}</>}
       >
-        <div className="basic-section">
-          <div className="reserve-row">
-            <div>
-              <div className="reserver">
-                {data?.order.reserveName} {data?.order.reservePhone}
+        <Tabs
+          activeKey={activeTabKey}
+          onChange={(value) => {
+            setActiveTabKey(value);
+          }}
+        >
+          <Tabs.TabPane tab="订单详情" key="orderDetail">
+            <div className="basic-section">
+              <div className="reserve-row">
+                <div>
+                  <div className="reserver">
+                    {data?.order.reserveName} {data?.order.reservePhone}
+                  </div>
+                  <div className="check-in">
+                    <span>
+                      {data?.order.status && OrderStateText[data?.order.status]}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <span className="channel-tag">
+                    <i
+                      style={{
+                        background:
+                          data?.order.channelType &&
+                          mapChannelText(data?.order.channelType, 'color'),
+                      }}
+                    ></i>
+                    {data?.order.channelType &&
+                      mapChannelText(data?.order.channelType, 'name')}
+                  </span>
+                </div>
               </div>
-              <div className="check-in">
-                <span>
-                  {data?.order.status && OrderStateText[data?.order.status]}
-                </span>
+              <div className="fee-row">
+                <div>
+                  已付金额
+                  <br />
+                  <span className="fee">A$ {data?.order.paidAmount}</span>
+                </div>
+                <div>
+                  还需付款
+                  <br />
+                  <span className="fee">A$ {data?.order.remainAmount}</span>
+                </div>
+                <div>
+                  订单金额
+                  <br />
+                  <span className="fee">A$ {data?.order.totalAmount}</span>
+                </div>
               </div>
             </div>
-            <div>
-              <span className="channel-tag">
-                <i
-                  style={{
-                    background:
-                      data?.order.channelType &&
-                      mapChannelText(data?.order.channelType, 'color'),
-                  }}
-                ></i>
-                {data?.order.channelType &&
-                  mapChannelText(data?.order.channelType, 'name')}
-              </span>
-            </div>
-          </div>
-          <div className="fee-row">
-            <div>
-              已付金额
-              <br />
-              <span className="fee">A$ {data?.order.paidAmount}</span>
-            </div>
-            <div>
-              还需付款
-              <br />
-              <span className="fee">A$ {data?.order.remainAmount}</span>
-            </div>
-            <div>
-              订单金额
-              <br />
-              <span className="fee">A$ {data?.order.totalAmount}</span>
-            </div>
-          </div>
-        </div>
 
-        <ProCard
-          title="房间信息"
-          extra={`共${data?.orderRoomList?.length}间房`}
-        >
-          <Table
-            bordered
-            row-key="roomId"
-            scroll={{ x: 'scroll' }}
-            size="small"
-            columns={roomColumns}
-            dataSource={data?.orderRoomList || []}
-            pagination={false}
-          />
-        </ProCard>
-        <ProCard
-          title={
-            <>
-              消费信息：
-              <span
-                style={{ color: 'red', fontWeight: 'normal', fontSize: '12px' }}
-              >
-                A${' '}
-                {consumeList?.reduce((acc: number, cur: ORDER.OrderConsume) => {
-                  return acc + cur.price * cur.count;
-                }, 0)}
-              </span>
-            </>
-          }
-          extra={
-            <>
-              <Button
-                type="link"
-                onClick={() => {
-                  openConsumeDrawer(orderId as number);
-                }}
-              >
-                + 添加消费
-              </Button>
-            </>
-          }
-        >
-          <Table
-            bordered
-            size="small"
-            row-key="roomId"
-            columns={consumeColumns}
-            dataSource={consumeList || []}
-            pagination={false}
-          />
-        </ProCard>
-        <ProCard
-          title={
-            <>
-              收退款信息：
-              <Space>
-                <span
-                  style={{
-                    color: 'green',
-                    fontWeight: 'normal',
-                    fontSize: '12px',
-                  }}
-                >
-                  收款：A$
-                  {payOrRefundList
-                    ?.filter(
-                      (c: ORDER.OrderPayOrRefund) =>
-                        c.type === 1 || c.type === 2,
-                    )
-                    .reduce((acc: number, cur: ORDER.OrderPayOrRefund) => {
-                      return acc + cur.amount;
-                    }, 0)}
-                </span>
+            <ProCard
+              title="房间信息"
+              extra={`共${data?.orderRoomList?.length}间房`}
+            >
+              <Table
+                bordered
+                row-key="roomId"
+                scroll={{ x: 'scroll' }}
+                size="small"
+                columns={roomColumns}
+                dataSource={data?.orderRoomList || []}
+                pagination={false}
+              />
+            </ProCard>
+            <ProCard
+              title={
+                <>
+                  消费信息：
+                  <span
+                    style={{
+                      color: 'red',
+                      fontWeight: 'normal',
+                      fontSize: '12px',
+                    }}
+                  >
+                    A${' '}
+                    {consumeList?.reduce(
+                      (acc: number, cur: ORDER.OrderConsume) => {
+                        return acc + cur.price * cur.count;
+                      },
+                      0,
+                    )}
+                  </span>
+                </>
+              }
+              extra={
+                <>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      openConsumeDrawer(orderId as number);
+                    }}
+                  >
+                    + 添加消费
+                  </Button>
+                </>
+              }
+            >
+              <Table
+                bordered
+                size="small"
+                row-key="roomId"
+                columns={consumeColumns}
+                dataSource={consumeList || []}
+                pagination={false}
+              />
+            </ProCard>
+            <ProCard
+              title={
+                <>
+                  收退款信息：
+                  <Space>
+                    <span
+                      style={{
+                        color: 'green',
+                        fontWeight: 'normal',
+                        fontSize: '12px',
+                      }}
+                    >
+                      收款：A$
+                      {payOrRefundList
+                        ?.filter(
+                          (c: ORDER.OrderPayOrRefund) =>
+                            c.type === 1 || c.type === 2,
+                        )
+                        .reduce((acc: number, cur: ORDER.OrderPayOrRefund) => {
+                          return acc + cur.amount;
+                        }, 0)}
+                    </span>
 
-                <span
-                  style={{
-                    color: 'red',
-                    fontWeight: 'normal',
-                    fontSize: '12px',
-                  }}
-                >
-                  退款：A$
-                  {payOrRefundList
-                    ?.filter(
-                      (c: ORDER.OrderPayOrRefund) =>
-                        c.type === 3 || c.type === 4,
-                    )
-                    .reduce((acc: number, cur: ORDER.OrderPayOrRefund) => {
-                      return acc + cur.amount;
-                    }, 0)}
-                </span>
-              </Space>
-            </>
-          }
-          extra={
-            <>
-              <Button
-                type="link"
-                onClick={() => {
-                  openPayOrRefundDrawer(orderId as number);
-                }}
-              >
-                + 添加收退款
-              </Button>
-            </>
-          }
-        >
-          <Table
-            bordered
-            size="small"
-            row-key="roomId"
-            columns={payOrRefundColumns}
-            dataSource={payOrRefundList || []}
-            pagination={false}
-          />
-        </ProCard>
-        <ProCard
-          title="提醒信息"
-          extra={
-            <>
-              <Button
-                type="link"
-                onClick={() => {
-                  openNoticeDrawer(orderId as number);
-                }}
-              >
-                + 添加提醒
-              </Button>
-            </>
-          }
-        >
-          <Table
-            bordered
-            row-key="roomId"
-            size="small"
-            columns={noticeColumns}
-            dataSource={noticeList || []}
-            pagination={false}
-            showHeader={false}
-          />
-        </ProCard>
-        <ProCard>
-          <div className="custom-form-item">
-            <label>备注：</label>
-            {data?.order.remark}
-          </div>
-          <div className="custom-form-item">
-            <label>订单编号：</label>
-            {data?.order.channelOrderNo}
-          </div>
-        </ProCard>
+                    <span
+                      style={{
+                        color: 'red',
+                        fontWeight: 'normal',
+                        fontSize: '12px',
+                      }}
+                    >
+                      退款：A$
+                      {payOrRefundList
+                        ?.filter(
+                          (c: ORDER.OrderPayOrRefund) =>
+                            c.type === 3 || c.type === 4,
+                        )
+                        .reduce((acc: number, cur: ORDER.OrderPayOrRefund) => {
+                          return acc + cur.amount;
+                        }, 0)}
+                    </span>
+                  </Space>
+                </>
+              }
+              extra={
+                <>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      openPayOrRefundDrawer(orderId as number);
+                    }}
+                  >
+                    + 添加收退款
+                  </Button>
+                </>
+              }
+            >
+              <Table
+                bordered
+                size="small"
+                row-key="roomId"
+                columns={payOrRefundColumns}
+                dataSource={payOrRefundList || []}
+                pagination={false}
+              />
+            </ProCard>
+            <ProCard
+              title="提醒信息"
+              extra={
+                <>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      openNoticeDrawer(orderId as number);
+                    }}
+                  >
+                    + 添加提醒
+                  </Button>
+                </>
+              }
+            >
+              <Table
+                bordered
+                row-key="roomId"
+                size="small"
+                columns={noticeColumns}
+                dataSource={noticeList || []}
+                pagination={false}
+                showHeader={false}
+              />
+            </ProCard>
+            <ProCard>
+              <div className="custom-form-item">
+                <label>备注：</label>
+                {data?.order.remark}
+              </div>
+              <div className="custom-form-item">
+                <label>订单编号：</label>
+                {data?.order.channelOrderNo}
+              </div>
+            </ProCard>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="操作日志" key="operationLog">
+            <OperatinoLog orderId={orderId as number} />
+          </Tabs.TabPane>
+        </Tabs>
       </Drawer>
 
       {NoticeDrawer}

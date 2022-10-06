@@ -114,4 +114,10 @@ declare namespace ORDER {
     nickName: string;
     phoneNo: string;
   }
+  interface OrderOperationLog {
+    operationType: number;
+    createTime: number;
+    creator: string;
+    remark: string;
+  }
 }

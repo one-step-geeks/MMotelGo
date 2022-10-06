@@ -260,3 +260,30 @@ export async function queryOccupants(params: Record<string, any>) {
     },
   );
 }
+
+/** 查询订单操作日志 */
+export async function queryOperationLog(orderId: number) {
+  // return Promise.resolve({
+  //   data: [{
+  //     operationType: 1,
+  //     createTime : 0,
+  //     creator: 'yefei',
+  //     remark: '新增消费：早餐*1 A$ 10 2021-12-12',
+  //   }, {
+  //     operationType: 2,
+  //     createTime : 0,
+  //     creator: 'yefei',
+  //     remark: 'remarkcontent is hrere',
+  //   }],
+  //   success: true,
+  // } as API.Result_List_ALL_<ORDER.OrderOperationLog>)
+  return request<API.Result_List_ALL_<ORDER.OrderOperationLog>>(
+    '/motel/orderOperationLog/list',
+    {
+      method: 'POST',
+      data: {
+        orderId,
+      },
+    },
+  );
+}
