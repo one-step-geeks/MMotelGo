@@ -72,7 +72,7 @@ export default (props: Props) => {
       autoFocusFirstInput
       visible={props.visible}
       drawerProps={{
-        width: 540,
+        width: 640,
         closeIcon: (
           <>
             <Space>

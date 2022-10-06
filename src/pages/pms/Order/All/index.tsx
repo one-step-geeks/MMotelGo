@@ -17,7 +17,8 @@ import {
   OrderStateOptions,
   OrderPayOptions,
 } from '@/services/OrderController';
-import OrderDetailDrawer from '../components/OrderDetailDrawer';
+import { useOrderDetailDrawer } from '../components/OrderDetailDrawer';
+
 import OrderFormDrawer from '../components/OrderFormDrawer';
 import OrderOperateDrawer from '../components/OrderOperateDrawer';
 
@@ -67,11 +68,19 @@ const OrderContainer: React.FC = (props) => {
     [],
   );
   const [orderId, setOrderId] = useState<number | undefined>();
-  const [detailOpen, setDetailOpen] = useState(false);
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const [operateDrawerVisible, setOperateDrawerVisible] = useState(false);
   const [operateData, setOperateData] = useState<OperateData>();
-  const [orderStatus, setOrderStatus] = useState<OrderState>();
+
+  const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
+    () => {
+      setEditDrawerVisible(true);
+    },
+    (data: any) => {
+      setOperateData(data);
+      setOperateDrawerVisible(true);
+    },
+  );
 
   useEffect(() => {
     ref.current?.submit();
@@ -105,7 +114,7 @@ const OrderContainer: React.FC = (props) => {
             onClick={() => {
               console.log('record.orderId');
               setOrderId(record.orderId);
-              setDetailOpen(true);
+              openOrderDetailDrawer(record.orderId);
             }}
           >
             {record.channelOrderNo || '无'}
@@ -403,7 +412,6 @@ const OrderContainer: React.FC = (props) => {
             type="primary"
             onClick={() => {
               setEditDrawerVisible(true);
-              setOrderStatus(OrderState.IS_ORDERED);
             }}
           >
             模拟预定
@@ -412,7 +420,6 @@ const OrderContainer: React.FC = (props) => {
             type="primary"
             onClick={() => {
               setEditDrawerVisible(true);
-              setOrderStatus(OrderState.IS_CHECKED);
             }}
           >
             模拟入住
@@ -465,27 +472,11 @@ const OrderContainer: React.FC = (props) => {
         }}
       />
 
-      <OrderDetailDrawer
-        id={orderId!}
-        visible={detailOpen}
-        onVisibleChange={(value) => {
-          setOrderId(undefined);
-          setDetailOpen(value);
-        }}
-        gotoEdit={() => {
-          setEditDrawerVisible(true);
-        }}
-        gotoOperate={(data: OperateData) => {
-          setOperateData(data);
-          setOperateDrawerVisible(true);
-        }}
-      />
+      {OrderDetailDrawer}
+
       <OrderOperateDrawer
         visible={operateDrawerVisible}
         onVisibleChange={(value) => setOperateDrawerVisible(value)}
-        // onSuccess={() => {
-        //   setOperateDrawerVisible(false);
-        // }}
         operateData={operateData}
       />
 

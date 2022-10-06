@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { message, Space, Form } from 'antd';
-import OrderDetailDrawer from '../../../Order/components/OrderDetailDrawer';
+import React from 'react';
+import { Form } from 'antd';
+import { useOrderDetailDrawer } from '../../../Order/components/OrderDetailDrawer';
 import OrderBox from './OrderBox';
-
-const FormItem = Form.Item;
 
 interface Props {
   record?: ROOM_STATE.StateTableData;
@@ -12,8 +10,14 @@ interface Props {
 
 const OrderDrawer: React.FC<Props> = (props) => {
   const { order, record } = props;
-
-  const [visible, setVisible] = useState(false);
+  const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
+    () => {
+      // TODO
+    },
+    () => {
+      // TODO
+    },
+  );
 
   return (
     <>
@@ -21,18 +25,10 @@ const OrderDrawer: React.FC<Props> = (props) => {
         order={order}
         record={record}
         onOrder={() => {
-          setVisible(true);
+          openOrderDetailDrawer(order?.orderId!);
         }}
       />
-      <OrderDetailDrawer
-        id={order?.orderId!}
-        visible={visible}
-        onVisibleChange={(value) => {
-          setVisible(value);
-        }}
-        gotoEdit={() => {}}
-        gotoOperate={() => {}}
-      />
+      {OrderDetailDrawer}
     </>
   );
 };

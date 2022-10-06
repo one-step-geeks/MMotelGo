@@ -27,35 +27,45 @@ interface Props {
   openNotice?: () => void;
 }
 
-// const App: React.FC =
-export default (props: Props) => {
+export function useOrderDetailDrawer(
+  gotoEdit?: (data: ORDER.OrderBase) => void,
+  gotoOperate?: (data: any) => void,
+) {
+  const [orderId, setOrderId] = useState<number | undefined>();
+  const [visible, setVisible] = useState(false);
+
+  const openOrderDetailDrawer = (orderId: number) => {
+    setOrderId(orderId);
+    setVisible(true);
+  };
+
   const { data: noticeList, run: queryNoticeList } = useRequest(
     () => {
-      if (props.id) {
-        return services.OrderController.queryNoticeList(props.id);
+      if (orderId) {
+        return services.OrderController.queryNoticeList(orderId);
       }
       return Promise.resolve([]);
     },
-    { refreshDeps: [props.id] },
+    { refreshDeps: [orderId] },
   );
   const { data: consumeList, run: queryConsumeList } = useRequest(
     () => {
-      if (props.id) {
-        return services.OrderController.queryConsumeList(props.id);
+      if (orderId) {
+        return services.OrderController.queryConsumeList(orderId);
       }
       return Promise.resolve([]);
     },
-    { refreshDeps: [props.id] },
+    { refreshDeps: [orderId] },
   );
 
   const { data: payOrRefundList, run: queryPayOrRefundList } = useRequest(
     () => {
-      if (props.id) {
-        return services.OrderController.queryPayOrRefundList(props.id);
+      if (orderId) {
+        return services.OrderController.queryPayOrRefundList(orderId);
       }
       return Promise.resolve([]);
     },
-    { refreshDeps: [props.id] },
+    { refreshDeps: [orderId] },
   );
   const { NoticeDrawer, openNoticeDrawer } = useNoticeDrawer(() => {
     queryNoticeList();
@@ -78,21 +88,23 @@ export default (props: Props) => {
   const { data: channelList } = useRequest(() => {
     return services.ChannelController.queryChannels();
   });
+
   const { data, run: executeQuery } = useRequest(
     () => {
-      if (props.id) {
-        return services.OrderController.queryDetail(props.id);
+      if (orderId) {
+        return services.OrderController.queryDetail(orderId);
       }
       return Promise.resolve();
     },
     {
-      refreshDeps: [props.id],
+      refreshDeps: [orderId],
     },
   );
 
   if (data && data.orderRoomList) {
     data.orderRoomList.forEach((d) => (d.key = d.roomId));
   }
+
   const noticeColumns: ColumnsType<ORDER.OrderNotice> = [
     {
       title: '提醒时间',
@@ -117,7 +129,7 @@ export default (props: Props) => {
         <Space size="middle">
           <EditOutlined
             onClick={() => {
-              openNoticeDrawer(props.id, record);
+              openNoticeDrawer(orderId as number, record);
             }}
           />
           <DeleteOutlined
@@ -351,11 +363,11 @@ export default (props: Props) => {
   const orderStatus = data?.order.status;
 
   const modifyOrder = () => {
-    props.onVisibleChange(false);
-    props.gotoEdit(data?.order as ORDER.OrderBase);
+    setVisible(false);
+    gotoEdit?.(data?.order as ORDER.OrderBase);
   };
   const operateOrder = (operationType: OperationType) => {
-    props.gotoOperate({ operationType, ...data });
+    gotoOperate?.({ operationType, ...data });
   };
 
   if (
@@ -431,7 +443,7 @@ export default (props: Props) => {
     );
   }
 
-  return (
+  const OrderDetailDrawer = (
     <>
       <Drawer
         width={640}
@@ -441,9 +453,9 @@ export default (props: Props) => {
         placement="right"
         onClose={() => {
           console.log('onClose');
-          props.onVisibleChange(false);
+          setVisible(false);
         }}
-        visible={props.visible}
+        visible={visible}
         footerStyle={{
           display: 'flex',
         }}
@@ -527,7 +539,7 @@ export default (props: Props) => {
               <Button
                 type="link"
                 onClick={() => {
-                  openConsumeDrawer(props.id);
+                  openConsumeDrawer(orderId as number);
                 }}
               >
                 + 添加消费
@@ -592,7 +604,7 @@ export default (props: Props) => {
               <Button
                 type="link"
                 onClick={() => {
-                  openPayOrRefundDrawer(props.id);
+                  openPayOrRefundDrawer(orderId as number);
                 }}
               >
                 + 添加收退款
@@ -616,7 +628,7 @@ export default (props: Props) => {
               <Button
                 type="link"
                 onClick={() => {
-                  openNoticeDrawer(props.id);
+                  openNoticeDrawer(orderId as number);
                 }}
               >
                 + 添加提醒
@@ -652,4 +664,8 @@ export default (props: Props) => {
       {OccupantDrawer}
     </>
   );
-};
+  return {
+    OrderDetailDrawer,
+    openOrderDetailDrawer,
+  };
+}
