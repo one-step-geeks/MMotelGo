@@ -36,6 +36,13 @@ const SingleDay: React.FC = () => {
     });
   });
 
+  // 获取房态列表
+  const { data: statusData, loading: statusLoading } = useRequest(async () => {
+    return services.RoomStateController.getRoomStatusList({
+      roomTypeIdList: [],
+    });
+  });
+
   const { data, loading } = useRequest(
     () => {
       return services.RoomStateController.getSingleDayRoomState({
@@ -54,7 +61,7 @@ const SingleDay: React.FC = () => {
     <div className="single-day-container">
       <Row gutter={24}>
         <Col span={18}>
-          <Skeleton loading={enumLoading || loading}>
+          <Skeleton loading={statusLoading || enumLoading || loading}>
             {data?.list?.map?.((item) => {
               return (
                 <div className="single-day-card" key={item.roomTypeId}>
@@ -68,9 +75,12 @@ const SingleDay: React.FC = () => {
                     {item?.roomList?.map((room) => {
                       return (
                         <SingleDayBox
-                          key={room.roomCode}
-                          code={room.roomCode}
-                          isDirty={room.status === 1}
+                          key={room.roomId}
+                          room={room}
+                          roomList={statusData?.roomTypeList?.reduce(
+                            (all, rt) => [...all, ...rt.roomList!],
+                            [] as ROOM_STATE.Room[],
+                          )}
                         />
                       );
                     })}
