@@ -1,36 +1,18 @@
 .ant-drawer-body {
   padding-top: 8px;
-  // .ant-pro-card {
-  .overview-header {
+  .room-sticky {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
-  }
-  .room-list {
-    width: 100%;
-    margin-top: 24px;
-    .room-card {
-      border: 1px solid #053dc8;
-      padding: 12px 16px;
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 24px;
+    span {
+      flex: 1;
+      background: #eee;
+      padding: 4px 8px;
+    }
+    span:not(:last-child) {
+      border-right: 1px solid #ccc;
     }
   }
-  .fee-overview {
-    margin-top: 24px;
-    width: 100%;
-    border-bottom: 1px dotted rgba(0, 0, 0, 0.06);
-    div {
-      display: flex;
-      justify-content: space-between;
-      .emphisis {
-        color: red;
-        font-weight: bold;
-      }
-    }
-  }
-  textarea {
-    margin-top: 24px;
+  .ant-btn-link {
+    padding-left: 0;
   }
 }

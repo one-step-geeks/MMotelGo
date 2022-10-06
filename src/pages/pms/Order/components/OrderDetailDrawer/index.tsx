@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Drawer, Table, message, Space, Tag } from 'antd';
 import services from '@/services';
 import { useRequest } from 'umi';
@@ -17,8 +17,6 @@ import { useNoticeDrawer } from '../NoticeDrawer';
 import { useConsumeDrawer } from '../ConsumeDrawer';
 import { useOccupantDrawer } from '../PersonDrawer';
 import { usePayOrRefundDrawer, payOrRefundOptions } from '../PayDrawer';
-
-// ConsumeDrawer
 
 interface Props {
   id: number;
@@ -101,6 +99,7 @@ export default (props: Props) => {
       dataIndex: 'remindTime',
       align: 'center',
       key: 'remindTime',
+      width: 185,
       render(value, record, index) {
         return moment(value).format('YYYY-MM-DD hh:mm');
       },
@@ -122,6 +121,7 @@ export default (props: Props) => {
             }}
           />
           <DeleteOutlined
+            type="link"
             onClick={async () => {
               await services.OrderController.deleteNotice(record.id);
               queryNoticeList();
@@ -176,18 +176,16 @@ export default (props: Props) => {
       align: 'center',
       render: (_, record) => (
         <Space size="middle">
-          {/* <EditOutlined
-            onClick={() => {
-              openConsumeDrawer(props.id, record);
-            }}
-          /> */}
-          <DeleteOutlined
+          <Button
+            type="link"
             onClick={async () => {
               await services.OrderController.deleteConsume(record.id);
               queryConsumeList();
               message.success('删除成功');
             }}
-          />
+          >
+            删除
+          </Button>
         </Space>
       ),
     },
@@ -242,18 +240,16 @@ export default (props: Props) => {
       align: 'center',
       render: (_, record) => (
         <Space size="middle">
-          {/* <EditOutlined
-            onClick={() => {
-              openPayOrRefundDrawer(props.id);
-            }}
-          /> */}
-          <DeleteOutlined
+          <Button
+            type="link"
             onClick={async () => {
               await services.OrderController.deletePayOrRefund(record.id);
-              queryPayOrRefundList(props.id);
+              queryPayOrRefundList();
               message.success('删除成功');
             }}
-          />
+          >
+            删除
+          </Button>
         </Space>
       ),
     },
@@ -578,7 +574,7 @@ export default (props: Props) => {
                     fontSize: '12px',
                   }}
                 >
-                  收款：A$
+                  退款：A$
                   {payOrRefundList
                     ?.filter(
                       (c: ORDER.OrderPayOrRefund) =>

@@ -55,8 +55,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
         type: 1,
       }}
       drawerProps={{
-        width: 540,
-
+        width: 640,
         closeIcon: (
           <>
             <Space>
@@ -88,7 +87,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
       }}
     >
       <Tabs
-        defaultActiveKey={payType}
+        activeKey={payType}
         onChange={(value) => {
           setPayType(value);
           form.setFieldsValue({
@@ -150,6 +149,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
   const openPayOrRefundDrawer = (orderId: number) => {
     setOrderId(orderId);
     setVisible(true);
+    setPayType('pay');
   };
 
   return { PayOrRefundDrawer, openPayOrRefundDrawer };

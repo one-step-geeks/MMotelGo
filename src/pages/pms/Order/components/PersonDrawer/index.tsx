@@ -6,9 +6,9 @@ import {
 import services from '@/services';
 import moment from 'moment';
 import { DrawerForm, ProFormText } from '@ant-design/pro-components';
-import { message, Input, Space, Form, Checkbox, Button } from 'antd';
+import { message, Input, Space, Form, Button } from 'antd';
 import { useEffect, useState } from 'react';
-import { useRequest } from 'umi';
+import './style.less';
 
 interface FormOrder {}
 
@@ -31,7 +31,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
       }).then((res) => {
         const { data } = res;
         form.setFieldsValue({
-          personList: data.list,
+          personList: data?.list || [],
         });
       });
     }
@@ -49,7 +49,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
         md: 4,
       }}
       drawerProps={{
-        width: 540,
+        width: 640,
         closeIcon: (
           <>
             <Space>
@@ -81,14 +81,14 @@ export function useOccupantDrawer(onSuccess: () => void) {
         } catch (err) {}
       }}
     >
-      <Space>
+      <div className="room-sticky">
         <span>{moment(room?.startDate).format('MM-DD')}入住</span>
         <span>
           {room?.roomTypeName}/{room?.roomCode}
         </span>
         <span>{room?.checkInDays}晚</span>
         <span>A$ {room?.totalAmount}</span>
-      </Space>
+      </div>
 
       <Form.List name={'personList'}>
         {(fields, { add, remove: remove }, { errors }) => (

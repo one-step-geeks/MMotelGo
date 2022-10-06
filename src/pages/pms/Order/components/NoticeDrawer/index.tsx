@@ -31,7 +31,7 @@ export function useNoticeDrawer(onSuccess: () => void) {
       autoFocusFirstInput
       visible={visible}
       drawerProps={{
-        width: 540,
+        width: 640,
         closeIcon: (
           <>
             <Space>

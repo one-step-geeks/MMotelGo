@@ -38,7 +38,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
         md: 4,
       }}
       drawerProps={{
-        width: 540,
+        width: 640,
         closeIcon: (
           <>
             <Space>

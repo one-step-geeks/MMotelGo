@@ -142,7 +142,7 @@ export default (props: Props) => {
       visible={props.visible}
       preserve={false}
       drawerProps={{
-        width: 540,
+        width: 640,
         destroyOnClose: true,
         maskClosable: false,
         onClose: (value) => {
@@ -153,6 +153,7 @@ export default (props: Props) => {
       submitTimeout={2000}
       onFinish={async (values) => {
         const { orderRoomList, ...rest } = values;
+        console.log('orderRoomList', orderRoomList);
         const submitData = {
           order: {
             id: props?.id,
