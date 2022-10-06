@@ -25,11 +25,14 @@ export default [
     // mainMenuId: 1,
   },
   {
+    path: 'pms/order',
+    exact: true,
+    redirect: 'pms/order/all',
+  },
+  {
     name: '订单',
     path: 'pms/order',
     component: 'pms/Order',
-    // access: 'canSeeRouter',
-    // mainMenuId: 3,
     routes: [
       { path: '/pms/order/all', component: 'pms/Order/All' },
       { path: '/pms/order/unarrange', component: 'pms/Order/All' },
