@@ -49,10 +49,33 @@
   background-color: #fff;
   padding: 6px;
   box-sizing: border-box;
+  border-radius: 2px;
+  user-select: none;
   cursor: pointer;
 
   &::before {
     content: attr(data-text);
+  }
+
+  &:hover {
+    border: 1px solid #053dc8;
+  }
+
+  &.selected {
+    border: 1px solid #053dc8;
+    & .icon {
+      display: block;
+      color: #053dc8;
+      font-size: 24px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  & .icon {
+    display: none;
   }
 
   &.dirty {
