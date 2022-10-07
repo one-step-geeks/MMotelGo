@@ -7,8 +7,6 @@ import {
   ProFormCheckbox,
 } from '@ant-design/pro-components';
 import { message, Input, Space, Form, Checkbox, Button } from 'antd';
-
-import './style.less';
 import { OperateData, OperationTypeText } from '@/services/OrderController';
 import { useEffect, useState } from 'react';
 

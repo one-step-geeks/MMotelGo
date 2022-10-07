@@ -28,6 +28,7 @@ export function useNoticeDrawer(onSuccess: () => void) {
       form={form}
       layout="horizontal"
       grid
+      className="order-notice-drawer"
       autoFocusFirstInput
       visible={visible}
       drawerProps={{
@@ -84,6 +85,10 @@ export function useNoticeDrawer(onSuccess: () => void) {
         name="remark"
         label="提醒内容"
         placeholder="请输入提醒内容"
+        fieldProps={{
+          maxLength: 200,
+          showCount: true,
+        }}
       />
     </DrawerForm>
   );

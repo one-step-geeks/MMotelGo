@@ -408,22 +408,14 @@ const OrderContainer: React.FC = (props) => {
             allowClear
           />
 
-          <Button
+          {/* <Button
             type="primary"
             onClick={() => {
               setEditDrawerVisible(true);
             }}
           >
             模拟预定
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              setEditDrawerVisible(true);
-            }}
-          >
-            模拟入住
-          </Button>
+          </Button> */}
           <Button type="primary" onClick={handleOnExport}>
             导出报表
           </Button>

@@ -41,6 +41,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
     <DrawerForm
       title={'新增入住人'}
       form={form}
+      className="order-person-drawer"
       layout="horizontal"
       grid
       autoFocusFirstInput
@@ -118,7 +119,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
               );
             })}
 
-            <Form.Item>
+            <Form.Item className="add-row">
               <Button
                 type="link"
                 onClick={() => {
