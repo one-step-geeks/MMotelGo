@@ -20,17 +20,25 @@ export default (props: Props) => {
   const [editing, setEditing] = useState(props.value.id ? false : true);
 
   const handleOnSave = async () => {
-    await services.FinanceController.addPaymentType(name);
-    message.success('新增成功');
-    onChange();
-    setEditing(false);
+    if (name && name.trim()) {
+      await services.FinanceController.addPaymentType(name);
+      message.success('新增成功');
+      onChange();
+      setEditing(false);
+    } else {
+      message.warn('名称不能为空');
+    }
   };
 
   const handleOnUpdate = async () => {
-    await services.FinanceController.updatePaymentType(value.id!, name);
-    message.success('修改成功');
-    onChange();
-    setEditing(false);
+    if (name && name.trim()) {
+      await services.FinanceController.updatePaymentType(value.id!, name);
+      message.success('修改成功');
+      onChange();
+      setEditing(false);
+    } else {
+      message.warn('名称不能为空');
+    }
   };
 
   const handleOnCancel = () => {

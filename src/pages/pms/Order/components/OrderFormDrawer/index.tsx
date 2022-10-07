@@ -446,9 +446,15 @@ export default (props: Props) => {
           )}
         </Form.List>
       </ProCard>
-
       <ProCard title={false}>
-        <ProFormTextArea name="remark" placeholder="备注信息" />
+        <ProFormTextArea
+          fieldProps={{
+            maxLength: 2048,
+            showCount: true,
+          }}
+          name="remark"
+          placeholder="备注信息"
+        />
       </ProCard>
     </DrawerForm>
   );
