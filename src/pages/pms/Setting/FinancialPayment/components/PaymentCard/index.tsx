@@ -59,6 +59,7 @@ export default (props: Props) => {
         <div className="content">
           <Input
             className="text-input"
+            maxLength={10}
             defaultValue={value.name}
             onChange={(e) => setName(e.target.value)}
           />
