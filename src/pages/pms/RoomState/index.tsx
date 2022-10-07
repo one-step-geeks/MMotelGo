@@ -18,17 +18,17 @@ import services from '@/services';
 import moment from 'moment';
 import './style.less';
 
-function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
+export function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
   const result: ROOM_STATE.CloseRoomInfo[] = [];
   for (let i = 0; i < list.length; i++) {
     const state = list[i];
     const finded = result.find((item) => item.roomId === state.roomId);
     if (finded) {
-      finded.dateList.push(state.date);
+      finded.dateList.push(state.date!);
     } else {
       result.push({
         roomId: state.roomId!,
-        dateList: [state.date],
+        dateList: [state.date!],
       });
     }
   }
@@ -44,11 +44,11 @@ function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
     const state = list[i];
     const finded = result.find((item) => item.roomId === state.roomId);
     if (finded) {
-      finded.dateList = [...finded.dateList, state.date].sort();
+      finded.dateList = [...finded.dateList, state.date!].sort();
       finded.priceList = [...finded.priceList, state.price!];
     } else {
       result.push({
-        dateList: [state.date],
+        dateList: [state.date!],
         roomId: state.roomId as number,
         roomTypeName: state.roomTypeName,
         roomCode: state.roomCode,

@@ -153,6 +153,7 @@ export default {
   多收款: 'Overpayment',
   钟点房: 'Hour Room',
   包栋: 'Private House',
+  预订: 'Order',
 
   收入项: 'Income Item',
   支出项: 'Expenditure Item',

@@ -1,22 +1,32 @@
 // import { Button } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { CheckOutlined } from '@ant-design/icons';
+import {
+  MinusCircleFilled,
+  CheckOutlined,
+  ToolFilled,
+  CarryOutFilled,
+} from '@ant-design/icons';
 import { Popover, Space, Typography } from 'antd';
 import { selectService } from './service';
 import { useModel, useIntl } from 'umi';
 import services from '@/services';
+import moment from 'moment';
 import './room-code.less';
 
 const { Text } = Typography;
 
 interface Props {
-  room: ROOM_STATE.StateTableData;
+  room: ROOM_STATE.SingleDayRoom & {
+    roomTypeId: number;
+    roomTypeName: string;
+  };
   roomList?: ROOM_STATE.Room[];
   order?: ORDER.OrderData;
+  date?: string;
 }
 
 const RoomCodeBox: React.FC<Props> = (props) => {
-  const { room, roomList, order } = props;
+  const { room, roomList, order, date } = props;
   const intl = useIntl();
   const [selected, setSelected] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -52,9 +62,11 @@ const RoomCodeBox: React.FC<Props> = (props) => {
     setDirty(isDirty);
   }, [roomList]);
 
+  const isRoomClosed = [9, 10, 11].includes(room.status);
+
   const className = `room-single-box${dirty ? ' dirty' : ''}${
     selected ? ' selected' : ''
-  }${order ? ' ordered' : ''}`;
+  }${order ? ' ordered' : ''}${isRoomClosed ? ' closed' : ''}`;
 
   async function changeRoomStatus() {
     setDirty(!dirty);
@@ -69,6 +81,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
     <div className={className} onClick={() => {}}>
       <div className="room-code">{room.roomCode}</div>
       <div className="reserve-name">{order.reserveName}</div>
+      <div className="orgin-source">{order.channelTypeName || '自来客'}</div>
     </div>
   ) : (
     <Popover
@@ -102,22 +115,48 @@ const RoomCodeBox: React.FC<Props> = (props) => {
       }
       overlayClassName="room-box-action-popover"
       placement="rightTop"
-      getPopupContainer={(p) => p}
       visible={visible}
     >
       <div
         className={className}
         onClick={() => {
           const info = {
+            date,
             roomId: room.roomId,
+            roomCode: room.roomCode,
+            roomTypeId: room.roomTypeId,
+            roomTypeName: room.roomTypeName,
+            // price,
           };
-          setVisible(true);
-          setSelected(!selected);
-          selectService.sendSelectedInfo(info);
+          if (!selected) {
+            setVisible(true);
+            setSelected(true);
+            setSelectedRooms([...selectedRooms, info]);
+            selectService.sendSelectedInfo(info);
+          } else {
+            const filteredRooms = selectedRooms.filter(
+              (item) =>
+                !(
+                  item.roomId === room.roomId &&
+                  moment(item.date).isSame(date, 'day')
+                ),
+            );
+            setSelectedRooms(filteredRooms);
+            if (!filteredRooms?.length) {
+              selectService.sendCancelInfo();
+            }
+            setSelected(false);
+          }
         }}
       >
         <div className="room-code">{room.roomCode}</div>
         <CheckOutlined className="icon" />
+
+        {room.status === 9 ? <ToolFilled className="close-icon" /> : null}
+        {room.status === 10 ? (
+          <MinusCircleFilled className="close-icon" />
+        ) : null}
+        {room.status === 11 ? <CarryOutFilled className="close-icon" /> : null}
       </div>
     </Popover>
   );

@@ -71,10 +71,19 @@
   }
 
   &.ordered {
+    display: flex;
+    flex-direction: column;
     background-color: rgb(255, 212, 179);
 
     & .reserve-name {
       font-size: 12px;
+    }
+
+    & .orgin-source {
+      display: flex;
+      align-items: flex-end;
+      font-size: 12px;
+      flex: 1;
     }
   }
 
@@ -94,6 +103,18 @@
       background-size: 100% 100%;
       right: 6px;
       top: 6px;
+    }
+  }
+
+  &.closed {
+    background-color: #ccc;
+
+    & .close-icon {
+      color: #999;
+      font-size: 16px;
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
     }
   }
 }
