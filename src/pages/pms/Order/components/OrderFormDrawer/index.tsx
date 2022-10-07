@@ -155,33 +155,39 @@ export default (props: Props) => {
       onFinish={async (values) => {
         const { orderRoomList, ...rest } = values;
         console.log('orderRoomList', orderRoomList);
-        const submitData = {
-          order: {
-            id: props?.id,
-            status: OrderState.IS_ORDERED,
-            ...rest,
-          },
-          orderRoomList: orderRoomList.map((orderRoom) => {
-            // 对于新增的房间，只有roomDesc，需要获取到roomId用于提交
-            let { roomDesc, roomId, startDate, ...rest } = orderRoom;
-            return {
-              roomId,
-              startDate: moment(startDate).format('YYYY-MM-DD'),
-              // // 房间状态可能和订单状态有差异，新增时候保持一致
+        if (rest.reserveName?.trim() || rest.reservePhone?.trim()) {
+          const submitData = {
+            order: {
+              id: props?.id,
               status: OrderState.IS_ORDERED,
-              checkInPersonCount: 0,
               ...rest,
-            };
-          }),
-        };
-        console.log('submitData', submitData);
-        try {
-          await services.OrderController[isEdit ? 'update' : 'add'](submitData);
-          message.success(isEdit ? '保存成功' : '新建成功');
-          form.resetFields();
-          props.onSubmited();
-          return true;
-        } catch (err) {}
+            },
+            orderRoomList: orderRoomList.map((orderRoom) => {
+              // 对于新增的房间，只有roomDesc，需要获取到roomId用于提交
+              let { roomDesc, roomId, startDate, ...rest } = orderRoom;
+              return {
+                roomId,
+                startDate: moment(startDate).format('YYYY-MM-DD'),
+                // // 房间状态可能和订单状态有差异，新增时候保持一致
+                status: OrderState.IS_ORDERED,
+                checkInPersonCount: 0,
+                ...rest,
+              };
+            }),
+          };
+          console.log('submitData', submitData);
+          try {
+            await services.OrderController[isEdit ? 'update' : 'add'](
+              submitData,
+            );
+            message.success(isEdit ? '保存成功' : '新建成功');
+            form.resetFields();
+            props.onSubmited();
+            return true;
+          } catch (err) {}
+        } else {
+          message.warn('姓名/电话至少填一个');
+        }
       }}
       submitter={{
         render: (props, defaultDoms) => {
