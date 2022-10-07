@@ -36,6 +36,23 @@ const SingleDay: React.FC = () => {
     });
   });
 
+  // 获取房间订单-渲染订单单元格
+  const {
+    data: orderData,
+    loading: orderLoading,
+    run: refreshAllOrder,
+  } = useRequest(
+    async () => {
+      return services.RoomStateController.getAllRoomOrder({
+        startDate: selectedDate.clone().format('YYYY-MM-DD'),
+        endDate: selectedDate.clone().add(1, 'day').format('YYYY-MM-DD'),
+      });
+    },
+    {
+      refreshDeps: [selectedDate],
+    },
+  );
+
   // 获取房态列表
   const { data: statusData, loading: statusLoading } = useRequest(async () => {
     return services.RoomStateController.getRoomStatusList({
@@ -57,11 +74,40 @@ const SingleDay: React.FC = () => {
     },
   );
 
+  function findOrderByRecord(roomId: number) {
+    const splitOrders = [];
+    const orderList = orderData?.orderList || [];
+    for (let i = 0; i < orderList.length; i++) {
+      const curOrder = orderList[i];
+      const roomList = curOrder?.roomList || [];
+      for (let j = 0; j < roomList.length; j++) {
+        splitOrders.push({
+          ...curOrder,
+          ...roomList[j],
+        });
+      }
+    }
+
+    return splitOrders?.find((o) => {
+      if (o.roomId !== roomId || !o.startDate || !o.endDate) {
+        return false;
+      }
+      const checkinTime = moment(o.startDate);
+      const checkoutTime = moment(o.endDate);
+      if (selectedDate.isBetween(checkinTime, checkoutTime, null, '[]')) {
+        return true;
+      }
+      return false;
+    });
+  }
+
   return (
     <div className="single-day-container">
       <Row gutter={24}>
         <Col span={18}>
-          <Skeleton loading={statusLoading || enumLoading || loading}>
+          <Skeleton
+            loading={orderLoading || statusLoading || enumLoading || loading}
+          >
             {data?.list?.map?.((item) => {
               return (
                 <div className="single-day-card" key={item.roomTypeId}>
@@ -73,10 +119,12 @@ const SingleDay: React.FC = () => {
                   </Space>
                   <Space wrap size={[12, 12]} className="box-wrap">
                     {item?.roomList?.map((room) => {
+                      const order = findOrderByRecord(room.roomId);
                       return (
                         <SingleDayBox
                           key={room.roomId}
                           room={room}
+                          order={order}
                           roomList={statusData?.roomTypeList?.reduce(
                             (all, rt) => [...all, ...rt.roomList!],
                             [] as ROOM_STATE.Room[],
@@ -163,7 +211,7 @@ const SingleDay: React.FC = () => {
               >
                 <Row gutter={[16, 8]}>
                   {enumData?.list?.map((item) => (
-                    <Col span={8}>
+                    <Col span={8} key={item.code}>
                       <Checkbox value={item.code}>
                         {intl.formatMessage({ id: item.desc })}
                       </Checkbox>

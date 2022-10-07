@@ -49,15 +49,11 @@
   background-color: #fff;
   padding: 6px;
   box-sizing: border-box;
-  border-radius: 2px;
+  border-radius: 4px;
   user-select: none;
   cursor: pointer;
 
-  &::before {
-    content: attr(data-text);
-  }
-
-  &:hover {
+  &:not(.ordered):hover {
     border: 1px solid #053dc8;
   }
 
@@ -71,6 +67,14 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
+    }
+  }
+
+  &.ordered {
+    background-color: rgb(255, 212, 179);
+
+    & .reserve-name {
+      font-size: 12px;
     }
   }
 
@@ -90,6 +94,23 @@
       background-size: 100% 100%;
       right: 6px;
       top: 6px;
+    }
+  }
+}
+
+.room-box-action-popover {
+  z-index: 100;
+  & .ant-popover-arrow-content,
+  & .ant-popover-arrow-content::before {
+    background: #4d4d4d;
+  }
+  & .ant-popover-inner {
+    background-color: #4d4d4d;
+    & .btn {
+      color: #fff;
+      padding: 4px 0;
+      cursor: pointer;
+      white-space: nowrap;
     }
   }
 }
