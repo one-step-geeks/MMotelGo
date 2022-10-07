@@ -100,9 +100,17 @@ const RoomCodeBox: React.FC<Props> = (props) => {
           <Text
             type="secondary"
             className="btn"
-            onClick={selectService.sendCloseRoom}
+            onClick={() => {
+              if (isRoomClosed) {
+                selectService.sendOpenRoom();
+              } else {
+                selectService.sendCloseRoom();
+              }
+            }}
           >
-            {intl.formatMessage({ id: '关房' })}
+            {isRoomClosed
+              ? intl.formatMessage({ id: '开房' })
+              : intl.formatMessage({ id: '关房' })}
           </Text>
           <Text
             type="secondary"
