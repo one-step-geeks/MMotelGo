@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   Typography,
@@ -10,10 +10,13 @@ import {
   Select,
   Checkbox,
 } from 'antd';
-import { useRequest, useIntl } from 'umi';
-import services from '@/services';
+import { useRequest, useIntl, useModel } from 'umi';
+import CloseRoomModal from './components/CloseRoomModal';
 import SingleDayBox from './components/SingleDayBox';
+import { selectService } from './components/service';
+import { processOpenAndClose } from './index';
 import moment from 'moment';
+import services from '@/services';
 import './single.less';
 
 const CheckboxGroup = Checkbox.Group;
@@ -27,6 +30,40 @@ const SingleDay: React.FC = () => {
   const [sortType, setSortType] = useState(1);
   const [statusList, setStatusList] = useState<number[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const { selectedRooms, setSelectedRooms } = useModel('state');
+  const [closeVisible, setCloseVisible] = useState(false);
+
+  const openOrCloseList = useMemo(
+    () => processOpenAndClose(selectedRooms),
+    [selectedRooms],
+  );
+
+  useEffect(() => {
+    const subs = selectService.getSelectedInfo().subscribe((info: any) => {
+      switch (info.type) {
+        case 'ADD_ORDER':
+          // setAddVisible(true);
+          break;
+        case 'CLOSE_ROOM':
+          setCloseVisible(true);
+          break;
+        case 'OPEN_ROOM':
+          services.RoomStateController.batchOpenRooms({
+            stateList: openOrCloseList,
+          });
+          setSelectedRooms([]);
+          selectService.sendCancelInfo();
+          refreshAllState();
+          break;
+        default:
+          break;
+      }
+    });
+
+    return () => {
+      subs.unsubscribe();
+    };
+  }, [openOrCloseList]);
 
   const { data: enumData, loading: enumLoading } = useRequest(() => {
     return services.RoomStateController.getRoomStatusEnum().then((res) => {
@@ -60,7 +97,11 @@ const SingleDay: React.FC = () => {
     });
   });
 
-  const { data, loading } = useRequest(
+  const {
+    data,
+    loading,
+    run: refreshAllState,
+  } = useRequest(
     () => {
       return services.RoomStateController.getSingleDayRoomState({
         stateDate: selectedDate.format('YYYY-MM-DD'),
@@ -123,8 +164,13 @@ const SingleDay: React.FC = () => {
                       return (
                         <SingleDayBox
                           key={room.roomId}
-                          room={room}
+                          room={{
+                            ...room,
+                            roomTypeId: item.roomTypeId,
+                            roomTypeName: item.roomTypeName,
+                          }}
                           order={order}
+                          date={selectedDate.format('YYYY-MM-DD')}
                           roomList={statusData?.roomTypeList?.reduce(
                             (all, rt) => [...all, ...rt.roomList!],
                             [] as ROOM_STATE.Room[],
@@ -150,7 +196,7 @@ const SingleDay: React.FC = () => {
               onChange={(date) => {
                 setSelectedDate(date || moment());
               }}
-              disabledDate={(d) => d.isBefore(moment())}
+              disabledDate={(d) => d.isBefore(moment(), 'day')}
               allowClear={false}
               style={{ width: '100%' }}
             />
@@ -223,6 +269,19 @@ const SingleDay: React.FC = () => {
           </Card>
         </Col>
       </Row>
+      <CloseRoomModal
+        visible={closeVisible}
+        stateList={openOrCloseList}
+        onSubmit={() => {
+          setSelectedRooms([]);
+          selectService.sendCancelInfo();
+          setCloseVisible(false);
+          refreshAllState();
+        }}
+        onClose={() => {
+          setCloseVisible(false);
+        }}
+      />
     </div>
   );
 };
