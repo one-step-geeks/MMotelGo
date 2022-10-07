@@ -44,6 +44,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
     <DrawerForm
       title="添加收退款"
       form={form}
+      className="order-pay-drawer"
       layout="horizontal"
       grid
       labelCol={{
@@ -142,7 +143,15 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
         label="日期"
       />
 
-      <ProFormTextArea name="remark" label="备注" placeholder="请输入备注" />
+      <ProFormTextArea
+        fieldProps={{
+          maxLength: 200,
+          showCount: true,
+        }}
+        name="remark"
+        label="备注"
+        placeholder="请输入备注"
+      />
     </DrawerForm>
   );
 

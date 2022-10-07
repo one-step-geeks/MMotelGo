@@ -124,6 +124,9 @@ export function useOrderDetailDrawer(
       title: '提醒内容',
       dataIndex: 'remark',
       key: 'remark',
+      render(value) {
+        return <div style={{ wordBreak: 'break-all' }}>{value}</div>;
+      },
     },
     {
       title: '操作',
@@ -457,6 +460,7 @@ export function useOrderDetailDrawer(
         maskClosable={false}
         title="订单详情"
         placement="right"
+        className="order-detail-drawer"
         onClose={() => {
           console.log('onClose');
           setVisible(false);

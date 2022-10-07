@@ -138,6 +138,7 @@ export default (props: Props) => {
       form={form}
       layout="horizontal"
       grid
+      className="order-form-drawer"
       autoFocusFirstInput
       visible={props.visible}
       preserve={false}

@@ -118,6 +118,10 @@ export function useConsumeDrawer(onSuccess: () => void) {
       <ProFormTextArea
         name="remark"
         label="消费备注"
+        fieldProps={{
+          maxLength: 200,
+          showCount: true,
+        }}
         placeholder="请输入消费备注"
       />
     </DrawerForm>
