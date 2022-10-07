@@ -9,6 +9,12 @@ export const selectService = {
       ...info,
     });
   },
+  sendShowOrder: (info: { orderId: number }) => {
+    return subject.next({
+      type: 'SHOW_ORDER',
+      ...info,
+    });
+  },
   sendCancelInfo: () => {
     return subject.next({
       type: 'CANCEL_SELECTED',

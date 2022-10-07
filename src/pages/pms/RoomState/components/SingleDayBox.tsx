@@ -78,7 +78,12 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   }
 
   return order ? (
-    <div className={className} onClick={() => {}}>
+    <div
+      className={className}
+      onClick={() => {
+        selectService.sendShowOrder({ orderId: order.orderId });
+      }}
+    >
       <div className="room-code">{room.roomCode}</div>
       <div className="reserve-name">{order.reserveName}</div>
       <div className="orgin-source">{order.channelTypeName || '自来客'}</div>

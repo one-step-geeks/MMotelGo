@@ -11,6 +11,7 @@ import {
   Checkbox,
 } from 'antd';
 import { useRequest, useIntl, useModel } from 'umi';
+import { useOrderDetailDrawer } from '../Order/components/OrderDetailDrawer';
 import CloseRoomModal from './components/CloseRoomModal';
 import SingleDayBox from './components/SingleDayBox';
 import { selectService } from './components/service';
@@ -33,6 +34,15 @@ const SingleDay: React.FC = () => {
   const { selectedRooms, setSelectedRooms } = useModel('state');
   const [closeVisible, setCloseVisible] = useState(false);
 
+  const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
+    () => {
+      // TODO
+    },
+    () => {
+      // TODO
+    },
+  );
+
   const openOrCloseList = useMemo(
     () => processOpenAndClose(selectedRooms),
     [selectedRooms],
@@ -43,6 +53,9 @@ const SingleDay: React.FC = () => {
       switch (info.type) {
         case 'ADD_ORDER':
           // setAddVisible(true);
+          break;
+        case 'SHOW_ORDER':
+          openOrderDetailDrawer(info.orderId);
           break;
         case 'CLOSE_ROOM':
           setCloseVisible(true);
@@ -282,6 +295,7 @@ const SingleDay: React.FC = () => {
           setCloseVisible(false);
         }}
       />
+      {OrderDetailDrawer}
     </div>
   );
 };
