@@ -118,7 +118,9 @@ const SettingRoomsPage: React.FC = () => {
         }}
         rowKey="id"
         pagination={{
-          pageSize: 10,
+          defaultPageSize: 25,
+          pageSizeOptions: [10, 25, 50],
+          showSizeChanger: true,
           showQuickJumper: true,
         }}
         toolBarRender={(action) => [
