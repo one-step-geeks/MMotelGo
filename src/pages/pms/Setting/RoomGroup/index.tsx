@@ -69,7 +69,7 @@ const SettingRoomGroup: React.FC = () => {
                 preserve={false}
                 rules={[{ required: true, message: '请填写分组名' }]}
               >
-                <Input></Input>
+                <Input maxLength={20}></Input>
               </FormItem>
               <DeleteOutlined
                 onClick={() => {
