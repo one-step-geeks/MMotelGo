@@ -28,6 +28,7 @@ export const isLoginPath = () => {
   if (
     pathname === '/user/login' ||
     pathname === '/user/regist' ||
+    pathname === '/user/regist-success' ||
     pathname === '/user/reset_password'
   ) {
     return true;
