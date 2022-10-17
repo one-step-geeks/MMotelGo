@@ -4,7 +4,6 @@ import type { ActionType } from '@ant-design/pro-table';
 import { ProFormSelect, ProFormText } from '@ant-design/pro-form';
 import { ConsumerItemClassifyEnum } from '@/constants';
 import services from '@/services';
-import Cookie from 'js-cookie';
 
 const FormItem = Form.Item;
 
