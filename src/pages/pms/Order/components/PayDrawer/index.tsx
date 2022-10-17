@@ -137,11 +137,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
         placeholder="请输入数量"
       /> */}
 
-      <ProFormDatePicker
-        name="feeDate"
-        placeholder="请选择消费时间"
-        label="日期"
-      />
+      <ProFormDatePicker name="feeDate" placeholder="请选择日期" label="日期" />
 
       <ProFormTextArea
         fieldProps={{

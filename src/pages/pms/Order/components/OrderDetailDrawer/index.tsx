@@ -77,6 +77,7 @@ export function useOrderDetailDrawer(
 
   const { ConsumeDrawer, openConsumeDrawer } = useConsumeDrawer(() => {
     queryConsumeList();
+    executeQuery();
   });
 
   const { OccupantDrawer, openOccupantDrawer } = useOccupantDrawer(() => {
@@ -86,6 +87,7 @@ export function useOrderDetailDrawer(
   const { PayOrRefundDrawer, openPayOrRefundDrawer } = usePayOrRefundDrawer(
     () => {
       queryPayOrRefundList();
+      executeQuery();
     },
   );
 
@@ -200,6 +202,7 @@ export function useOrderDetailDrawer(
             onClick={async () => {
               await services.OrderController.deleteConsume(record.id);
               queryConsumeList();
+              executeQuery();
               message.success('删除成功');
             }}
           >
@@ -264,6 +267,7 @@ export function useOrderDetailDrawer(
             onClick={async () => {
               await services.OrderController.deletePayOrRefund(record.id);
               queryPayOrRefundList();
+              executeQuery();
               message.success('删除成功');
             }}
           >

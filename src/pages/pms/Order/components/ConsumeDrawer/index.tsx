@@ -112,8 +112,8 @@ export function useConsumeDrawer(onSuccess: () => void) {
 
       <ProFormDatePicker
         name="consumeDate"
-        placeholder="请选择消费时间"
-        label="消费时间"
+        placeholder="请选择消费日期"
+        label="消费日期"
       />
       <ProFormTextArea
         name="remark"
