@@ -96,7 +96,7 @@ export default () => {
             name="roomTypeName"
             label="房型名称"
             fieldProps={{
-              maxLength: 20,
+              maxLength: 30,
               onBlur: (e) => {
                 const roomTypeName = e.target.value;
                 const shortName = form.getFieldValue('roomTypeShortName');

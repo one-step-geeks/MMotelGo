@@ -78,7 +78,12 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   }
 
   return order ? (
-    <div className={className} onClick={() => {}}>
+    <div
+      className={className}
+      onClick={() => {
+        selectService.sendShowOrder({ orderId: order.orderId });
+      }}
+    >
       <div className="room-code">{room.roomCode}</div>
       <div className="reserve-name">{order.reserveName}</div>
       <div className="orgin-source">{order.channelTypeName || '自来客'}</div>
@@ -100,9 +105,17 @@ const RoomCodeBox: React.FC<Props> = (props) => {
           <Text
             type="secondary"
             className="btn"
-            onClick={selectService.sendCloseRoom}
+            onClick={() => {
+              if (isRoomClosed) {
+                selectService.sendOpenRoom();
+              } else {
+                selectService.sendCloseRoom();
+              }
+            }}
           >
-            {intl.formatMessage({ id: '关房' })}
+            {isRoomClosed
+              ? intl.formatMessage({ id: '开房' })
+              : intl.formatMessage({ id: '关房' })}
           </Text>
           <Text
             type="secondary"

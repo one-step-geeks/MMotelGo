@@ -175,6 +175,17 @@ export default [
     component: 'user/Regist',
   },
   {
+    name: '注册成功',
+    path: 'user/regist-success',
+    hideInMenu: true,
+    layout: {
+      hideMenu: true, //  隐藏边栏
+      hideNav: true, // 隐藏顶部导航
+      hideFooter: true, // 隐藏底部底栏
+    },
+    component: 'user/RegistSuccess',
+  },
+  {
     name: '忘记密码',
     path: 'user/reset_password',
     hideInMenu: true,

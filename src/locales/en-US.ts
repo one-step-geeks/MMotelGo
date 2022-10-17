@@ -9,6 +9,7 @@ export default {
   'menu.忘记密码': 'Forgot Password',
   'menu.酒店列表': 'Hotel List',
   'menu.单日房态': 'Room Status',
+  'menu.注册成功': 'Regist Success',
   周日: 'SUN',
   周一: 'MON',
   周二: 'TUE',

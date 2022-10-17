@@ -35,7 +35,7 @@ export function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
   return result;
 }
 
-function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
+export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
   const result: (Partial<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>> & {
     dateList: string[];
     priceList: number[];

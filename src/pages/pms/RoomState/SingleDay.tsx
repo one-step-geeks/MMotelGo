@@ -11,10 +11,12 @@ import {
   Checkbox,
 } from 'antd';
 import { useRequest, useIntl, useModel } from 'umi';
+import { useOrderDetailDrawer } from '../Order/components/OrderDetailDrawer';
 import CloseRoomModal from './components/CloseRoomModal';
 import SingleDayBox from './components/SingleDayBox';
 import { selectService } from './components/service';
-import { processOpenAndClose } from './index';
+import { processOpenAndClose, processOrderRoom } from './index';
+import OrderFormDrawer from '../Order/components/OrderFormDrawer';
 import moment from 'moment';
 import services from '@/services';
 import './single.less';
@@ -32,6 +34,16 @@ const SingleDay: React.FC = () => {
   const [isReady, setIsReady] = useState(false);
   const { selectedRooms, setSelectedRooms } = useModel('state');
   const [closeVisible, setCloseVisible] = useState(false);
+  const [addVisible, setAddVisible] = useState(false);
+
+  const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
+    () => {
+      // TODO
+    },
+    () => {
+      // TODO
+    },
+  );
 
   const openOrCloseList = useMemo(
     () => processOpenAndClose(selectedRooms),
@@ -42,7 +54,10 @@ const SingleDay: React.FC = () => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
         case 'ADD_ORDER':
-          // setAddVisible(true);
+          setAddVisible(true);
+          break;
+        case 'SHOW_ORDER':
+          openOrderDetailDrawer(info.orderId);
           break;
         case 'CLOSE_ROOM':
           setCloseVisible(true);
@@ -269,6 +284,21 @@ const SingleDay: React.FC = () => {
           </Card>
         </Col>
       </Row>
+      <OrderFormDrawer
+        visible={addVisible}
+        onVisibleChange={(v) => {
+          if (!v) {
+            selectService.sendCancelInfo();
+          }
+          setAddVisible(v);
+        }}
+        rooms={processOrderRoom(selectedRooms)}
+        onSubmited={() => {
+          selectService.sendCancelInfo();
+          setAddVisible(false);
+          refreshAllOrder();
+        }}
+      />
       <CloseRoomModal
         visible={closeVisible}
         stateList={openOrCloseList}
@@ -282,6 +312,7 @@ const SingleDay: React.FC = () => {
           setCloseVisible(false);
         }}
       />
+      {OrderDetailDrawer}
     </div>
   );
 };
