@@ -25,7 +25,7 @@ export default () => {
                 onClick={async () => {
                   const values = await form.validateFields();
                   await services.UserController.accountRegister(values);
-                  history.push('/user/login');
+                  history.push('/user/regist-success?type=email');
                 }}
               >
                 注册
