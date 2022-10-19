@@ -1,9 +1,11 @@
 import { MailOutlined, UserOutlined, KeyOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { Form, Button } from 'antd';
+import { Form, Button, Typography } from 'antd';
 import { emailPattern } from '@/constants';
 import services from '@/services';
 import { useHistory } from 'umi';
+
+const { Link } = Typography;
 
 export default () => {
   const [form] = Form.useForm();
@@ -19,17 +21,21 @@ export default () => {
         submitter={{
           render: () => {
             return (
-              <Button
-                type="primary"
-                block
-                onClick={async () => {
-                  const values = await form.validateFields();
-                  await services.UserController.accountRegister(values);
-                  history.push('/user/regist-success?type=email');
-                }}
-              >
-                注册
-              </Button>
+              <>
+                <Button
+                  type="primary"
+                  block
+                  style={{ marginBottom: 24 }}
+                  onClick={async () => {
+                    const values = await form.validateFields();
+                    await services.UserController.accountRegister(values);
+                    history.push('/user/regist-success?type=email');
+                  }}
+                >
+                  注册
+                </Button>
+                <Link href="#/user/login">返回</Link>
+              </>
             );
           },
         }}

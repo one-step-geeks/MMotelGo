@@ -1,18 +1,14 @@
-import {
-  MailOutlined,
-  UserOutlined,
-  KeyOutlined,
-  TagOutlined,
-} from '@ant-design/icons';
+import { MailOutlined, KeyOutlined, TagOutlined } from '@ant-design/icons';
 import {
   LoginForm,
   ProFormCaptcha,
-  ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
-import { message, Form, Button } from 'antd';
+import { message, Form, Button, Typography } from 'antd';
 import { emailPattern } from '@/constants';
 import { useState } from 'react';
+
+const { Link } = Typography;
 
 export default () => {
   const [form] = Form.useForm();
@@ -31,17 +27,21 @@ export default () => {
             submitter={{
               render: () => {
                 return (
-                  <Button
-                    type="primary"
-                    block
-                    onClick={async () => {
-                      const values = await form.validateFields();
-                      console.log(values);
-                      setStep(1);
-                    }}
-                  >
-                    重置密码
-                  </Button>
+                  <>
+                    <Button
+                      type="primary"
+                      block
+                      style={{ marginBottom: 24 }}
+                      onClick={async () => {
+                        const values = await form.validateFields();
+                        console.log(values);
+                        setStep(1);
+                      }}
+                    >
+                      重置密码
+                    </Button>
+                    <Link href="#/user/login">返回</Link>
+                  </>
                 );
               },
             }}
