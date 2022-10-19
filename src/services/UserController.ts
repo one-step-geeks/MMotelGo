@@ -31,6 +31,26 @@ export async function accountLogin(params?: {
   });
 }
 
+/** 获取重置邮箱验证码接口 */
+export async function accountForgotEmail(params?: { emailAddress?: string }) {
+  return request<API.Result>('/motel/user/forgotPwd', {
+    method: 'POST',
+    data: { ...params },
+  });
+}
+
+/** 重置密码接口 */
+export async function accountResetPassword(params?: {
+  emailAddress?: string;
+  password?: string;
+  confirmCode?: string;
+}) {
+  return request<API.Result>('/motel/user/resetPwd', {
+    method: 'POST',
+    data: { ...params },
+  });
+}
+
 /** 获取门店列表 */
 export async function getPmsStoreList() {
   return request<API.Result_PmsStoreList_>('/motel/store/getPmsStoreList', {
