@@ -99,6 +99,9 @@ export function useOccupantDrawer(onSuccess: () => void) {
                 <Form.Item className="person-row" key={field.key}>
                   <Input.Group compact>
                     <ProFormText
+                      rules={[
+                        { required: true, message: '入住人姓名不能为空' },
+                      ]}
                       name={[field.name, 'nickName']}
                       placeholder="入住人姓名"
                     ></ProFormText>
