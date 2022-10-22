@@ -261,12 +261,12 @@ const RoomStatePage: React.FC = () => {
                   if (checkinTime.isSame(d)) {
                     const days = checkoutTime.diff(checkinTime, 'days');
                     return {
-                      colSpan: Math.abs(days) + 1,
+                      colSpan: Math.abs(days),
                     };
                   } else if (d.isSame(calendarList?.[0]?.date, 'day')) {
                     const days = checkoutTime.diff(d, 'days');
                     return {
-                      colSpan: Math.abs(days) + 1,
+                      colSpan: Math.abs(days),
                     };
                   } else {
                     return {

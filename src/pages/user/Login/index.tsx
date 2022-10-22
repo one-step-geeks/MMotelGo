@@ -79,6 +79,7 @@ export default () => {
             注册账号
           </Link>
           <Text
+            style={{ cursor: 'pointer' }}
             type="secondary"
             onClick={() => {
               history.push('/user/reset_password');
