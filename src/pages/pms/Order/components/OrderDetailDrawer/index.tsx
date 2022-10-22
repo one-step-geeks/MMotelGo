@@ -510,6 +510,11 @@ export function useOrderDetailDrawer(
               </div>
               <div className="fee-row">
                 <div>
+                  订单金额
+                  <br />
+                  <span className="fee">A$ {data?.order.totalAmount}</span>
+                </div>
+                <div>
                   已付金额
                   <br />
                   <span className="fee">A$ {data?.order.paidAmount}</span>
@@ -518,11 +523,6 @@ export function useOrderDetailDrawer(
                   还需付款
                   <br />
                   <span className="fee">A$ {data?.order.remainAmount}</span>
-                </div>
-                <div>
-                  订单金额
-                  <br />
-                  <span className="fee">A$ {data?.order.totalAmount}</span>
                 </div>
               </div>
             </div>
