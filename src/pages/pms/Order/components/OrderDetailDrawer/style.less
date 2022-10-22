@@ -57,11 +57,15 @@
       }
     }
     .custom-form-item {
-      white-space: pre-line;
       display: flex;
+      margin-bottom: 6px;
       label {
+        flex-shrink: 0;
         text-align: right;
         flex-basis: 80px;
+      }
+      div {
+        word-break: break-all;
       }
     }
   }
