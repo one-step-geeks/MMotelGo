@@ -12,7 +12,6 @@ import { useRequest, useLocation } from 'umi';
 import services from '@/services';
 import { message, Radio, Button, Input, Space, Select } from 'antd';
 import {
-  OrderState,
   OperateData,
   OrderStateOptions,
   OrderPayOptions,
@@ -275,7 +274,7 @@ const OrderContainer: React.FC = (props) => {
       title: '结账状态',
       dataIndex: 'payStatus',
       key: 'payStatus',
-      width: 120,
+      width: 105,
       order: 6 - 5,
       valueEnum: convertOptionToEnums(OrderPayOptions),
       renderText(_, record) {
@@ -285,6 +284,14 @@ const OrderContainer: React.FC = (props) => {
       onCell: (_) => {
         return { rowSpan: _.rowSpan };
       },
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      valueType: 'dateTime',
+      width: 185,
+      search: false,
     },
   ];
 
