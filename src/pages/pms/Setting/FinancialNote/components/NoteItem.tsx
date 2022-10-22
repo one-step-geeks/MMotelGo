@@ -60,7 +60,20 @@ const NoteItem: React.FC<Props> = (props) => {
               }}
             />
             <Popconfirm
-              title="确定要删除吗？"
+              title={
+                <div>
+                  <div
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      marginBottom: '6px',
+                    }}
+                  >
+                    确定要删除吗？
+                  </div>
+                  <div>删除后不再显示该项目，已添加的数据不删除。</div>
+                </div>
+              }
               placement="bottom"
               okText="是"
               cancelText="否"
