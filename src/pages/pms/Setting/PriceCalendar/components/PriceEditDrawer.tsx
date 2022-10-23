@@ -87,7 +87,12 @@ const PriceEditDrawer: React.FC<Props> = (props) => {
         name="price"
         initialValue={data?.price}
       >
-        <InputNumber style={{ width: '100%' }} max={100000000} precision={0} />
+        <InputNumber
+          style={{ width: '100%' }}
+          max={100000000}
+          precision={0}
+          maxLength={8}
+        />
       </FormItem>
     </DrawerForm>
   );
