@@ -44,9 +44,11 @@ const PriceEditDrawer: React.FC<Props> = (props) => {
           ) : null}
         </Space>
       }
+      preserve={false}
       drawerProps={{
         closable: false,
         maskClosable: false,
+        destroyOnClose: true,
       }}
       layout="horizontal"
       title="修改价格"
