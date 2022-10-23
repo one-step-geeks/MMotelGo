@@ -33,6 +33,9 @@ export default () => {
   async function onSubmit() {
     try {
       const data = await form.validateFields();
+      if (data?.roomList?.find((item: any) => !item?.code?.trim())) {
+        return message.warning('房间号不能为空');
+      }
       await services.SettingController.addRoomType(
         {
           ...data,
