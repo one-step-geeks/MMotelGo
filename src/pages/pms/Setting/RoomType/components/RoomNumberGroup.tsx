@@ -49,7 +49,7 @@ export default function RoomNumberGroup(props: Props) {
         });
       } else {
         // 房间增加
-        const lastRoomCode = roomList?.[roomList.length - 1];
+        const lastRoomCode = roomList?.[roomList.length - 1]?.code;
         const appendRooms = [...newRooms];
         for (let i = 1; i <= roomCount - newRooms.length; i++) {
           if (/^[0-9]+$/.test(lastRoomCode)) {
