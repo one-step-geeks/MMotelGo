@@ -74,7 +74,7 @@ export default function StorePage() {
               fieldProps={{
                 maxLength: 20,
               }}
-              rules={[{ required: true }]}
+              rules={[{ required: true }, { whitespace: true }]}
             />
             <ProFormText
               name="code"
