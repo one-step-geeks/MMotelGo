@@ -104,7 +104,11 @@ export default () => {
           initialValue={consumer?.price}
           rules={[{ required: true, message: '请输入价格' }]}
         >
-          <InputNumber style={{ width: '100%' }} addonBefore="￥" />
+          <InputNumber
+            style={{ width: '100%' }}
+            addonBefore="￥"
+            precision={2}
+          />
         </FormItem>
       </Form>
     </Modal>
