@@ -76,7 +76,6 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
       }
     }
   }
-
   return trueResult;
 }
 
@@ -453,6 +452,7 @@ const RoomStatePage: React.FC = () => {
         visible={addVisible}
         onVisibleChange={(v) => {
           if (!v) {
+            setSelectedRooms([]);
             selectService.sendCancelInfo();
           }
           setAddVisible(v);
