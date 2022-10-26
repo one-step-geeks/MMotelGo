@@ -80,6 +80,9 @@ export default function StorePage() {
               name="code"
               label="门店编号"
               rules={[{ required: true }]}
+              fieldProps={{
+                maxLength: 30,
+              }}
             />
             <ProFormRadio.Group
               label="门店类型"
@@ -100,6 +103,9 @@ export default function StorePage() {
               name="bossName"
               label="负责人姓名"
               rules={[{ required: true }]}
+              fieldProps={{
+                maxLength: 30,
+              }}
             />
             <ProFormText
               name="bossEmail"
