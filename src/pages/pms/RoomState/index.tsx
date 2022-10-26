@@ -68,6 +68,7 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
           startDate: moment(dateList[j]),
           checkInDays: 1,
           totalAmount: rest.priceList[j],
+          roomPrice: rest.priceList[j],
         });
       } else {
         trueResult[trueResult.length - 1].checkInDays! += 1;
@@ -76,6 +77,7 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
       }
     }
   }
+  console.log(trueResult);
   return trueResult;
 }
 
