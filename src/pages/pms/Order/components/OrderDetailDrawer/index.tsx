@@ -57,7 +57,7 @@ export function useOrderDetailDrawer(
       if (orderId) {
         return services.OrderController.queryConsumeList(orderId);
       }
-      return Promise.resolve([]);
+      return Promise.resolve({ data: [] });
     },
     { refreshDeps: [orderId] },
   );
@@ -67,7 +67,7 @@ export function useOrderDetailDrawer(
       if (orderId) {
         return services.OrderController.queryPayOrRefundList(orderId);
       }
-      return Promise.resolve([]);
+      return Promise.resolve({ data: [] });
     },
     { refreshDeps: [orderId] },
   );
@@ -108,7 +108,7 @@ export function useOrderDetailDrawer(
   );
 
   if (data && data.orderRoomList) {
-    data.orderRoomList.forEach((d) => (d.key = d.roomId));
+    data.orderRoomList.forEach((d) => (d.key = d.roomId!));
   }
 
   const noticeColumns: ColumnsType<ORDER.OrderNotice> = [
@@ -300,8 +300,8 @@ export function useOrderDetailDrawer(
       title: '房价',
       width: 82,
       align: 'center',
-      dataIndex: 'roomPrice',
-      key: 'roomPrice',
+      dataIndex: 'totalAmount',
+      key: 'totalAmount',
       render: (value) => {
         return `A$ ${value}`;
       },
