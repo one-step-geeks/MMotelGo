@@ -119,7 +119,13 @@ export default function StorePage() {
               ]}
               hidden
             />
-            <ProFormText name="bossPhoneNo" label="门店座机" />
+            <ProFormText
+              name="bossPhoneNo"
+              label="门店座机"
+              fieldProps={{
+                maxLength: 30,
+              }}
+            />
             <ProFormText
               name="activationCode"
               label="激活码"
