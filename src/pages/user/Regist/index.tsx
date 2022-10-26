@@ -43,6 +43,7 @@ export default () => {
         <ProFormText
           fieldProps={{
             prefix: <UserOutlined />,
+            maxLength: 50,
           }}
           name="nickName"
           placeholder={'请输入用户昵称'}
@@ -56,6 +57,7 @@ export default () => {
         <ProFormText
           fieldProps={{
             prefix: <MailOutlined />,
+            maxLength: 50,
           }}
           name="emailAddress"
           placeholder={'请输入邮箱账号'}
@@ -75,6 +77,7 @@ export default () => {
           fieldProps={{
             type: 'password',
             prefix: <KeyOutlined />,
+            maxLength: 50,
           }}
           rules={[
             {
