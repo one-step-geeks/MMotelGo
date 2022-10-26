@@ -452,13 +452,14 @@ const RoomStatePage: React.FC = () => {
         visible={addVisible}
         onVisibleChange={(v) => {
           if (!v) {
+            setSelectedRooms([]);
             selectService.sendCancelInfo();
           }
-          setSelectedRooms([]);
           setAddVisible(v);
         }}
         rooms={processOrderRoom(selectedRooms)}
         onSubmited={() => {
+          setSelectedRooms([]);
           selectService.sendCancelInfo();
           setAddVisible(false);
           refreshAllOrder();
