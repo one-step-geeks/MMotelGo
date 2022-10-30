@@ -10,14 +10,9 @@ import moment from 'moment';
 import { useRequest, useLocation } from 'umi';
 import services from '@/services';
 import { bufferDownload } from '@/utils';
-import {
-  OperateData,
-  OrderStateOptions,
-  OrderPayOptions,
-} from '@/services/OrderController';
+import { OrderStateOptions, OrderPayOptions } from '@/services/OrderController';
 import { useOrderDetailDrawer } from '../components/OrderDetailDrawer';
 import OrderFormDrawer from '../components/OrderFormDrawer';
-import OrderOperateDrawer from '../components/OrderOperateDrawer';
 
 import './style.less';
 
@@ -66,16 +61,9 @@ const OrderContainer: React.FC = (props) => {
   );
   const [orderId, setOrderId] = useState<number | undefined>();
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
-  const [operateDrawerVisible, setOperateDrawerVisible] = useState(false);
-  const [operateData, setOperateData] = useState<OperateData>();
-
   const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
     () => {
       setEditDrawerVisible(true);
-    },
-    (data: any) => {
-      setOperateData(data);
-      setOperateDrawerVisible(true);
     },
   );
 
@@ -526,16 +514,8 @@ const OrderContainer: React.FC = (props) => {
           );
         }}
       />
-      {/* ); */}
 
       {OrderDetailDrawer}
-
-      <OrderOperateDrawer
-        visible={operateDrawerVisible}
-        onVisibleChange={(value) => setOperateDrawerVisible(value)}
-        operateData={operateData}
-      />
-
       {orderId ? (
         <OrderFormDrawer
           visible={editDrawerVisible}

@@ -1,74 +1,48 @@
+import { useState } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import services from '@/services';
-import {
-  DrawerForm,
-  ProFormTextArea,
-  ProFormCheckbox,
-} from '@ant-design/pro-components';
-import { message, Input, Space, Form, Checkbox, Button } from 'antd';
+import { DrawerForm, ProFormTextArea } from '@ant-design/pro-components';
+import { message, Space, Form, Checkbox, Button } from 'antd';
 import { OperateData, OperationTypeText } from '@/services/OrderController';
-import { useEffect, useState } from 'react';
-
-interface Props {
-  visible: boolean;
-  onVisibleChange: (value: boolean) => void;
-  operateData?: OperateData;
-}
+import './style.less';
 
 export interface FormOrder {}
 
-export default (props: Props) => {
+export function useOperateDrawer(onSuccess: () => void) {
+  const [operateData, setOperateData] = useState<OperateData>();
   const [form] = Form.useForm<FormOrder>();
+  const [visible, setVisible] = useState(false);
   const [selectedRoomIndexs, setSelectedRoomIndexs] = useState<Array<number>>(
     [],
   );
-  const [selectedRoomFees, setSelectedRoomFees] = useState({
-    feeTotal: 0,
-    feeNotPaied: 0,
-  });
-  const title =
-    props.operateData?.operationType === undefined
-      ? '订单操作'
-      : OperationTypeText[props.operateData?.operationType];
+  const [selectedRoomFeeTotal, setSelectedRoomFeeTotal] = useState<number>(0);
 
-  useEffect(() => {
-    if (props.operateData) {
-      console.log('setSelectedRoomIndexs');
-      setSelectedRoomIndexs(props.operateData?.orderRoomList.map((r, i) => i));
-    }
-  }, [props.operateData]);
+  const title =
+    operateData?.operationType === undefined
+      ? '订单操作'
+      : OperationTypeText[operateData?.operationType];
 
   const handleRoomChecked = (index: number, value: boolean) => {
-    if (value) {
-      setSelectedRoomIndexs([index, ...selectedRoomIndexs]);
-    } else {
-      setSelectedRoomIndexs(selectedRoomIndexs.filter((i) => i !== index));
-    }
-    let feeTotal = 0;
-    let feePaied = 0;
-    selectedRoomIndexs.forEach((i) => {
-      const orderRoom = props.operateData?.orderRoomList[i];
-      if (orderRoom) {
-        const { totalAmount } = orderRoom;
-        feeTotal += totalAmount!;
-        feePaied += 0;
-      }
-    });
-    setSelectedRoomFees({
-      feeTotal,
-      feeNotPaied: feeTotal - feePaied,
-    });
+    const checkedIndexs = value
+      ? [index, ...selectedRoomIndexs]
+      : selectedRoomIndexs.filter((i) => i !== index);
+    setSelectedRoomIndexs(checkedIndexs);
+    setSelectedRoomFeeTotal(
+      checkedIndexs.reduce((acc, cur, index) => {
+        return acc + operateData?.orderRoomList?.[index].totalAmount!;
+      }, 0),
+    );
   };
 
-  return (
+  const OperateDrawer = (
     <DrawerForm
       title={title}
       form={form}
       layout="horizontal"
       grid
       autoFocusFirstInput
-      visible={props.visible}
+      visible={visible}
       drawerProps={{
         width: 640,
         closeIcon: (
@@ -83,24 +57,26 @@ export default (props: Props) => {
         maskClosable: false,
         onClose: () => {
           form.resetFields();
-          props.onVisibleChange(false);
+          setVisible(false);
         },
       }}
       submitTimeout={2000}
       onFinish={async (values) => {
         try {
-          console.log('values', values);
-          const rooms = props.operateData?.orderRoomList.filter((r, i) => {
+          const rooms = operateData?.orderRoomList.filter((r, i) => {
             return selectedRoomIndexs.includes(i);
           });
 
           await services.OrderController.operateOrder({
-            orderId: props.operateData?.order.id,
+            orderId: operateData?.order.id,
             roomReq: rooms?.map((r) => ({ id: r.id })),
-            operationType: props.operateData?.operationType,
+            operationType: operateData?.operationType,
             remark: values.remark,
           });
           message.success(`${title}成功`);
+          setVisible(false);
+          form.resetFields();
+          onSuccess();
           return true;
         } catch (err) {}
       }}
@@ -127,30 +103,28 @@ export default (props: Props) => {
         <Checkbox
           onClick={() => {
             if (
-              selectedRoomIndexs.length ===
-              props.operateData?.orderRoomList.length
+              selectedRoomIndexs.length === operateData?.orderRoomList.length
             ) {
               setSelectedRoomIndexs([]);
-            } else if (props.operateData?.orderRoomList) {
+            } else if (operateData?.orderRoomList) {
               setSelectedRoomIndexs(
-                props.operateData?.orderRoomList.map((r, i) => i),
+                operateData?.orderRoomList.map((r, i) => i),
               );
             }
           }}
           checked={
-            selectedRoomIndexs.length ===
-            props.operateData?.orderRoomList.length
+            selectedRoomIndexs.length === operateData?.orderRoomList.length
           }
         >
           全选
         </Checkbox>
         <span>
           已选{selectedRoomIndexs.length}间，共
-          {props.operateData?.orderRoomList?.length}间
+          {operateData?.orderRoomList?.length}间
         </span>
       </div>
       <div className="room-list">
-        {props.operateData?.orderRoomList.map((room, index) => {
+        {operateData?.orderRoomList.map((room, index) => {
           return (
             <div className="room-card">
               {/* <ProFormCheckbox noStyle proFormFieldKey={}={{noS}} name={['roomKeys', index]} /> */}
@@ -176,11 +150,15 @@ export default (props: Props) => {
         })}
       </div>
       <div className="fee-overview">
-        <div>订单总额：A$ {selectedRoomFees.feeTotal}</div>
+        <div>订单总额：A$ {selectedRoomFeeTotal}</div>
         <div>
-          <span>已付金额：A$ 0.00 </span>
+          <span>已付金额：A$ {operateData?.order?.paidAmount || 0} </span>
           <span className="emphisis">
-            还需收款：A${selectedRoomFees.feeNotPaied}
+            还需收款：A${' '}
+            {Math.max(
+              0,
+              selectedRoomFeeTotal - (operateData?.order?.paidAmount || 0),
+            )}
           </span>
         </div>
       </div>
@@ -192,4 +170,12 @@ export default (props: Props) => {
       />
     </DrawerForm>
   );
-};
+
+  const openOperateDrawer = (operateData: OperateData) => {
+    setOperateData(operateData);
+    setVisible(true);
+    setSelectedRoomIndexs(operateData?.orderRoomList.map((r, i) => i));
+    setSelectedRoomFeeTotal(operateData.order.totalAmount);
+  };
+  return { OperateDrawer, openOperateDrawer };
+}

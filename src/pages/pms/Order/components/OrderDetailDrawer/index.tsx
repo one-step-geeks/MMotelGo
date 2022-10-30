@@ -7,6 +7,7 @@ import { useRequest } from 'umi';
 import type { ColumnsType } from 'antd/es/table';
 import { ProCard } from '@ant-design/pro-components';
 import './style.less';
+import type { OperateData } from '@/services/OrderController';
 import {
   OrderState,
   OperationType,
@@ -18,20 +19,11 @@ import { useNoticeDrawer } from '../NoticeDrawer';
 import { useConsumeDrawer } from '../ConsumeDrawer';
 import { useOccupantDrawer } from '../PersonDrawer';
 import { usePayOrRefundDrawer, payOrRefundOptions } from '../PayDrawer';
+import { useOperateDrawer } from '../OperateDrawer';
 import OperatinoLog from './OperationLog';
-
-interface Props {
-  id: number;
-  visible: boolean;
-  onVisibleChange: (value: boolean) => void;
-  gotoEdit: (orderBase: ORDER.OrderBase) => void;
-  gotoOperate: (data: any) => void;
-  openNotice?: () => void;
-}
 
 export function useOrderDetailDrawer(
   gotoEdit?: (data: ORDER.OrderBase) => void,
-  gotoOperate?: (data: any) => void,
 ) {
   const [orderId, setOrderId] = useState<number | undefined>();
   const [visible, setVisible] = useState(false);
@@ -90,6 +82,10 @@ export function useOrderDetailDrawer(
       executeQuery();
     },
   );
+
+  const { OperateDrawer, openOperateDrawer } = useOperateDrawer(() => {
+    executeQuery();
+  });
 
   const { data: channelList } = useRequest(() => {
     return services.ChannelController.queryChannels();
@@ -383,8 +379,12 @@ export function useOrderDetailDrawer(
     setVisible(false);
     gotoEdit?.(data?.order as ORDER.OrderBase);
   };
+
   const operateOrder = (operationType: OperationType) => {
-    gotoOperate?.({ operationType, ...data });
+    openOperateDrawer({
+      operationType,
+      ...data,
+    } as OperateData);
   };
 
   if (activeTabKey === 'operationLog') {
@@ -434,12 +434,10 @@ export function useOrderDetailDrawer(
         >
           撤销入住
         </Button>
-        ,
         <Space>
           <Button onClick={modifyOrder} type="primary" key="修改订单">
             修改订单
           </Button>
-          ,
           <Button
             onClick={() => operateOrder(OperationType.CHECK_OUT)}
             type="primary"
@@ -447,7 +445,6 @@ export function useOrderDetailDrawer(
           >
             办理退房
           </Button>
-          ,
           <Button
             onClick={() => {
               message.info('打印暂未实现...');
@@ -456,7 +453,6 @@ export function useOrderDetailDrawer(
           >
             打印
           </Button>
-          ,
         </Space>
       </>
     );
@@ -479,7 +475,7 @@ export function useOrderDetailDrawer(
         footerStyle={{
           display: 'flex',
         }}
-        footer={<>{footerOperations}</>}
+        footer={footerOperations}
       >
         <Tabs
           activeKey={activeTabKey}
@@ -701,6 +697,7 @@ export function useOrderDetailDrawer(
       {ConsumeDrawer}
       {PayOrRefundDrawer}
       {OccupantDrawer}
+      {OperateDrawer}
     </>
   );
   return {
