@@ -682,7 +682,7 @@ export function useOrderDetailDrawer(
             </ProCard>
             <ProCard>
               <div className="custom-form-item">
-                <label>备注：?</label>
+                <label>备注：</label>
                 <div>{data?.order.remark}</div>
               </div>
               <div className="custom-form-item">
