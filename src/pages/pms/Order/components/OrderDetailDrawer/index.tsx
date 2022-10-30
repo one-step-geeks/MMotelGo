@@ -289,6 +289,12 @@ export function useOrderDetailDrawer(
       },
     },
     {
+      title: '房间号',
+      width: 80,
+      align: 'center',
+      dataIndex: 'roomCode',
+    },
+    {
       title: '间夜',
       width: 62,
       align: 'center',
