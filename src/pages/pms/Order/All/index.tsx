@@ -212,6 +212,7 @@ const OrderContainer: React.FC = (props) => {
             </Select>
             <ProFormDateRangePicker
               {...fieldProps}
+              noStyle
               transform={(values) => {
                 return {
                   startDate: values ? values[0] : undefined,
