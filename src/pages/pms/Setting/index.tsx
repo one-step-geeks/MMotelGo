@@ -32,7 +32,7 @@ const SettingContainer: React.FC = (props) => {
         >
           {access.canSeeRouter({ mainMenuId: 6 }) ? (
             <SubMenu
-              key="channels"
+              key="channel"
               icon={<AppstoreAddOutlined />}
               title={intl.formatMessage({ id: '渠道管理' })}
             >
