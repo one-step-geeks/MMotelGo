@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { bufferDownload } from '@/utils';
+import { Pagination, message, Radio, Button, Input, Space, Select } from 'antd';
 import {
   ProTable,
   ProFormDateRangePicker,
   ProFormInstance,
-  FieldLabel,
 } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import moment from 'moment';
 import { useRequest, useLocation } from 'umi';
 import services from '@/services';
-import { message, Radio, Button, Input, Space, Select } from 'antd';
+import { bufferDownload } from '@/utils';
 import {
   OperateData,
   OrderStateOptions,
   OrderPayOptions,
 } from '@/services/OrderController';
 import { useOrderDetailDrawer } from '../components/OrderDetailDrawer';
-
 import OrderFormDrawer from '../components/OrderFormDrawer';
 import OrderOperateDrawer from '../components/OrderOperateDrawer';
 
@@ -82,6 +80,11 @@ const OrderContainer: React.FC = (props) => {
   );
 
   useEffect(() => {
+    console.log('param changed, resetPage, submit');
+    setPagination({
+      ...pagination,
+      current: 1,
+    });
     ref.current?.submit();
   }, [param]);
 
@@ -111,7 +114,6 @@ const OrderContainer: React.FC = (props) => {
           <Button
             type="link"
             onClick={() => {
-              console.log('record.orderId');
               setOrderId(record.orderId);
               openOrderDetailDrawer(record.orderId);
             }}
@@ -324,7 +326,6 @@ const OrderContainer: React.FC = (props) => {
     setParam({ ...param, dateType: e });
   };
   const handleOnExport = async () => {
-    console.log('export via', param);
     const queryParam = generateQueryParam(ref.current?.getFieldsValue());
     const buffer = await services.OrderController.exportList(queryParam);
     bufferDownload(buffer, `订单列表.xlsx`);
@@ -361,6 +362,14 @@ const OrderContainer: React.FC = (props) => {
       ...rest,
     };
   };
+
+  const [pagination, setPagination] = useState({
+    consumed: true, // 分页改变后是否已经触发过接口查询
+    pageSize: 10,
+    total: 0,
+    current: 1,
+  });
+
   return (
     <div className="all-order-page">
       <div className="custom-page-header">
@@ -441,8 +450,24 @@ const OrderContainer: React.FC = (props) => {
         }}
         columns={columns}
         request={async (params) => {
-          const queryParam = generateQueryParam(params);
+          let newPagination = pagination.consumed
+            ? {
+                // 查询条件变
+                ...pagination,
+                current: 1,
+              }
+            : {
+                // 分页条件变
+                ...pagination,
+                consumed: true,
+              };
 
+          const queryParam = generateQueryParam(
+            Object.assign({}, params, {
+              pageSize: newPagination.pageSize,
+              current: newPagination.current,
+            }),
+          );
           const { data } = await services.OrderController.queryList(queryParam);
           const { list = [], total } = data || {};
           const flattedList = [];
@@ -451,7 +476,6 @@ const OrderContainer: React.FC = (props) => {
             const { roomDtoList, ...rest } = list[i];
             for (let j = 0; j < roomDtoList.length; j++) {
               const room = roomDtoList[j];
-              // console.log('roomDtoList.length', roomDtoList.length);
               flattedList.push({
                 rowSpan: j === 0 ? roomDtoList.length : 0,
                 ...rest,
@@ -460,17 +484,49 @@ const OrderContainer: React.FC = (props) => {
               });
             }
           }
+          setPagination({
+            ...newPagination,
+            total: total || 0,
+          });
+
           return {
             total,
-            data: flattedList.slice(0, 10) || [],
+            data: flattedList,
           };
         }}
         options={false}
-        pagination={{
-          pageSize: 10,
-          showQuickJumper: true,
+        pagination={false}
+      />
+
+      {/* 
+        订单数据请求10条，访客信息可能超过10条，在table的源码中，发现数据超过pageSize，会做slice处理，导致无法正常展示数据
+        https://github.com/ant-design/ant-design/blob/master/components/table/Table.tsx pageData部分 
+
+        因此采取自定义pagination的做法，更新时候通过触发ProTable的submit来请求数据
+      */}
+      <Pagination
+        current={pagination.current}
+        total={pagination.total}
+        showQuickJumper
+        showSizeChanger
+        onChange={(page, pageSize) => {
+          setPagination({
+            total: pagination.total,
+            consumed: false,
+            current: page,
+            pageSize,
+          });
+          ref.current?.submit();
+        }}
+        showTotal={(total, range) => {
+          return (
+            <div>
+              第 {range[0]}-{range[1]} 条/总共 {total} 条
+            </div>
+          );
         }}
       />
+      {/* ); */}
 
       {OrderDetailDrawer}
 
