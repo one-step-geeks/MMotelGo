@@ -289,6 +289,12 @@ export function useOrderDetailDrawer(
       },
     },
     {
+      title: '房间号',
+      width: 80,
+      align: 'center',
+      dataIndex: 'roomCode',
+    },
+    {
       title: '间夜',
       width: 62,
       align: 'center',
@@ -676,7 +682,7 @@ export function useOrderDetailDrawer(
             </ProCard>
             <ProCard>
               <div className="custom-form-item">
-                <label>备注：?</label>
+                <label>备注：</label>
                 <div>{data?.order.remark}</div>
               </div>
               <div className="custom-form-item">
