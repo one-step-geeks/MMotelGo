@@ -1,11 +1,11 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import services from '@/services';
+import moment from 'moment';
 import {
   DrawerForm,
   ProFormDatePicker,
   ProFormText,
   ProFormDigit,
-  ProFormDateTimePicker,
   ProFormTextArea,
   ProFormSelect,
 } from '@ant-design/pro-components';
@@ -57,11 +57,12 @@ export function useConsumeDrawer(onSuccess: () => void) {
       submitTimeout={2000}
       onFinish={async (values) => {
         try {
-          const { consumptionSetId, ...rest } = values;
+          const { consumptionSetId, consumeDate, ...rest } = values;
           await services.OrderController.addConsume({
             orderId,
             consumptionSetId: consumptionSetId.value,
             consumptionSetName: consumptionSetId.label,
+            consumeDate: moment(consumeDate).format('YYYY-MM-DD'),
             ...rest,
           });
           message.success('添加成功');
@@ -114,6 +115,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
         name="consumeDate"
         placeholder="请选择消费日期"
         label="消费日期"
+        fieldProps={{ format: 'MM/DD/YYYY' }}
       />
       <ProFormTextArea
         name="remark"

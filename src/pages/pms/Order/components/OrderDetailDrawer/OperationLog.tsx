@@ -46,12 +46,12 @@ const OperationLog: React.FC<Props> = (props) => {
   });
 
   return data?.length ? (
-    <Timeline>
+    <Timeline style={{ padding: '12px 24px' }}>
       {data.map((record) => {
         return (
           <Timeline.Item>
             <div style={{ fontSize: '13px', color: '#666' }}>
-              {moment(record.createTime).format('YYYY-MM-DD hh:mm:ss')}
+              {moment(record.createTime).format('MM/DD/YYYY HH:mm:ss')}
               &nbsp;操作人:{record.creator}&nbsp;
               {OperationTypeTexts[record.operationType as OperationTypeKeys]}
             </div>

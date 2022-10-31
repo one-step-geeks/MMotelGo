@@ -115,7 +115,7 @@ export function useOrderDetailDrawer(
       key: 'remindTime',
       width: 185,
       render(value, record, index) {
-        return moment(value).format('YYYY-MM-DD hh:mm');
+        return moment(value).format('MM/DD/YYYY HH:mm');
       },
     },
     {
@@ -178,7 +178,7 @@ export function useOrderDetailDrawer(
       align: 'center',
       key: 'consumeDate',
       render(value, record, index) {
-        return moment(value).format('MM-DD');
+        return moment(value).format('MM/DD');
       },
     },
     {
@@ -281,7 +281,7 @@ export function useOrderDetailDrawer(
       align: 'center',
       width: 112,
       render(value, record, index) {
-        return moment(value).format('YYYY-MM-DD');
+        return moment(value).format('MM/DD/YYYY');
       },
     },
     {

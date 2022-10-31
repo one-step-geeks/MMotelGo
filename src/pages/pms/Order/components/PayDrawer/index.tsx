@@ -1,17 +1,16 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import services from '@/services';
+import moment from 'moment';
 import {
   DrawerForm,
   ProFormDatePicker,
-  ProFormText,
   ProFormDigit,
-  ProFormDateTimePicker,
   ProFormTextArea,
   ProFormSelect,
   ProFormRadio,
 } from '@ant-design/pro-components';
-import { message, Tabs, Input, Space, Form, Checkbox, Button } from 'antd';
-import { useEffect, useState } from 'react';
+import { message, Tabs, Space, Form } from 'antd';
+import { useState } from 'react';
 import './style.less';
 
 interface FormOrder {}
@@ -75,9 +74,11 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
       submitTimeout={2000}
       onFinish={async (values) => {
         try {
+          const { feeDate, ...rest } = values;
           await services.OrderController.addPayOrRefund({
             orderId,
-            ...values,
+            feeDate: moment(feeDate).format('YYYY-MM-DD'),
+            ...rest,
           });
           message.success('添加成功');
           setVisible(false);
@@ -137,7 +138,12 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
         placeholder="请输入数量"
       /> */}
 
-      <ProFormDatePicker name="feeDate" placeholder="请选择日期" label="日期" />
+      <ProFormDatePicker
+        name="feeDate"
+        fieldProps={{ format: 'MM/DD/YYYY' }}
+        placeholder="请选择日期"
+        label="日期"
+      />
 
       <ProFormTextArea
         fieldProps={{

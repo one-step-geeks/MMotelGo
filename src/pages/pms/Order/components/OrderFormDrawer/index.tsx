@@ -12,7 +12,6 @@ import {
   Form,
   message,
   Input,
-  Select,
   DatePicker,
   InputNumber,
   TreeSelect,
@@ -277,6 +276,7 @@ export default (props: Props) => {
                               ?.status == OrderState.IS_CHECKED
                           }
                           style={{ width: '25%' }}
+                          format="MM/DD/YYYY"
                         ></DatePicker>
                       </Form.Item>
                       {/* integer, min 1 */}

@@ -1,5 +1,6 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import services from '@/services';
+import moment from 'moment';
 import {
   DrawerForm,
   ProFormDateTimePicker,
@@ -52,17 +53,20 @@ export function useNoticeDrawer(onSuccess: () => void) {
       onFinish={async (values) => {
         try {
           const { remindTime, remark } = values;
+          const formattedRemindTime = moment(remindTime).format(
+            'YYYY-MM-DD HH:mm:ss',
+          );
           if (notice?.id) {
             await services.OrderController.updateNotice({
               id: notice?.id,
-              remindTime,
+              remindTime: formattedRemindTime,
               remark,
             });
             message.success('修改成功');
           } else {
             await services.OrderController.addNotice({
               orderId,
-              remindTime,
+              remindTime: formattedRemindTime,
               remark,
             });
             message.success('添加成功');
@@ -79,6 +83,7 @@ export function useNoticeDrawer(onSuccess: () => void) {
         name="remindTime"
         placeholder="请选择提醒时间"
         label="提醒时间"
+        fieldProps={{ format: 'MM/DD/YYYY HH:mm:ss' }}
       />
       <ProFormTextArea
         rules={[{ required: true, message: '请输入提醒内容' }]}
