@@ -103,8 +103,8 @@ export async function queryList(params: Record<string, any>) {
 /** 导出订单列表 */
 export async function exportList(params: Record<string, any>) {
   return request<ArrayBuffer>('/motel/order/exportOrders', {
-    method: 'GET',
-    params,
+    method: 'POST',
+    data: { ...params },
   });
 }
 
