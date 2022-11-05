@@ -3,6 +3,7 @@ import ProTable from '@ant-design/pro-table';
 import type { ProColumns } from '@ant-design/pro-table';
 import { Button } from 'antd';
 import { useIntl } from 'umi';
+import moment from 'moment';
 import services from '@/services';
 
 const SettingPriceChangeLog: React.FC = () => {
@@ -12,8 +13,24 @@ const SettingPriceChangeLog: React.FC = () => {
     {
       title: intl.formatMessage({ id: '本地房型' }),
       width: 120,
-      dataIndex: 'roomTypeName',
+      dataIndex: 'roomTypeId',
       ellipsis: true,
+      request: async () => {
+        const { data } = await services.SettingController.getRoomTypeList({
+          current: 1,
+          pageSize: 999,
+        });
+        const { list } = data;
+        return (
+          list?.map((item) => ({
+            label: item.roomTypeName,
+            value: item.id,
+          })) || []
+        );
+      },
+      render: (_, record) => {
+        return record.roomTypeName;
+      },
     },
     {
       title: intl.formatMessage({ id: '价格渠道' }),
@@ -29,18 +46,23 @@ const SettingPriceChangeLog: React.FC = () => {
       width: 120,
       dataIndex: 'priceDate',
       ellipsis: true,
-      valueType: 'date',
+      valueType: 'dateRange',
+      render: (_, record) => {
+        return moment(record.priceDate).format('YYYY-MM-DD');
+      },
     },
     {
       title: intl.formatMessage({ id: '修改前价格' }),
       width: 120,
       dataIndex: 'beforePrice',
+      search: false,
       ellipsis: true,
     },
     {
       title: intl.formatMessage({ id: '修改后价格' }),
       width: 120,
       dataIndex: 'afterPrice',
+      search: false,
       ellipsis: true,
     },
     {
@@ -53,17 +75,21 @@ const SettingPriceChangeLog: React.FC = () => {
       title: intl.formatMessage({ id: '改价状态' }),
       width: 100,
       dataIndex: 'status',
+      search: false,
       ellipsis: true,
       valueEnum: {
-        1: intl.formatMessage({ id: '成功' }),
-        0: intl.formatMessage({ id: '失败' }),
+        1: { text: intl.formatMessage({ id: '成功' }), status: 'success' },
+        0: { text: intl.formatMessage({ id: '失败' }), status: 'error' },
       },
     },
     {
       title: intl.formatMessage({ id: '操作时间' }),
       width: 180,
       dataIndex: 'updateTime',
-      valueType: 'dateTime',
+      valueType: 'dateTimeRange',
+      render: (_, record) => {
+        return moment(record.updateTime).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
   ];
   return (
@@ -71,7 +97,6 @@ const SettingPriceChangeLog: React.FC = () => {
       scroll={{ x: 'scroll' }}
       columns={columns}
       options={false}
-      search={false}
       request={async (params) => {
         const { data } = await services.SettingController.getPriceChangeLog(
           params,
