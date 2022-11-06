@@ -367,3 +367,23 @@ export async function setConsumerItemStatus(params: {
     data: params,
   });
 }
+
+/** 导出改价记录 */
+export async function exportRoomPriceModifyRecord(params: {
+  updateStartDate?: string;
+  updateEndDate?: string;
+  priceStartDate?: string;
+  priceEndDate?: string;
+  channelType?: number;
+  priceType?: number;
+  roomTypeId?: number;
+  operatorId?: string;
+}) {
+  return request<ArrayBuffer>(
+    '/motel/config/price/exportRoomPriceModifyRecord',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
+}
