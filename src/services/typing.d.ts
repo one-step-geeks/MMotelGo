@@ -53,6 +53,8 @@ declare namespace API {
 
   type Result_Setting_ConsumerItemList_ = Result_List_<SETTING.ConsumerItem>;
 
+  type Result_Setting_StoreAccountList_ = Result<ACCOUNT.AccountData[]>;
+
   // 房态看板
   type Result_RoomState_OrderList_ = Result<{
     orderList: ORDER.OrderData[];

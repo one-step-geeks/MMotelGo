@@ -70,6 +70,15 @@ const SettingPriceChangeLog: React.FC = () => {
       width: 100,
       dataIndex: 'operator',
       ellipsis: true,
+      request: async () => {
+        const { data } = await services.AccountController.getStoreAccountList();
+        return (
+          data?.map((item) => ({
+            label: item.nickName,
+            value: item.id,
+          })) || []
+        );
+      },
     },
     {
       title: intl.formatMessage({ id: '改价状态' }),
@@ -86,7 +95,7 @@ const SettingPriceChangeLog: React.FC = () => {
       title: intl.formatMessage({ id: '操作时间' }),
       width: 180,
       dataIndex: 'updateTime',
-      valueType: 'dateTimeRange',
+      valueType: 'dateRange',
       render: (_, record) => {
         return moment(record.updateTime).format('YYYY-MM-DD HH:mm:ss');
       },
@@ -98,9 +107,16 @@ const SettingPriceChangeLog: React.FC = () => {
       columns={columns}
       options={false}
       request={async (params) => {
-        const { data } = await services.SettingController.getPriceChangeLog(
-          params,
-        );
+        const { data } = await services.SettingController.getPriceChangeLog({
+          current: params.current,
+          pageSize: params.pageSize,
+          roomTypeId: params.roomTypeId,
+          operatorId: params.operator,
+          priceStartDate: params?.priceDate?.[0],
+          priceEndDate: params?.priceDate?.[1],
+          updateStartDate: params?.updateTime?.[0],
+          updateEndDate: params?.updateTime?.[1],
+        });
         const { list, totalCount } = data;
         return {
           data: list,
