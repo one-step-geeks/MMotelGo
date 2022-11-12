@@ -9,9 +9,9 @@ import EmptyDrawer from './components/EmptyDrawer';
 import CloseRoomModal from './components/CloseRoomModal';
 import RoomCodeBox from './components/RoomCodeBox';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
-import TodayOverviewModal from './components/TodayOverviewModal';
-import ChangeLogModal from './components/ChangeLogModal';
-import RoomSituationModal from './components/RoomSituationModal';
+// import TodayOverviewModal from './components/TodayOverviewModal';
+// import ChangeLogModal from './components/ChangeLogModal';
+// import RoomSituationModal from './components/RoomSituationModal';
 import OrderFormDrawer from '../Order/components/OrderFormDrawer';
 import { selectService } from './components/service';
 import services from '@/services';
@@ -429,12 +429,11 @@ const RoomStatePage: React.FC = () => {
             {intl.formatMessage({ id: '单日房态' })}
           </Button>
         </Space>
-        <Space>
-          {/* <Button onClick={() => {}}>房价管理</Button> */}
+        {/* <Space>
           <TodayOverviewModal />
           <RoomSituationModal />
           <ChangeLogModal />
-        </Space>
+        </Space> */}
       </Space>
 
       <Table<ROOM_STATE.StateTableData>
