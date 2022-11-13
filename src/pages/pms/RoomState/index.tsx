@@ -207,7 +207,7 @@ const RoomStatePage: React.FC = () => {
       }
       const checkinTime = moment(o.startDate);
       const checkoutTime = moment(o.endDate);
-      if (recDate.isBetween(checkinTime, checkoutTime, null, '[]')) {
+      if (recDate.isBetween(checkinTime, checkoutTime, null, '[)')) {
         return true;
       }
       return false;
