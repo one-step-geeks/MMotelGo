@@ -81,3 +81,13 @@ export async function getAccountDetail(params: { accountId: string }) {
     },
   );
 }
+
+/** 获取酒店下员工列表 */
+export async function getStoreAccountList() {
+  return request<API.Result_Setting_StoreAccountList_>(
+    '/motel/account/getStoreAccountList',
+    {
+      method: 'GET',
+    },
+  );
+}

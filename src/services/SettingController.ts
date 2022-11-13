@@ -236,14 +236,14 @@ export async function setShopDetail(params?: {
 export async function getPriceChangeLog(params?: {
   current?: number;
   pageSize?: number;
-  logStartTime?: string;
-  logEndTime?: string;
-  startTime?: string;
-  endTime?: string;
+  updateStartDate?: string;
+  updateEndDate?: string;
+  priceStartDate?: string;
+  priceEndDate?: string;
   statue?: 0 | 1;
   priceType?: number;
   roomTypeId?: number;
-  operator?: string;
+  operatorId?: string;
 }) {
   return request<API.Result_Setting_PriceLogList_>(
     '/motel/config/price/allPriceLog',
@@ -366,4 +366,24 @@ export async function setConsumerItemStatus(params: {
     method: 'POST',
     data: params,
   });
+}
+
+/** 导出改价记录 */
+export async function exportRoomPriceModifyRecord(params: {
+  updateStartDate?: string;
+  updateEndDate?: string;
+  priceStartDate?: string;
+  priceEndDate?: string;
+  channelType?: number;
+  priceType?: number;
+  roomTypeId?: number;
+  operatorId?: string;
+}) {
+  return request<ArrayBuffer>(
+    '/motel/config/price/exportRoomPriceModifyRecord',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }

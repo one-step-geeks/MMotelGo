@@ -4,6 +4,7 @@ declare namespace ACCOUNT {
     id: number;
     phoneNo: number;
     name: string;
+    nickName: string;
     emailAddress: string;
     accountType: 0 | 1; // 0-管理员，1-普通员工；
     status: 0 | 1; // 0-禁用，1-启用

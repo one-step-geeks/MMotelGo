@@ -48,6 +48,7 @@ declare namespace ROOM_STATE {
     roomId?: Key;
     roomCode?: string;
     price?: number;
+    closed?: boolean;
     roomTypeId?: number;
     roomTypeName?: string;
   }

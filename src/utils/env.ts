@@ -1,29 +1,33 @@
 interface EnvConfig {
-  ENV?: 'prod' | 'test';
+  ENV?: 'prod' | 'test' | 'uat';
   APP_BASE_URL?: string;
 }
 
-function getConfigByEnv(env = 'local'): EnvConfig {
-  switch (env) {
-    case 'local':
-    case 'dev':
-    case 'test':
+const host = window.location.host;
+
+const envList = [
+  { origin: /dev/, env: 'dev' },
+  { origin: /uat/, env: 'uat' },
+];
+
+function getConfigByEnv(): EnvConfig {
+  const finded = envList.find((item) => item.origin.test(host));
+  switch (finded?.env) {
+    case 'production':
+      return {
+        ENV: 'prod',
+        APP_BASE_URL: 'https://uat.pietable.com',
+      };
+    case 'uat':
+      return {
+        ENV: 'uat',
+        APP_BASE_URL: 'https://uat.pietable.com',
+      };
+    default:
       return {
         ENV: 'test',
         APP_BASE_URL: 'http://dev.lamshan.com',
       };
-    case 'ppe':
-      return {
-        ENV: 'prod',
-        APP_BASE_URL: 'http://dev.lamshan.com',
-      };
-    case 'production':
-      return {
-        ENV: 'prod',
-        APP_BASE_URL: 'http://47.110.159.83:38885',
-      };
-    default:
-      return {};
   }
 }
 

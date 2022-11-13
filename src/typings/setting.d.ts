@@ -64,11 +64,12 @@ declare namespace SETTING {
     startTime?: string;
     endTime?: string;
     statue?: 0 | 1;
+    priceDate?: string;
     priceType?: number;
     operator?: string;
     beforePrice?: string;
     afterPrice?: string;
-    createTime?: string;
+    updateTime?: string;
   }
 
   interface PaymentType {

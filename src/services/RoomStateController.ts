@@ -53,8 +53,8 @@ export async function getRoomSituation(params: {
   return request<API.Result_RoomState_RoomConditionList_>(
     '/motel/roomState/condition/allCondition',
     {
-      method: 'GET',
-      params: {
+      method: 'POST',
+      data: {
         ...params,
         pageNum: params.current,
       },
