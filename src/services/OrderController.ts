@@ -104,7 +104,10 @@ export async function queryList(params: Record<string, any>) {
 export async function exportList(params: Record<string, any>) {
   return request<ArrayBuffer>('/motel/order/exportOrders', {
     method: 'POST',
-    data: { ...params },
+    data: {
+      ...params,
+    },
+    responseType: 'arrayBuffer',
   });
 }
 
