@@ -105,10 +105,12 @@ const EmptyBox: React.FC<Props> = (props) => {
               roomTypeName: record.roomTypeName,
               price,
             };
-            setVisible(true);
-            setSelected(true);
-            setSelectedRooms([...selectedRooms, info]);
-            selectService.sendSelectedInfo(info);
+            if (!selectedRooms?.length || !selectedRooms[0].closed) {
+              setVisible(true);
+              setSelected(true);
+              setSelectedRooms([...selectedRooms, info]);
+              selectService.sendSelectedInfo(info);
+            }
           }}
         >
           <Text type="secondary" className="hiden">
@@ -187,13 +189,16 @@ const EmptyBox: React.FC<Props> = (props) => {
             roomCode: record.roomCode,
             roomTypeId: record.roomTypeId,
             roomTypeName: record.roomTypeName,
+            closed: true,
             price,
           };
           if (!selected) {
-            setVisible(true);
-            setSelected(true);
-            setSelectedRooms([...selectedRooms, info]);
-            selectService.sendSelectedInfo(info);
+            if (!selectedRooms?.length || selectedRooms[0].closed) {
+              setVisible(true);
+              setSelected(true);
+              setSelectedRooms([...selectedRooms, info]);
+              selectService.sendSelectedInfo(info);
+            }
           } else {
             const filteredRooms = selectedRooms.filter(
               (item) =>
