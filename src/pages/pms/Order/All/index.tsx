@@ -190,6 +190,7 @@ const OrderContainer: React.FC = (props) => {
         return (
           <div className="compact-date-select" style={{ display: 'flex' }}>
             <Select
+              style={{ width: '33%' }}
               defaultValue={param.dateType}
               optionFilterProp="children"
               onChange={(value) => {

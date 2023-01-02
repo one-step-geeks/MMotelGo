@@ -290,14 +290,14 @@ export function useOrderDetailDrawer(
       align: 'center',
       dataIndex: 'roomCode',
     },
-    {
-      title: '间夜',
-      width: 62,
-      align: 'center',
-      dataIndex: 'checkInDays',
-      key: 'checkInDays',
-      render: (value) => `${value}夜`,
-    },
+    // {
+    //   title: '间夜',
+    //   width: 62,
+    //   align: 'center',
+    //   dataIndex: 'checkInDays',
+    //   key: 'checkInDays',
+    //   render: (value) => `${value}夜`,
+    // },
     {
       title: '房价',
       width: 82,
