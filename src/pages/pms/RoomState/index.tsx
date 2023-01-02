@@ -65,7 +65,7 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
       if (j === 0 || moment(dateList[j]).diff(dateList[j - 1], 'days') !== 1) {
         trueResult.push({
           ...rest,
-          startDate: moment(dateList[j]),
+          checkInDate: moment(dateList[j]),
           checkInDays: 1,
           totalAmount: rest.priceList[j],
           roomPrice: rest.priceList[j],
@@ -93,10 +93,9 @@ const RoomStatePage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
-  const openOrCloseList = useMemo(
-    () => processOpenAndClose(selectedRooms),
-    [selectedRooms],
-  );
+  const openOrCloseList = useMemo(() => processOpenAndClose(selectedRooms), [
+    selectedRooms,
+  ]);
 
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {

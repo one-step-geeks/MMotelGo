@@ -17,17 +17,19 @@ import {
   TreeSelect,
   Button,
 } from 'antd';
-import services from '@/services';
 import type { DefaultOptionType } from 'antd/es/select';
+import services from '@/services';
+import { OrderState } from '@/services/OrderController';
 import moment from 'moment';
 import { useRequest } from 'umi';
 
 import './style.less';
-import { OrderState } from '@/services/OrderController';
+
+type RoomProp = Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>;
 
 interface Props {
   id?: number;
-  rooms?: Array<Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>>;
+  rooms?: Array<RoomProp>;
   visible: boolean;
   onVisibleChange: (value: boolean) => void;
   onSubmited: () => void;
@@ -45,12 +47,27 @@ export default (props: Props) => {
   const roomsValue = Form.useWatch('orderRoomList', form);
 
   useEffect(() => {
+    // console.log('props.rooms', props.rooms);
     if (props.rooms) {
+      const orderRoomList = props.rooms.reduce(
+        (acc: Array<RoomProp>, cur: RoomProp) => {
+          const splitedRooms = [];
+          // 跨多天的订单，将其拆分为多条房间记录
+          for (let i = 0; i < cur.checkInDays; i++) {
+            splitedRooms.push({
+              ...cur,
+              roomPrice: cur.priceList[i],
+              checkInDate: moment(cur.checkInDate).add(i, 'day'),
+              roomDesc: `${cur.roomTypeName}-${cur.roomCode}`,
+            });
+          }
+          return [...acc, ...splitedRooms];
+        },
+        [],
+      );
+      // console.log('orderRoomList', orderRoomList);
       form.setFieldsValue({
-        orderRoomList: props.rooms.map((room) => ({
-          ...room,
-          roomDesc: `${room.roomTypeName}-${room.roomCode}`,
-        })),
+        orderRoomList,
       });
     }
   }, [props.rooms]);
@@ -66,10 +83,10 @@ export default (props: Props) => {
             // setOrderStatus(order.status);
             form.setFieldsValue({
               ...order,
-              orderRoomList: orderRoomList.map(({ startDate, ...rest }) => {
+              orderRoomList: orderRoomList.map(({ checkInDate, ...rest }) => {
                 return {
                   ...rest,
-                  startDate: moment(startDate),
+                  checkInDate: moment(checkInDate),
                   roomDesc: `${rest.roomTypeName}-${rest.roomCode}`,
                 };
               }),
@@ -84,12 +101,10 @@ export default (props: Props) => {
     },
   );
 
-  const onLoadRoomTree = async (open: boolean, startDate: string) => {
+  const onLoadRoomTree = async (open: boolean, checkInDate: string) => {
     if (open) {
-      console.log('startDate', startDate);
-      // queryObservableRooms
       const { data } = await services.OrderController.queryObservableRooms(
-        startDate,
+        checkInDate,
       );
       const { orderRoomList } = form.getFieldsValue();
       const addedRoomIds = orderRoomList.map((room) => room.roomId);
@@ -127,8 +142,6 @@ export default (props: Props) => {
     }
   };
 
-  // console.log('props.room', props.room)
-
   const isEdit = !!props?.id;
   // | 'orderStatus'>
   return (
@@ -163,14 +176,27 @@ export default (props: Props) => {
             },
             orderRoomList: orderRoomList.map((orderRoom) => {
               // 对于新增的房间，只有roomDesc，需要获取到roomId用于提交
-              let { roomDesc, roomId, startDate, ...rest } = orderRoom;
+              let {
+                roomPrice,
+                roomDesc,
+                roomId,
+                checkInDate,
+                ...rest
+              } = orderRoom;
+
               return {
                 roomId,
-                startDate: moment(startDate).format('YYYY-MM-DD'),
+                checkInDate: moment(checkInDate).format('YYYY-MM-DD'),
                 // // 房间状态可能和订单状态有差异，新增时候保持一致
                 status: OrderState.IS_ORDERED,
                 checkInPersonCount: 0,
+                roomPrice,
                 ...rest,
+                // 是最早方案设计中会需要totalAmount，代表预多天的订单的房价总和
+                // 但目前将多天拆分了多条记录，房价roomPrice*1 恒等于 totalAmount
+                // 后端仍旧依赖totalAmount字段，因此暂时冗余它
+                // 覆盖传入totalAmount：房态位置传入值是roomPrice*n的结果（n是预定天数）
+                totalAmount: roomPrice,
               };
             }),
           };
@@ -265,7 +291,7 @@ export default (props: Props) => {
                   <Form.Item key={field.key}>
                     <Input.Group compact>
                       <Form.Item
-                        name={[field.name, 'startDate']}
+                        name={[field.name, 'checkInDate']}
                         noStyle
                         initialValue={moment()}
                       >
@@ -275,49 +301,16 @@ export default (props: Props) => {
                             form.getFieldValue('orderRoomList')[index]
                               ?.status == OrderState.IS_CHECKED
                           }
-                          style={{ width: '25%' }}
+                          style={{ width: '30%' }}
                           format="MM/DD/YYYY"
-                        ></DatePicker>
+                        />
                       </Form.Item>
                       {/* integer, min 1 */}
 
-                      <Form.Item
-                        name={[field.name, 'checkInDays']}
-                        noStyle
-                        initialValue={1}
-                      >
-                        <InputNumber
-                          formatter={(value) => {
-                            const number = Math.max(Number(value), 1);
-                            return `${number}晚`;
-                          }}
-                          parser={(value) => {
-                            const parsed = value!.replace(/晚/g, '');
-                            console.log('parsed', parsed);
-                            return Number(parsed);
-                          }}
-                          style={{ width: '15%' }}
-                          onChange={(value: number) => {
-                            const { orderRoomList } = form.getFieldsValue();
-                            const room = orderRoomList[index];
-                            const { checkInDays, roomPrice } = room;
-                            console.log(
-                              'liveDaychanged',
-                              roomPrice,
-                              checkInDays,
-                            );
-                            room.totalAmount = roomPrice * checkInDays;
-                            form.setFieldsValue({ orderRoomList });
-                          }}
-                        />
-                      </Form.Item>
-
-                      {/* <Form.Item name={[field.name, 'roomId']}></Form.Item> */}
-                      {/* <Form.Item name={[field.name, 'roomPrice']}></Form.Item> */}
                       <Form.Item name={[field.name, 'roomDesc']} noStyle>
                         <TreeSelect
                           treeDataSimpleMode
-                          style={{ width: '35%' }}
+                          style={{ width: '40%' }}
                           dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                           placeholder="请选择房间"
                           treeData={treeData}
@@ -325,11 +318,10 @@ export default (props: Props) => {
                             console.log('field.name', field.name);
                             const { orderRoomList } = form.getFieldsValue();
                             const fieldRow = orderRoomList[field.name];
-                            const startDate =
-                              fieldRow.startDate &&
-                              fieldRow.startDate.format('YYYY-MM-DD');
-                            // console.log("orderRoomList[field.name]", orderRoomList[field.name]);
-                            onLoadRoomTree(value, startDate);
+                            const checkInDate =
+                              fieldRow.checkInDate &&
+                              fieldRow.checkInDate.format('YYYY-MM-DD');
+                            onLoadRoomTree(value, checkInDate);
                           }}
                           onSelect={(value, node) => {
                             // 更新房间的价格
@@ -338,9 +330,6 @@ export default (props: Props) => {
                             const room = orderRoomList.find(
                               (room) => room.roomDesc === value,
                             );
-                            const day = room!.checkInDays;
-                            console.log('treeChanged', price, day);
-                            room!.totalAmount = price * day;
                             room!.roomId = id;
                             room!.roomPrice = price;
                             form.setFieldsValue({ orderRoomList });
@@ -348,11 +337,10 @@ export default (props: Props) => {
                         />
                       </Form.Item>
 
-                      <Form.Item name={[field.name, 'totalAmount']} noStyle>
+                      <Form.Item name={[field.name, 'roomPrice']} noStyle>
                         <InputNumber
-                          style={{ width: '20%' }}
+                          style={{ width: '25%' }}
                           formatter={(value) => {
-                            console.log('InputNumber', value);
                             let feeValue = value;
                             const valueStr = value?.toString();
                             const match = valueStr && valueStr.match(/\.\d+/);
