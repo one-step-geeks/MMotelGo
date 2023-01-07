@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useIntl } from 'umi';
 import CommonCard from '@/components/CommonCard';
 
@@ -14,6 +14,9 @@ import {
 
 const PaymentDetail: React.FC = () => {
   const intl = useIntl();
+  const [paymentDatePriceObj, setPaymentDatePriceObj] = useState<
+    Record<any, number>
+  >({});
   const { store, paymentDetailActionRef } = useContext(PaymentCollectContext);
   const { collectDateRange } = store;
   const columns = useMemo<ProColumns[]>(() => {
@@ -23,7 +26,8 @@ const PaymentDetail: React.FC = () => {
         title: intl.formatMessage({ id: '项目' }),
         fixed: 'left',
         width: 100,
-        render: (_, index) => {
+        render: (_, index, ...args) => {
+          console.log(...args);
           return (index as number) < 4 ? _ : intl.formatMessage({ id: '合计' });
         },
         onCell: (_, index) => ({
@@ -75,17 +79,12 @@ const PaymentDetail: React.FC = () => {
             toolBarRender={false}
             search={false}
             request={async (params) => {
-              const { pageSize, current } = params;
               const timeParams = getRangeDate(collectDateRange);
               return fetchPaymentDetail({
                 ...timeParams,
-                pageSize,
-                pageNum: current,
-                paymentIds: [],
                 type: PaymentDetailTypeEnum.RECEIPTS,
               }).then((res) => {
                 return {
-                  total: res.data?.total,
                   data: res.data?.list || [],
                 };
               });
