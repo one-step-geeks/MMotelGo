@@ -99,7 +99,7 @@ export interface PaymentDetailType {
   paymentDetailList: PaymentDetailItemType[];
   totalAmountList: number[];
 }
-// 支付方式明细列表
+// 支付方式明细列表, 已格式化可做Protable的dateSource
 export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
   return request<API.Result<PaymentDetailType>>(
     '/motel/summary/payment/paymentDetail',
