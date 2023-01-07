@@ -7,16 +7,11 @@ import { PaymentCollectContext } from '../../context';
 import { Button } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { getRangeDate, transformRangeDate } from '@/utils';
-import {
-  PaymentDetailTypeEnum,
-  fetchPaymentDetail,
-} from '@/services/StatisticController';
+import { fetchSumFormData } from '@/services/StatisticController';
 
 const PaymentDetail: React.FC = () => {
   const intl = useIntl();
-  const [paymentDatePriceObj, setPaymentDatePriceObj] = useState<
-    Record<any, number>
-  >({});
+
   const { store, paymentDetailActionRef } = useContext(PaymentCollectContext);
   const { collectDateRange } = store;
   const columns = useMemo<ProColumns[]>(() => {
@@ -25,6 +20,7 @@ const PaymentDetail: React.FC = () => {
       {
         title: intl.formatMessage({ id: '项目' }),
         fixed: 'left',
+        dataIndex: 'project',
         width: 100,
         render: (_, index, ...args) => {
           console.log(...args);
@@ -37,17 +33,20 @@ const PaymentDetail: React.FC = () => {
       {
         title: intl.formatMessage({ id: '明细' }),
         fixed: 'left',
+        dataIndex: 'detail',
         width: 100,
       },
       {
         title: intl.formatMessage({ id: '合计' }),
         fixed: 'left',
         width: 100,
+        dataIndex: 'total',
       },
       ...rangeDayList.map((item) => {
         return {
           title: item,
           width: 150,
+          dataIndex: item,
         } as ProColumns;
       }),
     ];
@@ -80,12 +79,11 @@ const PaymentDetail: React.FC = () => {
             search={false}
             request={async (params) => {
               const timeParams = getRangeDate(collectDateRange);
-              return fetchPaymentDetail({
+              return fetchSumFormData({
                 ...timeParams,
-                type: PaymentDetailTypeEnum.RECEIPTS,
               }).then((res) => {
                 return {
-                  data: res.data?.list || [],
+                  data: res,
                 };
               });
             }}

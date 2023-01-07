@@ -113,19 +113,20 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
     const newPaymentDetailList: {
       paymentName: string;
       [x: string]: any;
-    }[] = paymentDetailList.map((paymentDetail) => {
-      const { paymentDateList, paymentName } = paymentDetail;
-      const paymentDetailItem: Record<string, any> = {};
-      paymentDateList.forEach((paymentDate) => {
-        const { date, price } = paymentDate;
-        paymentDetailItem[date] = price;
-        paymentDaySet.add(date);
-      });
-      return {
-        paymentName,
-        ...paymentDetailItem,
-      };
-    });
+    }[] =
+      paymentDetailList?.map((paymentDetail) => {
+        const { paymentDateList, paymentName } = paymentDetail;
+        const paymentDetailItem: Record<string, any> = {};
+        paymentDateList.forEach((paymentDate) => {
+          const { date, price } = paymentDate;
+          paymentDetailItem[date] = price;
+          paymentDaySet.add(date);
+        });
+        return {
+          paymentName,
+          ...paymentDetailItem,
+        };
+      }) || [];
 
     const totalItem: {
       paymentName: string;
@@ -136,7 +137,74 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
     [...paymentDaySet.values()].forEach((dateString, index) => {
       totalItem[dateString] = totalAmountList[index];
     });
+    if (newPaymentDetailList.length > 0) {
+      newPaymentDetailList.push(totalItem);
+    }
     newPaymentDetailList.push(totalItem);
     return newPaymentDetailList;
+  });
+}
+
+export interface SumFormDataDetailType {
+  allTotalAmount: number;
+  dailyAllAmounts: number[];
+  dates: string[];
+  list: {
+    name: string; //名字
+    list: {
+      name: string; //名字
+      itemId: number;
+      totalAmount: number; //总额
+      dailyAmounts: number[];
+    }[];
+  }[];
+}
+export interface PaymentItem {
+  project: string;
+  detail: string;
+  total: number;
+  [x: string]: any;
+}
+// 营业明细列表, 已格式化可做Protable的dateSource
+export async function fetchSumFormData(data: DateRangeData) {
+  return request<API.Result<SumFormDataDetailType>>(
+    '/motel/summary/business/sumFormData',
+    {
+      method: 'POST',
+      data,
+    },
+  ).then((res) => {
+    const { allTotalAmount, dailyAllAmounts, dates, list } = res.data || {};
+
+    const targetList: PaymentItem[] = [];
+    list.forEach((paymentDetail) => {
+      const { name, list: subList } = paymentDetail;
+      subList.forEach((item) => {
+        const { dailyAmounts, totalAmount, name: subName } = item;
+        const paymentItem: PaymentItem = {
+          project: name,
+          detail: subName,
+          total: totalAmount,
+        };
+        dates.forEach((dateString, index) => {
+          paymentItem[dateString] = dailyAmounts[index];
+        });
+        targetList.push(paymentItem);
+      });
+    });
+
+    const totalItem: PaymentItem = {
+      project: '合计',
+      detail: '',
+      total: allTotalAmount,
+    };
+    dates.forEach((dateString, index) => {
+      totalItem[dateString] = dailyAllAmounts[index];
+      totalItem.total += dailyAllAmounts[index];
+    });
+    if (targetList.length > 0) {
+      targetList.push(totalItem);
+    }
+    return targetList;
   });
 }
