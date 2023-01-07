@@ -40,21 +40,42 @@ export default [
     ],
   },
   {
+    path: 'pms/channel',
+    exact: true,
+    redirect: '/pms/channel/channel-list',
+  },
+  {
+    name: '渠道',
+    path: 'pms/channel',
+    component: 'pms/Channel',
+    routes: [
+      {
+        path: '/pms/channel/channel-list',
+        component: 'pms/Channel/ChannelList',
+      },
+      {
+        path: '/pms/channel/channel-origin',
+        component: 'pms/Channel/ChannelOrigin',
+      },
+    ],
+  },
+  {
     path: 'pms/statistic',
     exact: true,
-    redirect: '/pms/statistic/payment-manage',
+    redirect: '/pms/statistic/statistic-payment',
   },
+
   {
     name: '统计',
     path: 'pms/statistic',
     component: 'pms/Statistic',
     routes: [
       {
-        path: '/pms/statistic/payment-manage',
+        path: '/pms/statistic/statistic-payment',
         component: 'pms/Statistic/PaymentManage',
       },
       {
-        path: '/pms/statistic/trade-manage',
+        path: '/pms/statistic/statistic-trade',
         component: 'pms/Statistic/TradeManage',
       },
     ],
@@ -75,6 +96,13 @@ export default [
         access: 'canSeeSubRouter',
         subMenuId: 18,
       },
+      {
+        path: '/pms/setting/channel-mail-manage',
+        component: 'pms/Setting/ChannelMailManage',
+        access: 'canSeeSubRouter',
+        subMenuId: 18,
+      },
+
       {
         path: '/pms/setting/rooms-manage',
         component: 'pms/Setting/RoomType',

@@ -11,12 +11,11 @@ import {
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
-const SettingContainer: React.FC = (props) => {
+const ChannelContainer: React.FC = (props) => {
   const intl = useIntl();
   const history = useHistory();
   const access = useAccess();
   const pathname = history.location.pathname;
-  console.log(pathname);
   return (
     <Layout>
       <Sider width={160} collapsed={false} theme="light">
@@ -24,30 +23,22 @@ const SettingContainer: React.FC = (props) => {
           mode="inline"
           defaultSelectedKeys={[pathname]}
           defaultOpenKeys={[
-            pathname?.split('/pms/statistic/')?.[1]?.split('-')?.[0],
+            pathname?.split('/pms/channel/')?.[1]?.split('-')?.[0],
           ]}
           onClick={(info) => {
             const { key } = info;
             history.push(key);
           }}
         >
-          {access.canSeeRouter({ mainMenuId: 5 }) ? (
-            <SubMenu
-              key="statistic"
-              icon={<AppstoreAddOutlined />}
-              title={intl.formatMessage({ id: '数据汇总' })}
-            >
-              {access.canSeeSubMenu(18) ? (
-                <Menu.Item key="/pms/statistic/statistic-payment">
-                  {intl.formatMessage({ id: '收款汇总' })}
-                </Menu.Item>
-              ) : null}
-              {access.canSeeSubMenu(17) ? (
-                <Menu.Item key="/pms/statistic/statistic-trade">
-                  {intl.formatMessage({ id: '营业汇总' })}
-                </Menu.Item>
-              ) : null}
-            </SubMenu>
+          {access.canSeeSubMenu(18) ? (
+            <Menu.Item key="/pms/channel/channel-list">
+              {intl.formatMessage({ id: '渠道列表' })}
+            </Menu.Item>
+          ) : null}
+          {access.canSeeSubMenu(17) ? (
+            <Menu.Item key="/pms/channel/channel-origin">
+              {intl.formatMessage({ id: '渠道单来源' })}
+            </Menu.Item>
           ) : null}
         </Menu>
       </Sider>
@@ -66,4 +57,4 @@ const SettingContainer: React.FC = (props) => {
   );
 };
 
-export default SettingContainer;
+export default ChannelContainer;

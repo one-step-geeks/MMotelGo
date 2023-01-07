@@ -41,6 +41,11 @@ const SettingContainer: React.FC = (props) => {
                   {intl.formatMessage({ id: '渠道设置' })}
                 </Menu.Item>
               ) : null}
+              {access.canSeeSubMenu(18) ? (
+                <Menu.Item key="/pms/setting/channel-mail-manage">
+                  {intl.formatMessage({ id: '渠道邮箱配置' })}
+                </Menu.Item>
+              ) : null}
             </SubMenu>
           ) : null}
           {access.canSeeRouter({ mainMenuId: 7 }) ? (

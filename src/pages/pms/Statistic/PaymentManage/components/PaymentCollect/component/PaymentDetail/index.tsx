@@ -6,7 +6,6 @@ import './style.less';
 import { PaymentCollectContext } from '../../context';
 import { Button } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
-import moment from 'moment';
 
 const PaymentDetail: React.FC = () => {
   const intl = useIntl();
@@ -27,23 +26,23 @@ const PaymentDetail: React.FC = () => {
     }
     return [
       {
-        title: '项目',
+        title: intl.formatMessage({ id: '项目' }),
         fixed: 'left',
         width: 100,
         render: (_, index) => {
-          return (index as number) < 4 ? _ : '合计';
+          return (index as number) < 4 ? _ : intl.formatMessage({ id: '合计' });
         },
         onCell: (_, index) => ({
           colSpan: (index as number) < 4 ? 1 : 2,
         }),
       },
       {
-        title: '明细',
+        title: intl.formatMessage({ id: '明细' }),
         fixed: 'left',
         width: 100,
       },
       {
-        title: '合计',
+        title: intl.formatMessage({ id: '合计' }),
         fixed: 'left',
         width: 100,
       },
@@ -66,7 +65,11 @@ const PaymentDetail: React.FC = () => {
                 .join(' ~ ')
             : ''
         }
-        titleTool={<Button type="primary">报表导出</Button>}
+        titleTool={
+          <Button type="primary">
+            {intl.formatMessage({ id: '报表导出' })}
+          </Button>
+        }
       >
         <div className="payment-detail-card-warp">
           <ProTable

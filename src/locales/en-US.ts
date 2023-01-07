@@ -13,7 +13,10 @@ export default {
   'menu.注册成功': 'Regist Success',
   'menu.收款汇总': 'Payment Manage',
   'menu.营业汇总': 'Trade Manage',
+  'menu.数据汇总': 'Data summary',
+  数据汇总: 'Data summary',
   收款汇总: 'Payment Manage',
+  报表导出: 'Report export',
   营业汇总: 'Trade Manage',
   'a.数据统计时，按每条消费记录的发生时间进行统计，而不是您操作录入的时间':
     'a.In data statistics, the time of occurrence of each consumption record is counted, not the time you entered',
