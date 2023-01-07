@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Pie, measureTextWidth, PieConfig } from '@ant-design/plots';
 
-interface CommonPieProps {}
+interface CommonPieProps {
+  dataSource: {
+    type: string;
+    value: number;
+  }[];
+}
 const renderStatistic = (
   containerWidth: number,
   text: string,
@@ -32,19 +37,15 @@ const renderStatistic = (
     scale < 1 ? 1 : 'inherit'
   };">${text}</div>`;
 };
+
 const CommonPie: React.FC<CommonPieProps> = (props) => {
-  const data = [
-    {
-      type: '分类一',
-      value: 27,
-    },
-  ];
+  const { dataSource } = props;
   const config: PieConfig = {
     width: 200,
     height: 200,
     appendPadding: 0,
     padding: 0,
-    data,
+    data: dataSource,
     angleField: 'value',
     colorField: 'type',
     radius: 1,

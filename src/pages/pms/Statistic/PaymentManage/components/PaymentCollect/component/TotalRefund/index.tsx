@@ -10,6 +10,8 @@ const TotalRefund: React.FC = () => {
   const intl = useIntl();
   const { store } = useContext(PaymentCollectContext);
   const { totalRefundInfo, totalRefundLoading } = store;
+  const { totalAmount, paymentAmountList = [] } = totalRefundInfo || {};
+
   return (
     <div className="total-refund">
       <CommonCard
@@ -17,7 +19,14 @@ const TotalRefund: React.FC = () => {
         title={intl.formatMessage({ id: '总退款' })}
       >
         <div className="total-refund-card-warp">
-          <CommonPie />
+          <CommonPie
+            dataSource={paymentAmountList.map((item) => {
+              return {
+                type: item.paymentName,
+                value: item.amount,
+              };
+            })}
+          />
         </div>
       </CommonCard>
     </div>

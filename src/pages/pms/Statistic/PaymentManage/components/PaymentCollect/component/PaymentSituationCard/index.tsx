@@ -1,13 +1,12 @@
 import React, { useContext } from 'react';
 import { useIntl } from 'umi';
-import { Alert, DatePicker, PageHeader, Tooltip, Typography } from 'antd';
-import { ProCard } from '@ant-design/pro-components';
-import { QuestionCircleOutlined } from '@ant-design/icons';
-
-import './style.less';
 import PaymentSituationCardItem from './PaymentSituationCardItem';
 import CommonCard from '@/components/CommonCard';
 import { PaymentCollectContext } from '../../context';
+import refundIcon from '@/assets/images/退款管理.png';
+import netReceiptsIcon from '@/assets/images/收款认领.png';
+import receiptsIcon from '@/assets/images/新增收款.png';
+import './style.less';
 
 const PaymentSituationCard: React.FC = () => {
   const intl = useIntl();
@@ -41,17 +40,17 @@ const PaymentSituationCard: React.FC = () => {
       >
         <div className="payment-situation-card-warp">
           <PaymentSituationCardItem
-            iconUrl=""
+            iconUrl={netReceiptsIcon}
             label="净收款"
             price={paymentSurvey.netReceipts || 0}
           />
           <PaymentSituationCardItem
-            iconUrl=""
+            iconUrl={receiptsIcon}
             label="总收款"
             price={paymentSurvey.totalAmount || 0}
           />
           <PaymentSituationCardItem
-            iconUrl=""
+            iconUrl={refundIcon}
             label="总退款"
             price={paymentSurvey.totalRefund || 0}
           />

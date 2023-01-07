@@ -82,6 +82,7 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
       try {
         if (!isEmpty(searchParams)) {
           await fetchTotalPayment(searchParams).then((res) => {
+            console.log(res);
             this.setState({
               totalReceiptsInfo: res.data,
             });
