@@ -1,3 +1,5 @@
+import { bufferDownload } from '@/utils';
+import { message } from 'antd';
 import { request } from 'umi';
 
 interface DateRangeData {
@@ -204,5 +206,20 @@ export async function fetchSumFormData(data: DateRangeData) {
       targetList.push(totalItem);
     }
     return targetList;
+  });
+}
+
+// 营业明细列表导出
+export async function exportSummary(data: DateRangeData) {
+  return request<ArrayBuffer>('/motel/summary/business/exportSummary', {
+    method: 'POST',
+    data,
+    responseType: 'arrayBuffer',
+  }).then((buffer) => {
+    bufferDownload(
+      buffer,
+      `营业明细列表${data.startTime} ~ ${data.endTime}.xlsx`,
+    );
+    message.success('下载成功');
   });
 }
