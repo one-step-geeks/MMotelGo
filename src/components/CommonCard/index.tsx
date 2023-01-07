@@ -9,13 +9,22 @@ interface CommonCardProps {
   tooltip?: React.ReactNode;
   tooltipIcon?: React.ReactNode;
   title: React.ReactNode;
+  loading?: boolean;
   titleTool?: React.ReactNode;
   subTitle?: React.ReactNode;
   children?: React.ReactNode;
 }
 
 const CommonCard: React.FC<CommonCardProps> = (props) => {
-  const { children, tooltip, tooltipIcon, title, subTitle, titleTool } = props;
+  const {
+    children,
+    tooltip,
+    tooltipIcon,
+    title,
+    subTitle,
+    titleTool,
+    loading,
+  } = props;
   return (
     <div className="common-card">
       <div className="common-card-header">
@@ -41,7 +50,9 @@ const CommonCard: React.FC<CommonCardProps> = (props) => {
         </div>
         <div className="common-card-header-tool">{titleTool}</div>
       </div>
-      <ProCard className="common-card-content">{children}</ProCard>
+      <ProCard loading={loading} className="common-card-content">
+        {children}
+      </ProCard>
     </div>
   );
 };

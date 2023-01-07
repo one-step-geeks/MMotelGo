@@ -9,6 +9,7 @@ import PaymentSituationCard from './component/PaymentSituationCard';
 import TotalReceipts from './component/TotalReceipts';
 import TotalRefund from './component/TotalRefund';
 import PaymentDetail from './component/PaymentDetail';
+import PaymentManageDateRangePicker from './component/PaymentManageDateRangePicker';
 
 const PaymentCollect: React.FC<PaymentCollectContextType> = (props) => {
   const { store, setStore } = props;
@@ -20,15 +21,7 @@ const PaymentCollect: React.FC<PaymentCollectContextType> = (props) => {
         message={intl.formatMessage({ id: '收款记录不含记一笔收款' })}
         type="warning"
       />
-      <div className="payment-manage-collect-data-piker">
-        <DatePicker.RangePicker
-          value={collectDateRange}
-          onChange={(date) => setStore({ collectDateRange: date })}
-          disabledDate={(date) => {
-            return date.isAfter(moment(), 'day');
-          }}
-        />
-      </div>
+      <PaymentManageDateRangePicker />
       <PaymentSituationCard />
       <div className="payment-manage-collect-receipts">
         <TotalReceipts />

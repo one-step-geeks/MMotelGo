@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useIntl } from 'umi';
 import { Alert, DatePicker, PageHeader, Tooltip, Typography } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
@@ -7,13 +7,16 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import './style.less';
 import PaymentSituationCardItem from './PaymentSituationCardItem';
 import CommonCard from '@/components/CommonCard';
+import { PaymentCollectContext } from '../../context';
 
 const PaymentSituationCard: React.FC = () => {
   const intl = useIntl();
-
+  const { store } = useContext(PaymentCollectContext);
+  const { paymentSurvey, paymentSurveyLoading } = store;
   return (
     <div className="payment-situation">
       <CommonCard
+        loading={paymentSurveyLoading}
         title={intl.formatMessage({ id: '收款概况' })}
         subTitle={intl.formatMessage({ id: '统计说明' })}
         tooltip={
@@ -37,9 +40,21 @@ const PaymentSituationCard: React.FC = () => {
         }
       >
         <div className="payment-situation-card-warp">
-          <PaymentSituationCardItem iconUrl="" label="净收款" price={510} />
-          <PaymentSituationCardItem iconUrl="" label="总收款" price={510} />
-          <PaymentSituationCardItem iconUrl="" label="总退款" price={510} />
+          <PaymentSituationCardItem
+            iconUrl=""
+            label="净收款"
+            price={paymentSurvey.netReceipts}
+          />
+          <PaymentSituationCardItem
+            iconUrl=""
+            label="总收款"
+            price={paymentSurvey.totalAmount}
+          />
+          <PaymentSituationCardItem
+            iconUrl=""
+            label="总退款"
+            price={paymentSurvey.totalRefund}
+          />
         </div>
       </CommonCard>
     </div>
