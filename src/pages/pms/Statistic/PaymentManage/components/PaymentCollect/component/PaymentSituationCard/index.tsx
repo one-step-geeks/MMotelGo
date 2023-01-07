@@ -43,17 +43,17 @@ const PaymentSituationCard: React.FC = () => {
           <PaymentSituationCardItem
             iconUrl=""
             label="净收款"
-            price={paymentSurvey.netReceipts}
+            price={paymentSurvey.netReceipts || 0}
           />
           <PaymentSituationCardItem
             iconUrl=""
             label="总收款"
-            price={paymentSurvey.totalAmount}
+            price={paymentSurvey.totalAmount || 0}
           />
           <PaymentSituationCardItem
             iconUrl=""
             label="总退款"
-            price={paymentSurvey.totalRefund}
+            price={paymentSurvey.totalRefund || 0}
           />
         </div>
       </CommonCard>

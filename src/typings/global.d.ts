@@ -1,6 +1,5 @@
 declare module 'mockjs';
 declare module 'js-cookie';
-declare module 'lodash-es';
 declare module '@/assets/*';
 
 declare type Key = React.Key;

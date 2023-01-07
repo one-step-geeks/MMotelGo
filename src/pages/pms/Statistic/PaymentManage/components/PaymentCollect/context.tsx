@@ -11,6 +11,8 @@ import {
   fetchTotalRefund,
 } from '@/services/StatisticController';
 import moment from 'moment';
+import { isEmpty } from 'lodash';
+import { getRangeDate } from '@/utils';
 export const PaymentCollectContext = createContext<PaymentCollectContextType>(
   {} as any,
 );
@@ -50,30 +52,14 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
       });
       this.getInitData(collectDateRange);
     };
-    getRangeDate = (
-      collectDateRange: PaymentCollectStateType['collectDateRange'],
-    ) => {
-      const [start, end] = collectDateRange || [];
-      if (start && end) {
-        return {
-          startTime: start.hour(0).minute(0).second(0).millisecond(0).valueOf(),
-          endTime: end
-            .hour(23)
-            .minute(59)
-            .second(59)
-            .millisecond(999)
-            .valueOf(),
-        };
-      }
-      return null;
-    };
+
     getPaymentSurvey = async (
       collectDateRange: PaymentCollectStateType['collectDateRange'] = this.state
         .collectDateRange,
     ) => {
-      const searchParams = this.getRangeDate(collectDateRange);
+      const searchParams = getRangeDate(collectDateRange);
       try {
-        if (searchParams) {
+        if (!isEmpty(searchParams)) {
           await fetchPaymentSurvey(searchParams).then((res) => {
             this.setState({
               paymentSurvey: res.data,
@@ -92,9 +78,9 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
       collectDateRange: PaymentCollectStateType['collectDateRange'] = this.state
         .collectDateRange,
     ) => {
-      const searchParams = this.getRangeDate(collectDateRange);
+      const searchParams = getRangeDate(collectDateRange);
       try {
-        if (searchParams) {
+        if (!isEmpty(searchParams)) {
           await fetchTotalPayment(searchParams).then((res) => {
             this.setState({
               totalReceiptsInfo: res.data,
@@ -113,9 +99,9 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
       collectDateRange: PaymentCollectStateType['collectDateRange'] = this.state
         .collectDateRange,
     ) => {
-      const searchParams = this.getRangeDate(collectDateRange);
+      const searchParams = getRangeDate(collectDateRange);
       try {
-        if (searchParams) {
+        if (!isEmpty(searchParams)) {
           await fetchTotalRefund(searchParams).then((res) => {
             this.setState({
               totalRefundInfo: res.data,
@@ -136,6 +122,8 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
     ) => {
       this.getPaymentSurvey(collectDateRange);
       this.getTotalPayment(collectDateRange);
+      this.getTotalRefund(collectDateRange);
+      this.paymentDetailActionRef.current?.reload();
     };
     render() {
       const contextValue = {

@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { history, useIntl } from 'umi';
 import { RangeValue } from 'rc-picker/lib/interface';
+import { PaymentCollectStateType } from '@/pages/pms/Statistic/PaymentManage/components/PaymentCollect/interface';
 
 export const getWeekDay = (date: moment.Moment) => {
   const intl = useIntl();
@@ -63,4 +64,17 @@ export const transformRangeDate = (
     }
   }
   return rangeDayList;
+};
+
+export const getRangeDate = (
+  collectDateRange: PaymentCollectStateType['collectDateRange'],
+) => {
+  const [start, end] = collectDateRange || [];
+  if (start && end) {
+    return {
+      startTime: start.hour(0).minute(0).second(0).millisecond(0).valueOf(),
+      endTime: end.hour(23).minute(59).second(59).millisecond(999).valueOf(),
+    };
+  }
+  return {} as any;
 };

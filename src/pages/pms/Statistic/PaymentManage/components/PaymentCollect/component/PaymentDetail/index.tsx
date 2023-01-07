@@ -6,7 +6,11 @@ import './style.less';
 import { PaymentCollectContext } from '../../context';
 import { Button } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
-import { transformRangeDate } from '@/utils';
+import { getRangeDate, transformRangeDate } from '@/utils';
+import {
+  PaymentDetailTypeEnum,
+  fetchPaymentDetail,
+} from '@/services/StatisticController';
 
 const PaymentDetail: React.FC = () => {
   const intl = useIntl();
@@ -70,8 +74,21 @@ const PaymentDetail: React.FC = () => {
             }}
             toolBarRender={false}
             search={false}
-            request={async () => {
-              return [];
+            request={async (params) => {
+              const { pageSize, current } = params;
+              const timeParams = getRangeDate(collectDateRange);
+              return fetchPaymentDetail({
+                ...timeParams,
+                pageSize,
+                pageNum: current,
+                paymentIds: [],
+                type: PaymentDetailTypeEnum.RECEIPTS,
+              }).then((res) => {
+                return {
+                  total: res.data?.total,
+                  data: res.data?.list || [],
+                };
+              });
             }}
           />
         </div>
