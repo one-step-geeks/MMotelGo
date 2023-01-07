@@ -8,6 +8,7 @@ import { ActionType } from '@ant-design/pro-table';
 import {
   fetchPaymentSurvey,
   fetchTotalPayment,
+  fetchTotalRefund,
 } from '@/services/StatisticController';
 import moment from 'moment';
 export const PaymentCollectContext = createContext<PaymentCollectContextType>(
@@ -25,8 +26,12 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
       totalReceiptsInfo: {
         paymentAmountList: [],
       },
+      totalRefundInfo: {
+        paymentAmountList: [],
+      },
       paymentSurveyLoading: true,
       totalReceiptsLoading: true,
+      totalRefundLoading: true,
     } as any;
     paymentDetailActionRef = React.createRef<ActionType>();
     componentDidMount = () => {
@@ -100,6 +105,27 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
         return Promise.resolve().finally(() => {
           this.setStore({
             totalReceiptsLoading: false,
+          });
+        });
+      }
+    };
+    getTotalRefund = async (
+      collectDateRange: PaymentCollectStateType['collectDateRange'] = this.state
+        .collectDateRange,
+    ) => {
+      const searchParams = this.getRangeDate(collectDateRange);
+      try {
+        if (searchParams) {
+          await fetchTotalRefund(searchParams).then((res) => {
+            this.setState({
+              totalRefundInfo: res.data,
+            });
+          });
+        }
+      } finally {
+        return Promise.resolve().finally(() => {
+          this.setStore({
+            totalRefundLoading: false,
           });
         });
       }

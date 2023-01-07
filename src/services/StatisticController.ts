@@ -12,7 +12,7 @@ export interface PaymentSurveyType {
 }
 export async function fetchPaymentSurvey(data: DateRangeData) {
   return request<API.Result<PaymentSurveyType>>(
-    '/summary/payment/paymentSurvey',
+    '/motel/summary/payment/paymentSurvey',
     {
       method: 'POST',
       data,
@@ -30,7 +30,16 @@ export interface TotalPaymentType {
 }
 export async function fetchTotalPayment(data: DateRangeData) {
   return request<API.Result<TotalPaymentType>>(
-    '/summary/payment/totalPayment',
+    '/motel/summary/payment/totalPayment',
+    {
+      method: 'POST',
+      data,
+    },
+  );
+}
+export async function fetchTotalRefund(data: DateRangeData) {
+  return request<API.Result<TotalPaymentType>>(
+    '/motel/summary/payment/totalRefund',
     {
       method: 'POST',
       data,

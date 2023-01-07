@@ -11,7 +11,9 @@ export interface PaymentCollectStateType {
   paymentSurvey: PaymentSurveyType;
   paymentSurveyLoading: boolean;
   totalReceiptsInfo: TotalPaymentType;
+  totalRefundInfo: TotalPaymentType;
   totalReceiptsLoading: boolean;
+  totalRefundLoading: boolean;
 }
 export interface PaymentCollectPropsType {}
 
