@@ -85,12 +85,17 @@ export async function fetchSelectPaymentRecord(
   data: SelectPaymentRecordParams,
 ) {
   return request<API.Result_List_<SelectPaymentRecordItemType>>(
-    '/summary/payment/selectPaymentRecord',
+    '/motel/summary/payment/selectPaymentRecord',
     {
       method: 'POST',
       data,
     },
-  );
+  ).then((res) => {
+    return {
+      data: res.data?.list || [],
+      total: res.data?.total || 0,
+    };
+  });
 }
 interface FetchPaymentDetailParams extends DateRangeData {
   type: PaymentDetailTypeEnum; // --1 收款 2 收押金 3 退款 4 退押金 5 净收款
@@ -247,6 +252,18 @@ export async function exportSummary(data: DateRangeData) {
         data.endTime,
       ).format('YYYY-MM-DD')}.xlsx`,
     );
+    message.success('下载成功');
+  });
+}
+
+// 收款记录报表导出
+export async function paymentRecordExport(data: SelectPaymentRecordParams) {
+  return request<ArrayBuffer>('/motel/summary/channel/paymentRecordExport', {
+    method: 'POST',
+    data,
+    responseType: 'arrayBuffer',
+  }).then((buffer) => {
+    bufferDownload(buffer, `收款记录报表.xlsx`);
     message.success('下载成功');
   });
 }
