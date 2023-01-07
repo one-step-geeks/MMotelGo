@@ -19,7 +19,7 @@ const SettingContainer: React.FC = (props) => {
   console.log(pathname);
   return (
     <Layout>
-      <Sider width={160} collapsed={false} theme="light">
+      <Sider width={200} collapsed={false} theme="light">
         <Menu
           mode="inline"
           defaultSelectedKeys={[pathname]}
