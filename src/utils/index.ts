@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { history, useIntl } from 'umi';
+import { RangeValue } from 'rc-picker/lib/interface';
 
 export const getWeekDay = (date: moment.Moment) => {
   const intl = useIntl();
@@ -44,4 +45,22 @@ export const bufferDownload = (buffer: ArrayBuffer, filename: string) => {
   a.download = filename;
   a.click();
   window.URL.revokeObjectURL(url);
+};
+
+export const transformRangeDate = (
+  collectDateRange: RangeValue<moment.Moment>,
+) => {
+  const [start, end] = collectDateRange || [];
+  const rangeDayList = [];
+  if (start && end) {
+    const newStart = start.clone();
+    while (true) {
+      rangeDayList.push(newStart.format('YYYY-MM-DD'));
+      if (newStart.isSame(end, 'day')) {
+        break;
+      }
+      newStart.add(1, 'day');
+    }
+  }
+  return rangeDayList;
 };

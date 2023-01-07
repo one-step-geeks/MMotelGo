@@ -6,24 +6,14 @@ import './style.less';
 import { ChannelStatisticContext } from '../../context';
 import { Button } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
+import { transformRangeDate } from '@/utils';
 
 const PaymentDetail: React.FC = () => {
   const intl = useIntl();
   const { store, paymentDetailActionRef } = useContext(ChannelStatisticContext);
   const { collectDateRange } = store;
   const columns = useMemo<ProColumns[]>(() => {
-    const [start, end] = collectDateRange || [];
-    const rangeDayList = [];
-    if (start && end) {
-      const newStart = start.clone();
-      while (true) {
-        rangeDayList.push(newStart.format('YYYY-MM-DD'));
-        if (newStart.isSame(end, 'day')) {
-          break;
-        }
-        newStart.add(1, 'day');
-      }
-    }
+    const rangeDayList = transformRangeDate(collectDateRange);
     return [
       {
         title: intl.formatMessage({ id: '渠道' }),
