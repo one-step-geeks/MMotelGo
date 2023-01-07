@@ -99,6 +99,10 @@ export interface PaymentDetailType {
   paymentDetailList: PaymentDetailItemType[];
   totalAmountList: number[];
 }
+export interface PaymentDetailItem {
+  paymentName: string;
+  [x: string]: any;
+}
 // 支付方式明细列表, 已格式化可做Protable的dateSource
 export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
   return request<API.Result<PaymentDetailType>>(
@@ -110,10 +114,7 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
   ).then((res) => {
     const { paymentDetailList, totalAmountList } = res.data || {};
     const paymentDaySet = new Set<string>();
-    const newPaymentDetailList: {
-      paymentName: string;
-      [x: string]: any;
-    }[] =
+    const newPaymentDetailList: PaymentDetailItem[] =
       paymentDetailList?.map((paymentDetail) => {
         const { paymentDateList, paymentName } = paymentDetail;
         const paymentDetailItem: Record<string, any> = {};
@@ -128,10 +129,7 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
         };
       }) || [];
 
-    const totalItem: {
-      paymentName: string;
-      [x: string]: any;
-    } = {
+    const totalItem: PaymentDetailItem = {
       paymentName: '合计',
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {
