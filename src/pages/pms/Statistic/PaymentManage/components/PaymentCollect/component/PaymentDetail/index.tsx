@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { PaymentCollectContext } from '../../context';
-import ReceiptAndPaymentDetail from '@/components/ReceiptAndPaymentDetail';
+import PaymentDetailTable from '@/components/PaymentDetail';
 import './style.less';
 
 const PaymentDetail: React.FC = () => {
@@ -9,7 +9,7 @@ const PaymentDetail: React.FC = () => {
   const { collectDateRange } = store;
 
   return (
-    <ReceiptAndPaymentDetail
+    <PaymentDetailTable
       paymentDetailActionRef={paymentDetailActionRef}
       collectDateRange={collectDateRange}
     />
