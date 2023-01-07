@@ -16,25 +16,25 @@ export default (initialState: SYSTEM.InitialState) => {
   }, [] as ACCOUNT.SubMenu[]);
 
   return {
-    canSeeRouter: (route: MenuDataItem) => {
-      return true;
-    },
-    canSeeSubRouter: (route: MenuDataItem) => {
-      return true;
-    },
-    canSeeSubMenu: (menuId: number) => {
-      return true;
-    },
     // canSeeRouter: (route: MenuDataItem) => {
-    //   return !!mainMenuList?.find(
-    //     (main) => main.mainMenuId === route.mainMenuId,
-    //   );
+    //   return true;
     // },
     // canSeeSubRouter: (route: MenuDataItem) => {
-    //   return !!subMenuList?.find((sub) => sub.menuId === route.subMenuId);
+    //   return true;
     // },
     // canSeeSubMenu: (menuId: number) => {
-    //   return !!subMenuList?.find((sub) => sub.menuId === menuId);
+    //   return true;
     // },
+    canSeeRouter: (route: MenuDataItem) => {
+      return !!mainMenuList?.find(
+        (main) => main.mainMenuId === route.mainMenuId,
+      );
+    },
+    canSeeSubRouter: (route: MenuDataItem) => {
+      return !!subMenuList?.find((sub) => sub.menuId === route.subMenuId);
+    },
+    canSeeSubMenu: (menuId: number) => {
+      return !!subMenuList?.find((sub) => sub.menuId === menuId);
+    },
   };
 };
