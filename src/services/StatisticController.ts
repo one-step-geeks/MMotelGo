@@ -258,7 +258,7 @@ export async function exportSummary(data: DateRangeData) {
 
 // 收款记录报表导出
 export async function paymentRecordExport(data: SelectPaymentRecordParams) {
-  return request<ArrayBuffer>('/motel/summary/channel/paymentRecordExport', {
+  return request<ArrayBuffer>('/motel/summary/payment/paymentRecordExport', {
     method: 'POST',
     data,
     responseType: 'arrayBuffer',
