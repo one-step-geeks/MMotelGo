@@ -78,6 +78,10 @@ export default [
         path: '/pms/statistic/statistic-trade',
         component: 'pms/Statistic/TradeManage',
       },
+      {
+        path: '/pms/statistic/statistic-channel',
+        component: 'pms/Statistic/ChannelStatistic',
+      },
     ],
   },
   {
