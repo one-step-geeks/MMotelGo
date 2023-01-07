@@ -39,6 +39,9 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
           title: item,
           width: 150,
           dataIndex: item,
+          render: (price) => {
+            return `${intl.formatMessage({ id: '¥' })}${price}`;
+          },
         } as ProColumns;
       }),
     ];
