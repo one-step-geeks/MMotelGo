@@ -1,5 +1,6 @@
 import { bufferDownload } from '@/utils';
 import { message } from 'antd';
+import moment from 'moment';
 import { request } from 'umi';
 
 interface DateRangeData {
@@ -54,6 +55,13 @@ export enum PaymentDetailTypeEnum {
   REFUND_CASH_PLEDGE = 4,
   NET_RECEIPTS = 5,
 }
+export const paymentDetailTrans = {
+  [PaymentDetailTypeEnum.RECEIPTS]: '收款',
+  [PaymentDetailTypeEnum.RECEIPTS_CASH_PLEDGE]: '收押金',
+  [PaymentDetailTypeEnum.REFUND]: '退款',
+  [PaymentDetailTypeEnum.REFUND_CASH_PLEDGE]: '退押金',
+  [PaymentDetailTypeEnum.NET_RECEIPTS]: '净收款',
+};
 interface SelectPaymentRecordParams extends DateRangeData {
   type: PaymentDetailTypeEnum; // --1 收款 2 收押金 3 退款 4 退押金 5 净收款
   paymentIds: number[]; // --收款设置表主键id集合, 下拉框查询收款设置列表 二期接口里面有
@@ -140,11 +148,28 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
     if (newPaymentDetailList.length > 0) {
       newPaymentDetailList.push(totalItem);
     }
-    newPaymentDetailList.push(totalItem);
-    return newPaymentDetailList;
+    return {
+      list: newPaymentDetailList,
+      paymentDayList: [...paymentDaySet.values()],
+    };
   });
 }
-
+// 收支明细列表导出
+export async function paymentDetailExport(data: FetchPaymentDetailParams) {
+  return request<ArrayBuffer>('/motel/summary/payment/paymentDetailExport', {
+    method: 'POST',
+    data,
+    responseType: 'arrayBuffer',
+  }).then((buffer) => {
+    bufferDownload(
+      buffer,
+      `收支明细列表${moment(data.startTime).format('YYYY-MM-DD')} ~ ${moment(
+        data.endTime,
+      ).format('YYYY-MM-DD')}.xlsx`,
+    );
+    message.success('下载成功');
+  });
+}
 export interface SumFormDataDetailType {
   allTotalAmount: number;
   dailyAllAmounts: number[];
@@ -218,7 +243,9 @@ export async function exportSummary(data: DateRangeData) {
   }).then((buffer) => {
     bufferDownload(
       buffer,
-      `营业明细列表${data.startTime} ~ ${data.endTime}.xlsx`,
+      `营业明细列表${moment(data.startTime).format('YYYY-MM-DD')} ~ ${moment(
+        data.endTime,
+      ).format('YYYY-MM-DD')}.xlsx`,
     );
     message.success('下载成功');
   });
