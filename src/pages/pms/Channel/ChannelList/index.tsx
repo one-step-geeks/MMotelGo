@@ -8,14 +8,14 @@ const TradeManage: React.FC = () => {
   const intl = useIntl();
   const reactHistory = useHistory();
   const data = [
-    '语雀的天空',
-    'Ant Design',
-    '蚂蚁金服体验科技',
-    'TechUI',
-    'TechUI 2.0',
-    'Bigfish',
-    'Umi',
-    'Ant Design Pro',
+    '美团',
+    'airbnb',
+    '携程',
+    '途家',
+    '途家',
+    '途家',
+    '途家',
+    '途家',
   ].map((item) => ({
     title: item,
     avatar:
@@ -60,7 +60,7 @@ const TradeManage: React.FC = () => {
         pagination={false}
         showActions="always"
         rowSelection={{}}
-        grid={{ gutter: 16, column: 4 }}
+        grid={{ gutter: 16, column: 5 }}
         onItem={(record: any) => {
           return {
             onMouseEnter: () => {
