@@ -22,12 +22,13 @@ export enum OperationType {
   CANCEL_CHECKIN = 3,
   CHECK_OUT = 4,
 }
-// 】1-办理入住 2-取消预订 3-取消入住 4-办理退房 5-恢复预订 6-撤销退房
+
+// 1-办理入住 2-取消预订 3-取消入住 4-办理退房 5-恢复预订 6-撤销退房
 export const OperationTypeText = {
-  [OperationType.CONFIRM_CHECKIN]: '办理入住',
-  [OperationType.CANCEL_OBSERVE]: '取消预定',
-  [OperationType.CANCEL_CHECKIN]: '取消入住',
-  [OperationType.CHECK_OUT]: '办理退房',
+  [OperationType.CONFIRM_CHECKIN]: '办理入住', // 已入住
+  [OperationType.CANCEL_OBSERVE]: '取消预定', // 已取消
+  [OperationType.CANCEL_CHECKIN]: '取消入住', // 已预定
+  [OperationType.CHECK_OUT]: '办理退房', // 已退房
 };
 export interface OperateData extends ORDER.OrderDetail {
   operationType: OperationType;
@@ -112,13 +113,13 @@ export async function exportList(params: Record<string, any>) {
 }
 
 /** 查询可预定的房间 */
-export async function queryObservableRooms(startDate: string) {
+export async function queryObservableRooms(checkInDate: string) {
   return request<API.Result_RoomTypeInfo_>(
     '/motel/order/checkOrderRoomByDate',
     {
       method: 'GET',
       params: {
-        startDate,
+        checkInDate,
       },
     },
   );

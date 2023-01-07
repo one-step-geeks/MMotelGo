@@ -169,8 +169,8 @@ const OrderContainer: React.FC = (props) => {
     },
     {
       title: '入住时间',
-      dataIndex: 'startDate',
-      key: 'startDate',
+      dataIndex: 'checkInDate',
+      key: 'checkInDate',
       valueType: 'date',
       hideInSearch: true,
       width: 120,
@@ -190,6 +190,7 @@ const OrderContainer: React.FC = (props) => {
         return (
           <div className="compact-date-select" style={{ display: 'flex' }}>
             <Select
+              style={{ width: '33%' }}
               defaultValue={param.dateType}
               optionFilterProp="children"
               onChange={(value) => {
@@ -223,6 +224,9 @@ const OrderContainer: React.FC = (props) => {
       valueType: 'date',
       width: 120,
       search: false,
+      renderText: (_, record) => {
+        return moment(record.checkInDate).add(1, 'd').format('YYYY-MM-DD');
+      },
     },
     {
       title: '订单状态',
@@ -461,13 +465,14 @@ const OrderContainer: React.FC = (props) => {
           const flattedList = [];
           let index = 0;
           for (let i = 0; i < list.length; i++) {
-            const { roomDtoList, ...rest } = list[i];
+            const { roomDtoList, totalAmount, ...rest } = list[i];
             for (let j = 0; j < roomDtoList.length; j++) {
               const room = roomDtoList[j];
               flattedList.push({
-                rowSpan: j === 0 ? roomDtoList.length : 0,
                 ...rest,
                 ...room,
+                rowSpan: j === 0 ? roomDtoList.length : 0,
+                totalAmount,
                 key: `${index++}`,
               });
             }
@@ -516,39 +521,17 @@ const OrderContainer: React.FC = (props) => {
       />
 
       {OrderDetailDrawer}
-      {orderId ? (
-        <OrderFormDrawer
-          visible={editDrawerVisible}
-          onVisibleChange={(value) => setEditDrawerVisible(value)}
-          id={orderId}
-          onSubmited={() => {
-            ref.current?.submit();
-            setEditDrawerVisible(false);
-            setOrderId(undefined);
-          }}
-        />
-      ) : (
-        <OrderFormDrawer
-          visible={editDrawerVisible}
-          onVisibleChange={(value) => setEditDrawerVisible(value)}
-          rooms={[
-            {
-              roomId: 452,
-              startDate: moment(),
-              checkInDays: 1,
-              roomTypeName: '大套房',
-              roomCode: '206',
-              roomPrice: 2,
-              totalAmount: 2 * 1,
-            },
-          ]}
-          onSubmited={() => {
-            ref.current?.submit();
-            setEditDrawerVisible(false);
-            setOrderId(undefined);
-          }}
-        />
-      )}
+
+      <OrderFormDrawer
+        visible={editDrawerVisible}
+        onVisibleChange={(value) => setEditDrawerVisible(value)}
+        id={orderId}
+        onSubmited={() => {
+          ref.current?.submit();
+          setEditDrawerVisible(false);
+          setOrderId(undefined);
+        }}
+      />
     </div>
   );
 };

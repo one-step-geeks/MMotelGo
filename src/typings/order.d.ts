@@ -69,12 +69,13 @@ declare namespace ORDER {
     roomTypeName?: string;
     roomCode?: string;
     roomDesc: string; // 房型-房号
-    startDate: moment.Moment | string;
+    checkInDate: moment.Moment;
     checkInDays: number;
     roomPrice?: number;
     totalAmount?: number;
     checkInPersonCount?: number;
     status?: number;
+    priceList: Array<number>; // 房间价格（跨多天)
   }
 
   interface OrderNotice {
