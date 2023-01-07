@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button, Result } from 'antd';
 import CommonCard from '@/components/CommonCard';
-import { useIntl } from 'umi';
+import { useIntl, useHistory } from 'umi';
 import { ProList } from '@ant-design/pro-components';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
+  const reactHistory = useHistory();
   const data = [
     '语雀的天空',
     'Ant Design',
@@ -43,7 +44,12 @@ const TradeManage: React.FC = () => {
           <Button style={{ marginRight: 8 }} type="primary">
             {intl.formatMessage({ id: '同步邮件渠道' })}
           </Button>
-          <Button type="primary">
+          <Button
+            onClick={() =>
+              reactHistory.push('/pms/setting/channel-mail-manage')
+            }
+            type="primary"
+          >
             {intl.formatMessage({ id: '渠道邮箱配置' })}
           </Button>
         </>
