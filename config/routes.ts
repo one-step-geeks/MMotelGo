@@ -40,6 +40,26 @@ export default [
     ],
   },
   {
+    path: 'pms/statistic',
+    exact: true,
+    redirect: '/pms/statistic/payment-manage',
+  },
+  {
+    name: '统计',
+    path: 'pms/statistic',
+    component: 'pms/Statistic',
+    routes: [
+      {
+        path: '/pms/statistic/payment-manage',
+        component: 'pms/Statistic/PaymentManage',
+      },
+      {
+        path: '/pms/statistic/trade-manage',
+        component: 'pms/Statistic/TradeManage',
+      },
+    ],
+  },
+  {
     path: 'pms/setting',
     exact: true,
     redirect: 'pms/setting/rooms-manage',
