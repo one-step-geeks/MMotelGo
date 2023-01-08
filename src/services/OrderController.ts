@@ -32,7 +32,7 @@ export enum OperationType {
 export const OperationTypeText = {
   [OperationType.CONFIRM_CHECKIN]: '办理入住', // 已入住
   [OperationType.CANCEL_OBSERVE]: '取消预定', // 已取消
-  [OperationType.CANCEL_CHECKIN]: '取消入住', // 已预定
+  [OperationType.CANCEL_CHECKIN]: '撤销入住', // 已预定
   [OperationType.CHECK_OUT]: '办理退房', // 已退房
 };
 

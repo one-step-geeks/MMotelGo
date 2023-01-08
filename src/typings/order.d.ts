@@ -70,6 +70,7 @@ declare namespace ORDER {
     roomCode?: string;
     roomDesc: string; // 房型-房号
     checkInDate: moment.Moment;
+    endDate?: moment.Moment;
     checkInDays: number;
     roomPrice?: number;
     totalAmount?: number;
