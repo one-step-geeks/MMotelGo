@@ -116,6 +116,7 @@ export interface PaymentDetailType {
 }
 export interface PaymentDetailItem {
   paymentName: string;
+  total: number;
   [x: string]: any;
 }
 // 支付方式明细列表, 已格式化可做Protable的dateSource
@@ -132,23 +133,26 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
     const newPaymentDetailList: PaymentDetailItem[] =
       paymentDetailList?.map((paymentDetail) => {
         const { paymentDateList, paymentName } = paymentDetail;
-        const paymentDetailItem: Record<string, any> = {};
+        const paymentDetailItem: PaymentDetailItem = {
+          paymentName,
+          total: 0,
+        };
         paymentDateList.forEach((paymentDate) => {
           const { date, price } = paymentDate;
           paymentDetailItem[date] = price;
+          paymentDetailItem.total += price;
           paymentDaySet.add(date);
         });
-        return {
-          paymentName,
-          ...paymentDetailItem,
-        };
+        return paymentDetailItem;
       }) || [];
 
     const totalItem: PaymentDetailItem = {
       paymentName: '合计',
+      total: 0,
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {
       totalItem[dateString] = totalAmountList[index];
+      totalItem.total += totalAmountList[index];
     });
     if (newPaymentDetailList.length > 0) {
       newPaymentDetailList.push(totalItem);
