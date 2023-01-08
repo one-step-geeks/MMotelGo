@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'umi';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import PaymentRecordExportModalForm from '../ExportModalForm';
@@ -12,10 +12,21 @@ import {
 } from '@/services/StatisticController';
 import { queryPaymentTypes } from '@/services/FinanceController';
 import { Button } from 'antd';
+import { useOrderDetailDrawer } from '@/pages/pms/Order/components/OrderDetailDrawer';
+import OrderFormDrawer from '@/pages/pms/Order/components/OrderFormDrawer';
+import { ProFormInstance } from '@ant-design/pro-form';
 
 const PaymentRecordTable: React.FC = () => {
   const intl = useIntl();
   const { tableActionRef, tableFormRef } = useContext(PaymentRecordContext);
+  const drawerFormRef = useRef<ProFormInstance>();
+  const [orderId, setOrderId] = useState<number | undefined>();
+  const [editDrawerVisible, setEditDrawerVisible] = useState(false);
+  const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
+    () => {
+      setEditDrawerVisible(true);
+    },
+  );
   const columns = useMemo<ProColumns[]>(() => {
     return [
       {
@@ -111,8 +122,20 @@ const PaymentRecordTable: React.FC = () => {
         title: intl.formatMessage({ id: '关联订单' }),
         dataIndex: 'orderNo',
         search: false,
-        render: (orderNo) => {
-          return <a>{orderNo}</a>;
+        render: (_, record) => {
+          return (
+            <Button
+              type="link"
+              onClick={() => {
+                if (record.orderId) {
+                  setOrderId(record.orderId);
+                  openOrderDetailDrawer(record.orderId);
+                }
+              }}
+            >
+              {record.orderNo || '无'}
+            </Button>
+          );
         },
       },
       {
@@ -129,6 +152,18 @@ const PaymentRecordTable: React.FC = () => {
   }, []);
   return (
     <div className="payment-manage-record-table">
+      {OrderDetailDrawer}
+
+      <OrderFormDrawer
+        visible={editDrawerVisible}
+        onVisibleChange={(value) => setEditDrawerVisible(value)}
+        id={orderId}
+        onSubmited={() => {
+          drawerFormRef.current?.submit();
+          setEditDrawerVisible(false);
+          setOrderId(undefined);
+        }}
+      />
       <ProTable
         columns={columns}
         actionRef={tableActionRef}
