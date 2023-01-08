@@ -10,7 +10,7 @@ import TotalRefund from './component/TotalRefund';
 import PaymentDetail from './component/PaymentDetail';
 
 const ChannelStatistic: React.FC<ChannelStatisticContextType> = (props) => {
-  const { store, setStore } = props;
+  const { store, setCollectDateRange } = props;
   const { collectDateRange } = store;
   const intl = useIntl();
   return (
@@ -22,7 +22,7 @@ const ChannelStatistic: React.FC<ChannelStatisticContextType> = (props) => {
       <div className="channel-statistic-data-piker">
         <DatePicker.RangePicker
           value={collectDateRange}
-          onChange={(date) => setStore({ collectDateRange: date })}
+          onChange={setCollectDateRange}
           disabledDate={(date) => {
             return date.isAfter(moment(), 'day');
           }}

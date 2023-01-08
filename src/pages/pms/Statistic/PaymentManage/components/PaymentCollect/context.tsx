@@ -47,10 +47,14 @@ const paymentCollectContextHoc = (Comp: React.ComponentType<any>) => {
     setCollectDateRange = (
       collectDateRange: PaymentCollectStateType['collectDateRange'],
     ) => {
-      this.setStore({
-        collectDateRange,
-      });
-      this.getInitData(collectDateRange);
+      this.setStore(
+        {
+          collectDateRange,
+        },
+        () => {
+          this.getInitData(collectDateRange);
+        },
+      );
     };
 
     getPaymentSurvey = async (

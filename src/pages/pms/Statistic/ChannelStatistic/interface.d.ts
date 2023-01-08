@@ -12,6 +12,9 @@ export interface ChannelStatisticContextType extends ChannelStatisticPropsType {
     newState: Partial<ChannelStatisticStateType>,
     cb?: () => any,
   ) => any;
+  setCollectDateRange: (
+    collectDateRange: ChannelStatisticStateType['collectDateRange'],
+  ) => any;
   store: ChannelStatisticStateType;
   paymentDetailActionRef: React.Ref<ActionType>;
 }

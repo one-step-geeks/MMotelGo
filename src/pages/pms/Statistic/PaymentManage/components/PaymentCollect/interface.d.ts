@@ -23,5 +23,5 @@ export interface PaymentCollectContextType extends PaymentCollectPropsType {
     collectDateRange: PaymentCollectStateType['collectDateRange'],
   ) => any;
   store: PaymentCollectStateType;
-  paymentDetailActionRef: React.Ref<ActionType>;
+  paymentDetailActionRef: React.RefObject<ActionType>;
 }

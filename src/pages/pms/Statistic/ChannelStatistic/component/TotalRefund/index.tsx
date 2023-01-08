@@ -12,7 +12,7 @@ const TotalRefund: React.FC = () => {
     <div className="channel-statistic-total-refund">
       <CommonCard title={intl.formatMessage({ id: '总退款' })}>
         <div className="channel-statistic-total-refund-card-warp">
-          <CommonPie />
+          <CommonPie dataSource={[{ type: '支付宝', value: 100 }]} />
         </div>
       </CommonCard>
     </div>

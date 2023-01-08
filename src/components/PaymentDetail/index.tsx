@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useIntl } from 'umi';
 import CommonCard from '@/components/CommonCard';
 import { RangeValue } from 'rc-picker/lib/interface';
@@ -10,6 +10,7 @@ import { getRangeDate, transformRangeDate } from '@/utils';
 import {
   exportSummary,
   fetchSumFormData,
+  PaymentItem,
 } from '@/services/StatisticController';
 
 export interface PaymentDetailProps {
@@ -20,6 +21,7 @@ export interface PaymentDetailProps {
 const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
   const intl = useIntl();
   const { collectDateRange, paymentDetailActionRef } = props;
+  const [dataSource, setDataSource] = useState<PaymentItem[]>([]);
   const columns = useMemo<ProColumns[]>(() => {
     const rangeDayList = transformRangeDate(collectDateRange);
     return [
@@ -29,34 +31,52 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
         dataIndex: 'project',
         width: 100,
         render: (_, index, ...args) => {
-          console.log(...args);
-          return (index as number) < 4 ? _ : intl.formatMessage({ id: '合计' });
+          return (index as number) < dataSource.length - 1
+            ? _
+            : intl.formatMessage({ id: '合计' });
         },
-        onCell: (_, index) => ({
-          colSpan: (index as number) < 4 ? 1 : 2,
-        }),
+        onCell: (_, index) => {
+          return {
+            colSpan: (index as number) < dataSource.length - 1 ? 1 : 2,
+          };
+        },
       },
       {
         title: intl.formatMessage({ id: '明细' }),
         fixed: 'left',
         dataIndex: 'detail',
         width: 100,
+        onCell: (_, index) => {
+          return {
+            colSpan: (index as number) < dataSource.length - 1 ? 1 : 0,
+          };
+        },
       },
       {
         title: intl.formatMessage({ id: '合计' }),
         fixed: 'left',
         width: 100,
         dataIndex: 'total',
+        render: (price) => {
+          return `${intl.formatMessage({ id: '¥' })}${
+            price === '-' ? 0 : price
+          }`;
+        },
       },
       ...rangeDayList.map((item) => {
         return {
           title: item,
           width: 150,
           dataIndex: item,
+          render: (price) => {
+            return `${intl.formatMessage({ id: '¥' })}${
+              price === '-' ? 0 : price
+            }`;
+          },
         } as ProColumns;
       }),
     ];
-  }, [collectDateRange]);
+  }, [collectDateRange, dataSource]);
   return (
     <div className="payment-detail">
       <CommonCard
@@ -72,6 +92,7 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
           <Button
             onClick={() => {
               const timeParams = getRangeDate(collectDateRange);
+              console.log(timeParams);
               exportSummary(timeParams);
             }}
             type="primary"
@@ -92,6 +113,7 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
             request={async (params) => {
               const timeParams = getRangeDate(collectDateRange);
               return fetchSumFormData(timeParams).then((res) => {
+                setDataSource(res);
                 return {
                   data: res,
                 };
