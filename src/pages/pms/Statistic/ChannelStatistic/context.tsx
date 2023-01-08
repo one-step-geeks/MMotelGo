@@ -5,6 +5,7 @@ import {
   ChannelStatisticStateType,
 } from './interface';
 import { ActionType } from '@ant-design/pro-table';
+import moment from 'moment';
 export const ChannelStatisticContext =
   createContext<ChannelStatisticContextType>({} as any);
 
@@ -14,7 +15,7 @@ const channelStatisticContextHoc = (Comp: React.ComponentType<any>) => {
     ChannelStatisticStateType
   > {
     state: ChannelStatisticStateType = {
-      collectDateRange: [] as any,
+      collectDateRange: [moment(), moment()] as any,
     };
     paymentDetailActionRef = React.createRef<ActionType>();
     componentDidMount = () => {
