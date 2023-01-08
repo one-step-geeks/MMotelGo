@@ -1,5 +1,4 @@
 import { request } from 'umi';
-import moment from 'moment';
 import Cookie from 'js-cookie';
 
 export enum OrderState {
@@ -7,6 +6,9 @@ export enum OrderState {
   IS_CHECKED,
   IS_CHECKOUT,
   IS_CANCELED,
+  HO_SHOW,
+  PART_CHECKED,
+  PART_CANCELED,
 }
 
 export const OrderStateText = {
@@ -14,6 +16,9 @@ export const OrderStateText = {
   [OrderState.IS_CHECKED]: '已入住',
   [OrderState.IS_CANCELED]: '已取消',
   [OrderState.IS_CHECKOUT]: '已退房',
+  [OrderState.HO_SHOW]: '未到',
+  [OrderState.PART_CHECKED]: '部分入住',
+  [OrderState.PART_CANCELED]: '部分退房',
 };
 
 export enum OperationType {
@@ -30,6 +35,7 @@ export const OperationTypeText = {
   [OperationType.CANCEL_CHECKIN]: '取消入住', // 已预定
   [OperationType.CHECK_OUT]: '办理退房', // 已退房
 };
+
 export interface OperateData extends ORDER.OrderDetail {
   operationType: OperationType;
 }
@@ -50,6 +56,14 @@ export const OrderStateOptions = [
   {
     value: OrderState.IS_CHECKOUT,
     label: OrderStateText[OrderState.IS_CHECKOUT],
+  },
+  {
+    value: OrderState.PART_CHECKED,
+    label: OrderStateText[OrderState.PART_CHECKED],
+  },
+  {
+    value: OrderState.PART_CANCELED,
+    label: OrderStateText[OrderState.PART_CANCELED],
   },
 ];
 
