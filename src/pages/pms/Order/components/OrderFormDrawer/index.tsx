@@ -286,6 +286,7 @@ export default (props: Props) => {
                         initialValue={1}
                       >
                         <InputNumber
+                          min={1}
                           formatter={(value) => {
                             const number = Math.max(Number(value), 1);
                             return `${number}晚`;
