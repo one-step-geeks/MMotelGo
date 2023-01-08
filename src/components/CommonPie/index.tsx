@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Pie, measureTextWidth, PieConfig } from '@ant-design/plots';
+import { useIntl } from 'umi';
 
 interface CommonPieProps {
   dataSource: {
@@ -39,7 +40,9 @@ const renderStatistic = (
 };
 
 const CommonPie: React.FC<CommonPieProps> = (props) => {
+  const intl = useIntl();
   const { dataSource } = props;
+  const $symbol = intl.formatMessage({ id: '¥' });
   const config: PieConfig = {
     width: 200,
     height: 200,
@@ -52,7 +55,7 @@ const CommonPie: React.FC<CommonPieProps> = (props) => {
     innerRadius: 0.7,
     meta: {
       value: {
-        formatter: (v: any) => `${v} ¥`,
+        formatter: (v: any) => `${v} ${$symbol}`,
       },
     },
     label: {
@@ -84,8 +87,8 @@ const CommonPie: React.FC<CommonPieProps> = (props) => {
         customHtml: (container, view, datum, data) => {
           const { width } = container.getBoundingClientRect();
           const text = datum
-            ? `¥ ${datum.value}`
-            : `¥ ${data?.reduce((r, d) => r + d.value, 0)}`;
+            ? `${$symbol} ${datum.value}`
+            : `${$symbol} ${data?.reduce((r, d) => r + d.value, 0)}`;
           return renderStatistic(width, text, {
             fontSize: 32,
           });
