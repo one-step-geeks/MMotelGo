@@ -153,11 +153,10 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
     const totalItem: PaymentDetailItem = {
       paymentName: '合计',
       paymentId: Math.random(),
-      total: 0,
+      total: totalAmountList[0] || 0,
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {
-      totalItem[dateString] = totalAmountList[index];
-      totalItem.total += totalAmountList[index];
+      totalItem[dateString] = totalAmountList[index + 1];
     });
     if (newPaymentDetailList.length > 0) {
       newPaymentDetailList.push(totalItem);
