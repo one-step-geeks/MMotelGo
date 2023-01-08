@@ -396,6 +396,7 @@ const RoomStatePage: React.FC = () => {
   ];
 
   const dataSource = getCalendarRows(rowData?.list);
+  console.log('dataSource', dataSource);
 
   return (
     <div className="roome-state-container">

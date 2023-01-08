@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Drawer, Table, message, Space, Tabs, Tag } from 'antd';
-
+import { Button, Drawer, Table, message, Space, Tabs } from 'antd';
 import services from '@/services';
 import { useRequest } from 'umi';
 import type { ColumnsType } from 'antd/es/table';
@@ -374,6 +373,8 @@ export function useOrderDetailDrawer(
 
   let footerOperations;
   const orderStatus = data?.order.status;
+  const roomStatusList = data?.orderRoomList.map(({ status }) => status);
+  // const roomStatusSet = new Set(roomStatusList);
 
   const modifyOrder = () => {
     setVisible(false);
@@ -381,83 +382,53 @@ export function useOrderDetailDrawer(
   };
 
   const operateOrder = (operationType: OperationType) => {
+    const { orderRoomList, ...rest } = data!;
+    let filteredRoomList = [...orderRoomList];
+
+    const isOrdered = [
+      OperationType.CANCEL_OBSERVE,
+      OperationType.CONFIRM_CHECKIN,
+    ].includes(operationType);
+    const isChecked = [
+      OperationType.CANCEL_CHECKIN,
+      OperationType.CHECK_OUT,
+    ].includes(operationType);
+    if (isOrdered) {
+      filteredRoomList = orderRoomList.filter(
+        (room) => room.status === OrderState.IS_ORDERED,
+      );
+    } else if (isChecked) {
+      filteredRoomList = orderRoomList.filter(
+        (room) => room.status === OrderState.IS_CHECKED,
+      );
+    }
+
     openOperateDrawer({
       operationType,
-      ...data,
+      orderRoomList: filteredRoomList,
+      ...rest,
     } as OperateData);
   };
 
+  const sideButtons = [];
+  const mainButtons = [];
+
+  console.log('roomStatusList', roomStatusList);
+
   if (activeTabKey === 'operationLog') {
     footerOperations = null;
-  } else if (
-    orderStatus &&
-    [OrderState.IS_CANCELED, OrderState.IS_CHECKOUT].includes(orderStatus)
-  ) {
-    footerOperations = null;
-  } else if (OrderState.IS_ORDERED === orderStatus) {
-    footerOperations = (
-      <>
-        <Button
-          onClick={() => operateOrder(OperationType.CANCEL_OBSERVE)}
-          key="取消预定"
-        >
-          取消预定
-        </Button>
-        <Space>
-          <Button
-            onClick={() => operateOrder(OperationType.CONFIRM_CHECKIN)}
-            type="primary"
-            key="办理入住"
-          >
-            办理入住
-          </Button>
-          <Button onClick={modifyOrder} type="primary" key="修改订单">
-            修改订单
-          </Button>
-          <Button
-            onClick={() => {
-              message.info('打印暂未实现...');
-            }}
-            key="打印"
-          >
-            打印
-          </Button>
-        </Space>
-      </>
-    );
-  } else if (OrderState.IS_CHECKED === orderStatus) {
-    footerOperations = (
-      <>
-        <Button
-          onClick={() => operateOrder(OperationType.CANCEL_CHECKIN)}
-          key="撤销入住"
-        >
-          撤销入住
-        </Button>
-        <Space>
-          <Button onClick={modifyOrder} type="primary" key="修改订单">
-            修改订单
-          </Button>
-          <Button
-            onClick={() => operateOrder(OperationType.CHECK_OUT)}
-            type="primary"
-            key="办理退房"
-          >
-            办理退房
-          </Button>
-          <Button
-            onClick={() => {
-              message.info('打印暂未实现...');
-            }}
-            key="打印"
-          >
-            打印
-          </Button>
-        </Space>
-      </>
-    );
   }
-
+  if (roomStatusList?.includes(OrderState.IS_ORDERED)) {
+    sideButtons.push({ value: OperationType.CANCEL_OBSERVE, text: '取消预定' });
+    mainButtons.push({
+      value: OperationType.CONFIRM_CHECKIN,
+      text: '办理入住',
+    });
+  }
+  if (roomStatusList?.includes(OrderState.IS_CHECKED)) {
+    sideButtons.push({ value: OperationType.CANCEL_CHECKIN, text: '撤销入住' });
+    mainButtons.push({ value: OperationType.CHECK_OUT, text: '办理退房' });
+  }
   const OrderDetailDrawer = (
     <>
       <Drawer
@@ -475,7 +446,52 @@ export function useOrderDetailDrawer(
         footerStyle={{
           display: 'flex',
         }}
-        footer={footerOperations}
+        footer={
+          <>
+            {[...sideButtons, ...mainButtons].length > 0 ? (
+              <>
+                {
+                  <Space
+                    style={{
+                      justifyContent: 'flex-start',
+                    }}
+                  >
+                    {sideButtons.map((btn) => (
+                      <Button
+                        onClick={() => operateOrder(btn.value)}
+                        key={btn.text}
+                      >
+                        {btn.text}
+                      </Button>
+                    ))}
+                  </Space>
+                }
+                <Space>
+                  <Button
+                    onClick={() => {
+                      message.info('打印暂未实现...');
+                    }}
+                    key="打印"
+                  >
+                    打印
+                  </Button>
+                  <Button onClick={modifyOrder} type="primary" key="修改订单">
+                    修改订单
+                  </Button>
+                  {mainButtons.map((btn) => (
+                    <Button
+                      type="primary"
+                      onClick={() => operateOrder(btn.value)}
+                      key={btn.text}
+                    >
+                      {btn.text}
+                    </Button>
+                  ))}
+                </Space>
+              </>
+            ) : null}
+          </>
+        }
       >
         <Tabs
           activeKey={activeTabKey}
