@@ -77,6 +77,7 @@ export interface SelectPaymentRecordItemType {
   operator: string;
   updateTime: number; // --更新时间
   orderNo: string; // --关联订单
+  orderId: number; // --关联订单
   contacts: string;
   phone: number;
 }
@@ -107,6 +108,7 @@ export interface PaymentDateItemType {
 }
 export interface PaymentDetailItemType {
   paymentName: string;
+  paymentId: number;
   totalAmount: number;
   paymentDateList: PaymentDateItemType[];
 }
@@ -117,6 +119,7 @@ export interface PaymentDetailType {
 export interface PaymentDetailItem {
   paymentName: string;
   total: number;
+  paymentId: number;
   [x: string]: any;
 }
 // 支付方式明细列表, 已格式化可做Protable的dateSource
@@ -132,9 +135,10 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
     const paymentDaySet = new Set<string>();
     const newPaymentDetailList: PaymentDetailItem[] =
       paymentDetailList?.map((paymentDetail) => {
-        const { paymentDateList, paymentName } = paymentDetail;
+        const { paymentDateList, paymentName, paymentId } = paymentDetail;
         const paymentDetailItem: PaymentDetailItem = {
           paymentName,
+          paymentId,
           total: 0,
         };
         paymentDateList.forEach((paymentDate) => {
@@ -148,6 +152,7 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
 
     const totalItem: PaymentDetailItem = {
       paymentName: '合计',
+      paymentId: Math.random(),
       total: 0,
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {

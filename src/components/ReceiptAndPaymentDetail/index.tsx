@@ -135,6 +135,7 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
               x: 'max-content',
             }}
             search={false}
+            rowKey="paymentId"
             request={async (params) => {
               const timeParams = getRangeDate(collectDateRange);
               return fetchPaymentDetail({
