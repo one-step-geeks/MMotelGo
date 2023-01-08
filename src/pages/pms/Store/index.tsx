@@ -1,5 +1,5 @@
 import { Space, Card, Button, Row, Col } from 'antd';
-import { useRequest } from 'umi';
+import { useModel, useRequest } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { ModalForm, ProFormText, ProFormRadio } from '@ant-design/pro-form';
 import Cookie from 'js-cookie';
@@ -13,6 +13,7 @@ const formItemLayout = {
 
 export default function StorePage() {
   const history = useHistory();
+  const { refresh } = useModel('@@initialState');
 
   const { data, run } = useRequest(() => {
     return services.UserController.getPmsStoreList();
@@ -38,6 +39,7 @@ export default function StorePage() {
                   onClick={async () => {
                     Cookie.set('storeId', store.storeId);
                     await services.UserController.bindPmsStoreToken();
+                    refresh();
                     history.push('/');
                   }}
                 >
