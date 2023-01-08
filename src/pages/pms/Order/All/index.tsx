@@ -224,9 +224,6 @@ const OrderContainer: React.FC = (props) => {
       valueType: 'date',
       width: 120,
       search: false,
-      renderText: (_, record) => {
-        return moment(record.checkInDate).add(1, 'd').format('YYYY-MM-DD');
-      },
     },
     {
       title: '订单状态',
