@@ -46,12 +46,22 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
         fixed: 'left',
         dataIndex: 'detail',
         width: 100,
+        onCell: (_, index) => {
+          return {
+            colSpan: (index as number) < dataSource.length - 1 ? 1 : 0,
+          };
+        },
       },
       {
         title: intl.formatMessage({ id: '合计' }),
         fixed: 'left',
         width: 100,
         dataIndex: 'total',
+        render: (price) => {
+          return `${intl.formatMessage({ id: '¥' })}${
+            price === '-' ? 0 : price
+          }`;
+        },
       },
       ...rangeDayList.map((item) => {
         return {
@@ -59,7 +69,9 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
           width: 150,
           dataIndex: item,
           render: (price) => {
-            return `${intl.formatMessage({ id: '¥' })}${price}`;
+            return `${intl.formatMessage({ id: '¥' })}${
+              price === '-' ? 0 : price
+            }`;
           },
         } as ProColumns;
       }),
@@ -80,6 +92,7 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
           <Button
             onClick={() => {
               const timeParams = getRangeDate(collectDateRange);
+              console.log(timeParams);
               exportSummary(timeParams);
             }}
             type="primary"

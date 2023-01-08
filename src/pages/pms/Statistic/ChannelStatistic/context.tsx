@@ -25,13 +25,27 @@ const channelStatisticContextHoc = (Comp: React.ComponentType<any>) => {
         cb && cb();
       });
     };
-
-    init = () => {};
+    setCollectDateRange = (
+      collectDateRange: ChannelStatisticStateType['collectDateRange'],
+    ) => {
+      this.setStore(
+        {
+          collectDateRange,
+        },
+        () => {
+          this.init();
+        },
+      );
+    };
+    init = () => {
+      this.paymentDetailActionRef.current?.reload();
+    };
     render() {
       const contextValue = {
         ...this.props,
         store: this.state,
         setStore: this.setStore,
+        setCollectDateRange: this.setCollectDateRange,
         paymentDetailActionRef: this.paymentDetailActionRef,
       };
       return (
