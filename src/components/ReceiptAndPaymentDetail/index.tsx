@@ -81,7 +81,10 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
                 <Button
                   onClick={() => {
                     const timeParams = getRangeDate(collectDateRange);
-                    paymentDetailExport(timeParams);
+                    paymentDetailExport({
+                      ...timeParams,
+                      type: Number(activeKey),
+                    });
                   }}
                   type="primary"
                 >
