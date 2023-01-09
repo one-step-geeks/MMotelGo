@@ -169,8 +169,8 @@ const OrderContainer: React.FC = (props) => {
     },
     {
       title: '入住时间',
-      dataIndex: 'checkInDate',
-      key: 'checkInDate',
+      dataIndex: 'startDate',
+      key: 'startDate',
       valueType: 'date',
       hideInSearch: true,
       width: 120,

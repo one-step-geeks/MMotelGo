@@ -65,7 +65,7 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
       if (j === 0 || moment(dateList[j]).diff(dateList[j - 1], 'days') !== 1) {
         trueResult.push({
           ...rest,
-          checkInDate: moment(dateList[j]),
+          startDate: moment(dateList[j]),
           checkInDays: 1,
           totalAmount: rest.priceList[j],
           roomPrice: rest.priceList[j],
@@ -285,6 +285,7 @@ const RoomStatePage: React.FC = () => {
                   );
                 }
                 const order = findOrderByRecord(record, item.date);
+                console.log('order', order ? 'true' : 'false');
 
                 if (order) {
                   return <OrderDrawer record={record} order={order} />;

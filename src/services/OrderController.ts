@@ -127,13 +127,13 @@ export async function exportList(params: Record<string, any>) {
 }
 
 /** 查询可预定的房间 */
-export async function queryObservableRooms(checkInDate: string) {
+export async function queryObservableRooms(startDate: string) {
   return request<API.Result_RoomTypeInfo_>(
     '/motel/order/checkOrderRoomByDate',
     {
       method: 'GET',
       params: {
-        checkInDate,
+        startDate,
       },
     },
   );

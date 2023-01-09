@@ -68,10 +68,10 @@ export default (props: Props) => {
             // setOrderStatus(order.status);
             form.setFieldsValue({
               ...order,
-              orderRoomList: orderRoomList.map(({ checkInDate, ...rest }) => {
+              orderRoomList: orderRoomList.map(({ startDate, ...rest }) => {
                 return {
                   ...rest,
-                  checkInDate: moment(checkInDate),
+                  startDate: moment(startDate),
                   roomDesc: `${rest.roomTypeName}-${rest.roomCode}`,
                 };
               }),
@@ -86,10 +86,10 @@ export default (props: Props) => {
     },
   );
 
-  const onLoadRoomTree = async (open: boolean, checkInDate: string) => {
+  const onLoadRoomTree = async (open: boolean, startDate: string) => {
     if (open) {
       const { data } = await services.OrderController.queryObservableRooms(
-        checkInDate,
+        startDate,
       );
       const { orderRoomList } = form.getFieldsValue();
       const addedRoomIds = orderRoomList.map((room) => room.roomId);
@@ -161,11 +161,11 @@ export default (props: Props) => {
             },
             orderRoomList: orderRoomList.map((orderRoom) => {
               // 对于新增的房间，只有roomDesc，需要获取到roomId用于提交
-              let { roomDesc, roomId, checkInDate, ...rest } = orderRoom;
+              let { roomDesc, roomId, startDate, ...rest } = orderRoom;
 
               return {
                 roomId,
-                checkInDate: moment(checkInDate).format('YYYY-MM-DD'),
+                startDate: moment(startDate).format('YYYY-MM-DD'),
                 // 房间状态可能和订单状态有差异，新增时候保持一致
                 status: OrderState.IS_ORDERED,
                 checkInPersonCount: 0,
@@ -264,7 +264,7 @@ export default (props: Props) => {
                   <Form.Item key={field.key}>
                     <Input.Group compact>
                       <Form.Item
-                        name={[field.name, 'checkInDate']}
+                        name={[field.name, 'startDate']}
                         noStyle
                         initialValue={moment()}
                       >

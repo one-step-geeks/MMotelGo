@@ -275,8 +275,8 @@ export function useOrderDetailDrawer(
   const roomColumns: ColumnsType<ORDER.OrderRoom> = [
     {
       title: '入住日期',
-      dataIndex: 'checkInDate',
-      key: 'checkInDate',
+      dataIndex: 'startDate',
+      key: 'startDate',
       align: 'center',
       width: 112,
       render(value, record, index) {
