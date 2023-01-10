@@ -34,6 +34,17 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
         dataIndex: 'paymentName',
         width: 100,
       },
+      {
+        title: intl.formatMessage({ id: '合计' }),
+        fixed: 'left',
+        dataIndex: 'total',
+        width: 100,
+        render: (price) => {
+          return `${intl.formatMessage({ id: '¥' })}${
+            price === '-' ? 0 : price
+          }`;
+        },
+      },
       ...rangeDayList.map((item) => {
         return {
           title: item,
@@ -70,7 +81,10 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
                 <Button
                   onClick={() => {
                     const timeParams = getRangeDate(collectDateRange);
-                    paymentDetailExport(timeParams);
+                    paymentDetailExport({
+                      ...timeParams,
+                      type: Number(activeKey),
+                    });
                   }}
                   type="primary"
                 >
@@ -121,6 +135,7 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
               x: 'max-content',
             }}
             search={false}
+            rowKey="paymentId"
             request={async (params) => {
               const timeParams = getRangeDate(collectDateRange);
               return fetchPaymentDetail({

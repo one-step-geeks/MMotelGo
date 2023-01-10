@@ -3,7 +3,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import Cookie from 'js-cookie';
 import type { CSSProperties } from 'react';
-import { useHistory } from 'umi';
+import { useHistory, useModel } from 'umi';
 import services from '@/services';
 
 const { Link, Text } = Typography;

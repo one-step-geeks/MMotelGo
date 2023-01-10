@@ -186,6 +186,7 @@ const PaymentRecordTable: React.FC = () => {
             paymentIds,
           });
         }}
+        rowKey={(item, index) => item.orderId + index}
         toolBarRender={() => {
           return [
             <Button
