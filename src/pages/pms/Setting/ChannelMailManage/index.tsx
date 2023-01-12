@@ -11,13 +11,6 @@ import {
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
-  const data = [{ id: 1, emailAddr: 'yty@qq.com' }].map((item) => ({
-    title: item.emailAddr,
-    actions: [
-      <EditChannelMailDrawerForm id={item.id} trigger={<a>编辑</a>} />,
-      <a onClick={() => deleteChannelMail(item.id)}>删除</a>,
-    ],
-  }));
   return (
     <div className="channel-mail-manage">
       <CommonCard
@@ -50,8 +43,20 @@ const TradeManage: React.FC = () => {
             actions: {},
           }}
           request={async () => {
-            return getChannelMailList(1).catch(() => {
-              return data;
+            return getChannelMailList(1).then((res) => {
+              (res as any).data = (res.data || []).map((item) => {
+                return {
+                  title: item.emailAddr,
+                  actions: [
+                    <EditChannelMailDrawerForm
+                      id={item.id}
+                      trigger={<a>编辑</a>}
+                    />,
+                    <a onClick={() => deleteChannelMail(item.id)}>删除</a>,
+                  ],
+                };
+              });
+              return res;
             });
           }}
         />
