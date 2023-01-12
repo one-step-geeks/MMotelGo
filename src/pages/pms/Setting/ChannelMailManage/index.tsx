@@ -4,19 +4,19 @@ import CommonCard from '@/components/CommonCard';
 import { useIntl } from 'umi';
 import { ProForm, ProList } from '@ant-design/pro-components';
 import EditChannelMailDrawerForm from './EditChannelMailDrawerForm';
+import {
+  deleteChannelMail,
+  getChannelMailList,
+} from '@/services/ChannelController';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
-  const data = [
-    'yty@qq.com',
-    'yaskdbaskdasty@qqaskdaskd.com',
-    'yty@qq.com',
-    'yty@qq.com',
-    'yty@qq.com',
-    'yty@qq.com',
-  ].map((item) => ({
-    title: item,
-    actions: [<EditChannelMailDrawerForm trigger={<a>编辑</a>} />, <a>删除</a>],
+  const data = [{ id: 1, emailAddr: 'yty@qq.com' }].map((item) => ({
+    title: item.emailAddr,
+    actions: [
+      <EditChannelMailDrawerForm id={item.id} trigger={<a>编辑</a>} />,
+      <a onClick={() => deleteChannelMail(item.id)}>删除</a>,
+    ],
   }));
   return (
     <div className="channel-mail-manage">
@@ -43,23 +43,17 @@ const TradeManage: React.FC = () => {
           showActions="always"
           rowSelection={{}}
           grid={{ gutter: 16, column: 2 }}
-          onItem={(record: any) => {
-            return {
-              onMouseEnter: () => {
-                console.log(record);
-              },
-              onClick: () => {
-                console.log(record);
-              },
-            };
-          }}
           metas={{
             title: {},
             subTitle: {},
             type: {},
             actions: {},
           }}
-          dataSource={data}
+          request={async () => {
+            return getChannelMailList(1).catch(() => {
+              return data;
+            });
+          }}
         />
       </CommonCard>
     </div>

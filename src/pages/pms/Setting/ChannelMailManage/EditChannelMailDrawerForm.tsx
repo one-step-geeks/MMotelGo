@@ -1,8 +1,11 @@
 import React from 'react';
-import { useIntl } from 'umi';
+import { useIntl, useRequest } from 'umi';
 import ProForm, { DrawerForm, ProFormText } from '@ant-design/pro-form';
+import { addChannelMail, editChannelMail } from '@/services/ChannelController';
 interface EditChannelMailDrawerFormProps {
   trigger: JSX.Element;
+  id?: number;
+  emailAddr?: string;
 }
 const EditChannelMailDrawerForm: React.FC<EditChannelMailDrawerFormProps> = (
   props,
@@ -10,7 +13,7 @@ const EditChannelMailDrawerForm: React.FC<EditChannelMailDrawerFormProps> = (
   const intl = useIntl();
   const [editChannelMailDrawerForm] = ProForm.useForm();
 
-  const { trigger } = props;
+  const { trigger, id, emailAddr } = props;
   return (
     <DrawerForm
       width={500}
@@ -21,15 +24,31 @@ const EditChannelMailDrawerForm: React.FC<EditChannelMailDrawerFormProps> = (
         } else {
         }
       }}
+      onFinish={async (values) => {
+        const { emailAddr, emailPwd } = values;
+        if (id) {
+          await editChannelMail({
+            mailList: [{ id, emailPwd }],
+          });
+        } else {
+          await addChannelMail({
+            emailAddr,
+            emailPwd,
+          });
+        }
+        return true;
+      }}
       trigger={trigger}
     >
       <ProFormText
-        name="email"
+        name="emailAddr"
         label={intl.formatMessage({ id: '邮箱地址' })}
+        initialValue={emailAddr}
+        disabled={!!emailAddr}
         rules={[{ required: true }]}
       />
       <ProFormText.Password
-        name="password"
+        name="emailPwd"
         label={intl.formatMessage({ id: '邮箱密码' })}
         rules={[{ required: true }]}
       />

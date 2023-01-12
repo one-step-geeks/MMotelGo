@@ -93,3 +93,8 @@ declare namespace API {
   type Result_OrderListInfo_ = Result_List_<ORDER.OrderListItem>;
   type Result_RoomTypeInfo_ = Result<ORDER.TypeAndRoomTree>;
 }
+
+interface PageSearchParams {
+  pageNum?: number;
+  pageSize?: number;
+}

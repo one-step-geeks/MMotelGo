@@ -3,39 +3,15 @@ import { Button, Result } from 'antd';
 import CommonCard from '@/components/CommonCard';
 import { useIntl, useHistory } from 'umi';
 import { ProList } from '@ant-design/pro-components';
+import {
+  channelStatustrans,
+  getChannelList,
+} from '@/services/ChannelController';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
   const reactHistory = useHistory();
-  const data = [
-    '美团',
-    'airbnb',
-    '携程',
-    '途家',
-    '途家',
-    '途家',
-    '途家',
-    '途家',
-  ].map((item) => ({
-    title: item,
-    avatar:
-      'https://gw.alipayobjects.com/zos/antfincdn/UCSiy1j6jx/xingzhuang.svg',
-    content: (
-      <div
-        style={{
-          flex: 1,
-        }}
-      >
-        <div
-          style={{
-            width: 200,
-          }}
-        >
-          <div>发布中</div>
-        </div>
-      </div>
-    ),
-  }));
+
   return (
     <CommonCard
       title={intl.formatMessage({ id: '订单自动化支持' })}
@@ -61,16 +37,6 @@ const TradeManage: React.FC = () => {
         showActions="always"
         rowSelection={{}}
         grid={{ gutter: 16, column: 5 }}
-        onItem={(record: any) => {
-          return {
-            onMouseEnter: () => {
-              console.log(record);
-            },
-            onClick: () => {
-              console.log(record);
-            },
-          };
-        }}
         metas={{
           title: {},
           subTitle: {},
@@ -79,7 +45,36 @@ const TradeManage: React.FC = () => {
           content: {},
           actions: {},
         }}
-        dataSource={data}
+        request={async (params) => {
+          const { pageSize, current } = params;
+          return getChannelList({
+            pageSize: pageSize!,
+            pageNum: current!,
+          }).then((res) => {
+            (res as any).data = (res.data || []).map((item) => {
+              return {
+                title: item.name,
+                avatar: item.picUrl,
+                content: (
+                  <div
+                    style={{
+                      flex: 1,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 200,
+                      }}
+                    >
+                      <div>{channelStatustrans[item.status]}</div>
+                    </div>
+                  </div>
+                ),
+              };
+            });
+            return res;
+          });
+        }}
       />
     </CommonCard>
   );

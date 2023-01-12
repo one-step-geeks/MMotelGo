@@ -47,12 +47,103 @@ export async function deleteChannel(id: number) {
   });
 }
 
-/** 排序渠道 */
-export async function sortChannels(orderIds: Array<number>) {
-  return request<API.Result>('/motel/config/channelSet/sort', {
+/** 渠道邮箱列表 */
+export async function getChannelMailList(channelId: number) {
+  return request<
+    API.Result<
+      {
+        id: number; // 渠道邮箱配置id
+        emailAddr: string; // 渠道邮箱地址
+      }[]
+    >
+  >('/motel/channel/mail/list', {
+    data: {
+      channelId: channelId,
+    },
+  });
+}
+/** 添加渠道邮箱 */
+export async function addChannelMail(data: {
+  emailAddr: string; // 渠道邮箱地址
+  emailPwd: string; //渠道邮箱密码
+}) {
+  return request<API.Result<number>>('/motel/channel/mail/add', {
+    method: 'POST',
+    data,
+  });
+}
+
+/** 修改渠道邮箱 */
+export async function editChannelMail(data: {
+  mailList: {
+    id: number; // 渠道邮箱主键id
+    emailPwd: string; //渠道邮箱密码
+  }[];
+}) {
+  return request<API.Result>('/motel/channel/mail/update', {
+    method: 'POST',
+    data,
+  });
+}
+/** 删除渠道邮箱 */
+export async function deleteChannelMail(id: number) {
+  return request<API.Result>('/motel/channel/mail/del', {
     method: 'POST',
     data: {
-      idList: orderIds,
+      id,
     },
+  });
+}
+export interface ChannelOrderItemType {
+  id: number; // 渠道订单主键id
+  channelName: string; // 渠道名称
+  createTime: string; //创建时间
+  emailAddr: string; //邮箱地址
+  channelOrderNo: string; //渠道订单号
+  emailLink: string; //邮件链接，后期放到oss中，一期先不实现
+  emailSubject: string; //邮件主题
+}
+/** 渠道列表 */
+export async function getChannelOrderList(data: {
+  pageNum: number; //页码
+  pageSize: number; //每页数据量
+  channelOrderNo: string; // 渠道订单号
+  startDate: string; // 渠道订单生成开始时间
+  endDate: string; //渠道订单生成结束时间
+}) {
+  return request<API.Result<ChannelOrderItemType[]>>(
+    '/motel/channel/order/list',
+    {
+      method: 'POST',
+      data,
+    },
+  );
+}
+export enum ChannelTypeEnum {
+  OTA = 1,
+  MAIL = 0,
+}
+export enum ChannelStatusEnum {
+  UN_ENABLE = 0,
+  ENABLED = 1,
+}
+export const channelStatustrans = {
+  [ChannelStatusEnum.ENABLED]: '已开通',
+  [ChannelStatusEnum.UN_ENABLE]: '未开通',
+};
+/** 获取渠道列表 */
+export async function getChannelList(params: PageSearchParams) {
+  return request<
+    API.Result<
+      {
+        id: number; // 渠道主键
+        name: string; // 渠道名称
+        type: ChannelTypeEnum; // 0-邮件直连，1-OTA直连
+        status: ChannelStatusEnum; // 0-未开通，1-已开通
+        picUrl: string; // 渠道图片展示url
+      }[]
+    >
+  >('/motel/channel/list', {
+    params,
   });
 }
