@@ -78,7 +78,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
       }}
     >
       <div className="room-sticky">
-        <span>{moment(room?.checkInDate).format('MM-DD')}入住</span>
+        <span>{moment(room?.startDate).format('MM-DD')}入住</span>
         <span>
           {room?.roomTypeName}/{room?.roomCode}
         </span>
