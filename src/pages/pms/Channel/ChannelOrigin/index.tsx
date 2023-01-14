@@ -37,7 +37,7 @@ const TradeManage: React.FC = () => {
       {
         title: intl.formatMessage({ id: '渠道来源' }),
         hideInTable: true,
-        dataIndex: 'channelId',
+        dataIndex: 'channelIds',
         valueType: 'select',
         fieldProps: {
           mode: 'multiple',
