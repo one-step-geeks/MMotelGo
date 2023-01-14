@@ -1,7 +1,10 @@
 import React, { useMemo } from 'react';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { useIntl } from 'umi';
-import { getChannelOrderList } from '@/services/ChannelController';
+import {
+  getChannelList,
+  getChannelOrderList,
+} from '@/services/ChannelController';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
@@ -18,18 +21,30 @@ const TradeManage: React.FC = () => {
         valueType: 'dateRange',
         dataIndex: 'date',
       },
-      // {
-      //   title: intl.formatMessage({ id: '渠道来源' }),
-      //   hideInTable: true,
-      //   dataIndex: 'channelOrigin',
-      //   valueType: 'select',
-      // },
-      // {
-      //   title: intl.formatMessage({ id: '邮箱' }),
-      //   hideInTable: true,
-      //   dataIndex: 'channelMail',
-      //   valueType: 'select',
-      // },
+      {
+        title: intl.formatMessage({ id: '渠道来源' }),
+        hideInTable: true,
+        dataIndex: 'channelId',
+        valueType: 'select',
+        fieldProps: {
+          mode: 'multiple',
+        },
+        request: () => {
+          return getChannelList().then((res) => {
+            return res.data.map((item) => {
+              return {
+                label: item.name,
+                value: item.id,
+              };
+            });
+          });
+        },
+      },
+      {
+        title: intl.formatMessage({ id: '邮箱' }),
+        hideInTable: true,
+        dataIndex: 'emailAddr',
+      },
       {
         title: intl.formatMessage({ id: '序号' }),
         search: false,

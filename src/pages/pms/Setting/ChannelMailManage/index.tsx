@@ -43,7 +43,7 @@ const TradeManage: React.FC = () => {
             actions: {},
           }}
           request={async () => {
-            return getChannelMailList(1).then((res) => {
+            return getChannelMailList().then((res) => {
               (res as any).data = (res.data || []).map((item) => {
                 return {
                   title: item.emailAddr,

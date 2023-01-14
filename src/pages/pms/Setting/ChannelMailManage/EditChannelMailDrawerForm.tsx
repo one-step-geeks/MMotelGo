@@ -21,6 +21,10 @@ const EditChannelMailDrawerForm: React.FC<EditChannelMailDrawerFormProps> = (
       form={editChannelMailDrawerForm}
       onVisibleChange={(open) => {
         if (open) {
+          editChannelMailDrawerForm.setFieldsValue({
+            emailAddr,
+            emailPwd: null,
+          });
         } else {
         }
       }}

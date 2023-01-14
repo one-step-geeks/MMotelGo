@@ -17,9 +17,9 @@ const TradeManage: React.FC = () => {
       title={intl.formatMessage({ id: '订单自动化支持' })}
       titleTool={
         <>
-          <Button style={{ marginRight: 8 }} type="primary">
+          {/* <Button style={{ marginRight: 8 }} type="primary">
             {intl.formatMessage({ id: '同步邮件渠道' })}
-          </Button>
+          </Button> */}
           <Button
             onClick={() =>
               reactHistory.push('/pms/setting/channel-mail-manage')
@@ -46,11 +46,7 @@ const TradeManage: React.FC = () => {
           actions: {},
         }}
         request={async (params) => {
-          const { pageSize, current } = params;
-          return getChannelList({
-            pageSize: pageSize!,
-            pageNum: current!,
-          }).then((res) => {
+          return getChannelList().then((res) => {
             (res as any).data = (res.data || []).map((item) => {
               return {
                 title: item.name,

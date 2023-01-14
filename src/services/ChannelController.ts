@@ -48,7 +48,7 @@ export async function deleteChannel(id: number) {
 }
 
 /** 渠道邮箱列表 */
-export async function getChannelMailList(channelId: number) {
+export async function getChannelMailList() {
   return request<
     API.Result<
       {
@@ -56,11 +56,7 @@ export async function getChannelMailList(channelId: number) {
         emailAddr: string; // 渠道邮箱地址
       }[]
     >
-  >('/motel/channel/mail/list', {
-    data: {
-      channelId: channelId,
-    },
-  });
+  >('/motel/channel/mail/list');
 }
 /** 添加渠道邮箱 */
 export async function addChannelMail(data: {
@@ -126,24 +122,24 @@ export enum ChannelTypeEnum {
 export enum ChannelStatusEnum {
   UN_ENABLE = 0,
   ENABLED = 1,
+  UN_FOUND = 2,
 }
 export const channelStatustrans = {
   [ChannelStatusEnum.ENABLED]: '已开通',
   [ChannelStatusEnum.UN_ENABLE]: '未开通',
+  [ChannelStatusEnum.UN_FOUND]: '未发现',
 };
 /** 获取渠道列表 */
-export async function getChannelList(params: PageSearchParams) {
+export async function getChannelList() {
   return request<
     API.Result<
       {
         id: number; // 渠道主键
         name: string; // 渠道名称
         type: ChannelTypeEnum; // 0-邮件直连，1-OTA直连
-        status: ChannelStatusEnum; // 0-未开通，1-已开通
+        status: ChannelStatusEnum; // 0-未开通，1-已开通 2-未发现
         picUrl: string; // 渠道图片展示url
       }[]
     >
-  >('/motel/channel/list', {
-    params,
-  });
+  >('/motel/channel/list');
 }
