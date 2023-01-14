@@ -143,3 +143,8 @@ export async function getChannelList() {
     >
   >('/motel/channel/list');
 }
+
+/** 同步渠道 */
+export async function syncChannel(channelId: number) {
+  return request<API.Result>('/motel/channel/sync', { data: { channelId } });
+}
