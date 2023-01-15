@@ -117,14 +117,14 @@ const OrderContainer: React.FC = (props) => {
     {
       title: '渠道',
       ellipsis: true,
-      key: 'channelType',
-      dataIndex: 'channelType',
+      key: 'channelSettingId',
+      dataIndex: 'channelSettingId',
       order: 6 - 4,
       width: 100,
       valueEnum: convertOptionToEnums(channelOptions),
       render: (_, record) => {
         const option = channelOptions.find(
-          (o) => o.value === record.channelType,
+          (o) => o.value === record.channelSettingId,
         );
         return option && option.label;
       },

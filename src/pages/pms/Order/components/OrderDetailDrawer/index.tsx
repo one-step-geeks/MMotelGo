@@ -517,12 +517,12 @@ export function useOrderDetailDrawer(
                     <i
                       style={{
                         background:
-                          data?.order.channelType &&
-                          mapChannelText(data?.order.channelType, 'color'),
+                          data?.order.channelSettingId &&
+                          mapChannelText(data?.order.channelSettingId, 'color'),
                       }}
                     ></i>
-                    {data?.order.channelType &&
-                      mapChannelText(data?.order.channelType, 'name')}
+                    {data?.order.channelSettingId &&
+                      mapChannelText(data?.order.channelSettingId, 'name')}
                   </span>
                 </div>
               </div>

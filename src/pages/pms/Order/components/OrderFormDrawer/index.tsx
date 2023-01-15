@@ -226,7 +226,7 @@ export default (props: Props) => {
           <ProFormSelect
             colProps={{ md: 12 }}
             label="渠道"
-            name="channelType"
+            name="channelSettingId"
             fieldProps={{
               optionItemRender(item) {
                 return (

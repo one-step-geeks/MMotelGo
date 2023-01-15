@@ -18,7 +18,7 @@ declare namespace ORDER {
 
   interface OrderBase {
     id: number;
-    channelType: number;
+    channelSettingId: number;
     status: 1 | 2;
     remark: string;
     reserveName: string;
