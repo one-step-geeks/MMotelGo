@@ -226,6 +226,13 @@ const OrderContainer: React.FC = (props) => {
       search: false,
     },
     {
+      title: '间夜',
+      dataIndex: 'checkInDays',
+      key: 'checkInDays',
+      width: 80,
+      search: false,
+    },
+    {
       title: '订单状态',
       dataIndex: 'status',
       key: 'status',
@@ -241,8 +248,8 @@ const OrderContainer: React.FC = (props) => {
     },
     {
       title: '房费',
-      dataIndex: 'roomPrice',
-      key: 'roomPrice',
+      dataIndex: 'totalRoomAmount',
+      key: 'totalRoomAmount',
       width: 120,
       search: false,
       renderText(_) {
