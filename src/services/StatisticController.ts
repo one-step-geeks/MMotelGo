@@ -275,3 +275,80 @@ export async function paymentRecordExport(data: SelectPaymentRecordParams) {
     message.success('下载成功');
   });
 }
+
+/**
+ * 营业汇总页面
+ */
+export interface TradeStatistics {
+  total: number; //总营业额
+  dayPercent: number; //日环比
+  list: Array<{
+    date: string; // 日期
+    value: number; // 值
+  }>;
+  consume: number; //客房消费
+  consumePercent: number; //客房消费占比
+  penalSum: number; //违约金
+  penalSumPercent: number; //违约金占比
+  roomFees: number; // 房费
+  roomFeesPercent: number; // 房费占比
+}
+
+// 营业汇总概括
+export async function getTradeStatistics(params: {
+  startTime: string;
+  endTime: string;
+}) {
+  return request<API.Result<TradeStatistics>>(
+    '/motel/summary/business/getStatistics',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
+}
+
+export interface TradeDistributions {
+  total: number;
+  list: Array<{
+    name: string;
+    amount: number;
+    percentage: number;
+  }>;
+}
+
+// 营业汇总统计
+export async function getTradeDistributions(params: {
+  startTime: string;
+  endTime: string;
+}) {
+  return request<API.Result<TradeDistributions>>(
+    '/motel/summary/business/getPieChart',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
+}
+
+export interface TradeDaily {
+  date: string;
+  value: number;
+}
+
+// 美日汇总统计
+export async function getTradeDaily(params: {
+  type: number;
+  startTime: string;
+  endTime: string;
+}) {
+  return request<API.Result<TradeDaily[]>>(
+    '/motel/summary/business/getLineChart',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
+}
+
+getTradeDaily;
