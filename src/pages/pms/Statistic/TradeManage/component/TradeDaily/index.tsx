@@ -55,7 +55,9 @@ const TotalReceipts: React.FC = () => {
             key="4"
           ></Tabs.TabPane>
         </Tabs>
-        <Line height={190} data={state} xField="date" yField="value"></Line>
+        <div className="trade-statistic-chart-wrapper">
+          <Line data={state} xField="date" smooth={true} yField="value"></Line>
+        </div>
       </CommonCard>
     </div>
   );

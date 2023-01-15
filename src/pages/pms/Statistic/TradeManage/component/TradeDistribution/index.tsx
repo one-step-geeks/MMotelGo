@@ -34,9 +34,11 @@ const TotalReceipts: React.FC = () => {
   }, [collectDateRange]);
 
   return (
-    <div className="trade-statistic-disribution">
+    <div className="trade-statistic-distribution">
       <CommonCard title={intl.formatMessage({ id: '营业汇总统计' })}>
-        <CommonPie dataSource={state} />
+        <div className="trade-statistic-chart-wrapper">
+          <CommonPie dataSource={state} />
+        </div>
       </CommonCard>
     </div>
   );
