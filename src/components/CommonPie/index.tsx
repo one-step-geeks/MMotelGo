@@ -46,8 +46,6 @@ const CommonPie: React.FC<CommonPieProps> = (props) => {
   const config: PieConfig = {
     width: 200,
     height: 200,
-    appendPadding: 0,
-    padding: 0,
     data: dataSource,
     angleField: 'value',
     colorField: 'type',
@@ -67,13 +65,16 @@ const CommonPie: React.FC<CommonPieProps> = (props) => {
       autoRotate: false,
       content: '{value}',
     },
+    legend: {
+      position: 'bottom',
+    },
     statistic: {
       title: {
         offsetY: -4,
         customHtml: (container, view, datum) => {
           const { width, height } = container.getBoundingClientRect();
           const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-          const text = datum ? datum.type : '总计';
+          const text = datum ? datum.type : intl.formatMessage({ id: '总计' });
           return renderStatistic(d, text, {
             fontSize: 28,
           });
