@@ -104,13 +104,31 @@ export async function getChannelOrderList(data: {
   pageNum: number; //页码
   pageSize: number; //每页数据量
   channelOrderNo: string; // 渠道订单号
-  channelIdList: any[];
+  channelIdList: { channelId: any }[];
   emailAddr: string;
   startDate: string; // 渠道订单生成开始时间
   endDate: string; //渠道订单生成结束时间
 }) {
   return request<API.Result<ChannelOrderItemType[]>>(
     '/motel/channel/order/list',
+    {
+      method: 'POST',
+      data,
+    },
+  );
+}
+/** 手动拉取邮件订单 */
+export async function pullChannelOrder(data: {
+  pageNum: number; //页码
+  pageSize: number; //每页数据量
+  channelOrderNo: string; // 渠道订单号
+  channelIdList: { channelId: any }[];
+  emailAddr: string;
+  startDate: string; // 渠道订单生成开始时间
+  endDate: string; //渠道订单生成结束时间
+}) {
+  return request<API.Result<ChannelOrderItemType[]>>(
+    '/motel/channel/order/create',
     {
       method: 'POST',
       data,

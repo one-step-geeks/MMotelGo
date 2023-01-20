@@ -3,17 +3,19 @@ import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { useIntl } from 'umi';
 import {
   getChannelOrderList,
+  pullChannelOrder,
   queryChannels,
   syncChannel,
 } from '@/services/ChannelController';
 import { ProFormInstance } from '@ant-design/pro-form';
 import { useOrderDetailDrawer } from '../../Order/components/OrderDetailDrawer';
 import OrderFormDrawer from '../../Order/components/OrderFormDrawer';
-import { Button } from 'antd';
+import { Button, Form } from 'antd';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
   const drawerFormRef = useRef<ProFormInstance>();
+  const [tableForm] = Form.useForm();
   const [orderId, setOrderId] = useState<number | undefined>();
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
@@ -143,6 +145,44 @@ const TradeManage: React.FC = () => {
       <ProTable
         scroll={{ x: 'max-content' }}
         columns={columns}
+        toolbar={{
+          settings: [],
+          actions: [
+            <Button
+              type="primary"
+              onClick={() => {
+                const params = tableForm.getFieldsValue();
+                const {
+                  date = [],
+                  current,
+                  pageSize,
+                  channelOrderNo,
+                  channelIds,
+                  emailAddr,
+                } = params;
+                const [startDate, endDate] = date || [];
+                const channelIdList = (channelIds || []).map(
+                  (channelId: any) => {
+                    return {
+                      channelId,
+                    };
+                  },
+                );
+                return pullChannelOrder({
+                  pageNum: current!,
+                  emailAddr,
+                  channelOrderNo,
+                  pageSize: pageSize!,
+                  channelIdList,
+                  startDate,
+                  endDate,
+                });
+              }}
+            >
+              手动拉取订单
+            </Button>,
+          ],
+        }}
         request={async (params, sort, filter) => {
           const {
             date = [],
