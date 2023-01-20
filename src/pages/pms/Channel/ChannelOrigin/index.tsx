@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { useIntl } from 'umi';
 import {
   getChannelOrderList,
@@ -7,15 +7,17 @@ import {
   queryChannels,
   syncChannel,
 } from '@/services/ChannelController';
-import { ProFormInstance } from '@ant-design/pro-form';
 import { useOrderDetailDrawer } from '../../Order/components/OrderDetailDrawer';
 import OrderFormDrawer from '../../Order/components/OrderFormDrawer';
 import { Button, Form } from 'antd';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
-  const drawerFormRef = useRef<ProFormInstance>();
   const [tableForm] = Form.useForm();
+  const channelOriginActionRef = useRef<ActionType>();
+  const refreshList = () => {
+    channelOriginActionRef?.current?.reload?.();
+  };
   const [orderId, setOrderId] = useState<number | undefined>();
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
@@ -137,7 +139,6 @@ const TradeManage: React.FC = () => {
         onVisibleChange={(value) => setEditDrawerVisible(value)}
         id={orderId}
         onSubmited={() => {
-          drawerFormRef.current?.submit();
           setEditDrawerVisible(false);
           setOrderId(undefined);
         }}
@@ -176,7 +177,7 @@ const TradeManage: React.FC = () => {
                   channelIdList,
                   startDate,
                   endDate,
-                });
+                }).then(refreshList);
               }}
             >
               手动拉取订单

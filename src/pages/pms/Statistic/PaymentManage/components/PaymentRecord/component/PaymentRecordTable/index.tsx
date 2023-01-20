@@ -14,12 +14,10 @@ import { queryPaymentTypes } from '@/services/FinanceController';
 import { Button } from 'antd';
 import { useOrderDetailDrawer } from '@/pages/pms/Order/components/OrderDetailDrawer';
 import OrderFormDrawer from '@/pages/pms/Order/components/OrderFormDrawer';
-import { ProFormInstance } from '@ant-design/pro-form';
 
 const PaymentRecordTable: React.FC = () => {
   const intl = useIntl();
   const { tableActionRef, tableFormRef } = useContext(PaymentRecordContext);
-  const drawerFormRef = useRef<ProFormInstance>();
   const [orderId, setOrderId] = useState<number | undefined>();
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
@@ -159,7 +157,6 @@ const PaymentRecordTable: React.FC = () => {
         onVisibleChange={(value) => setEditDrawerVisible(value)}
         id={orderId}
         onSubmited={() => {
-          drawerFormRef.current?.submit();
           setEditDrawerVisible(false);
           setOrderId(undefined);
         }}

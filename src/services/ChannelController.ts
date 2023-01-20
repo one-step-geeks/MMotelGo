@@ -143,7 +143,10 @@ export async function pullChannelOrder(data: {
       method: 'POST',
       data,
     },
-  );
+  ).then((res) => {
+    message.success('拉取成功');
+    return res;
+  });
 }
 export enum ChannelTypeEnum {
   OTA = 1,
