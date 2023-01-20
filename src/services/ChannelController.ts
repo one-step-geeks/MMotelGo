@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import Cookie from 'js-cookie';
+import { message } from 'antd';
 
 /** 获取渠道 */
 export async function queryChannels() {
@@ -66,6 +67,9 @@ export async function addChannelMail(data: {
   return request<API.Result<number>>('/motel/channel/mail/add', {
     method: 'POST',
     data,
+  }).then((res) => {
+    message.success('新增成功');
+    return res;
   });
 }
 
@@ -79,6 +83,9 @@ export async function editChannelMail(data: {
   return request<API.Result>('/motel/channel/mail/update', {
     method: 'POST',
     data,
+  }).then((res) => {
+    message.success('编辑成功');
+    return res;
   });
 }
 /** 删除渠道邮箱 */
@@ -88,6 +95,9 @@ export async function deleteChannelMail(id: number) {
     data: {
       id,
     },
+  }).then((res) => {
+    message.success('删除成功');
+    return res;
   });
 }
 export interface ChannelOrderItemType {

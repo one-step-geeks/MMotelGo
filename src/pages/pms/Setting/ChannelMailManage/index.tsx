@@ -1,8 +1,8 @@
-import React from 'react';
-import { Button, Result } from 'antd';
+import React, { useRef } from 'react';
+import { Button, Popconfirm } from 'antd';
 import CommonCard from '@/components/CommonCard';
 import { useIntl } from 'umi';
-import { ProForm, ProList } from '@ant-design/pro-components';
+import { ActionType, ProForm, ProList } from '@ant-design/pro-components';
 import EditChannelMailDrawerForm from './EditChannelMailDrawerForm';
 import {
   deleteChannelMail,
@@ -11,6 +11,10 @@ import {
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
+  const mailListActionRef = useRef<ActionType>();
+  const refreshList = () => {
+    mailListActionRef?.current?.reload?.();
+  };
   return (
     <div className="channel-mail-manage">
       <CommonCard
@@ -18,6 +22,7 @@ const TradeManage: React.FC = () => {
         titleTool={
           <>
             <EditChannelMailDrawerForm
+              onFinish={refreshList}
               trigger={
                 <Button type="primary">
                   {' '}
@@ -32,6 +37,7 @@ const TradeManage: React.FC = () => {
           itemCardProps={{
             bodyStyle: { paddingBottom: 0, paddingTop: 16 },
           }}
+          actionRef={mailListActionRef}
           pagination={false}
           showActions="always"
           rowSelection={{}}
@@ -49,10 +55,19 @@ const TradeManage: React.FC = () => {
                   title: item.emailAddr,
                   actions: [
                     <EditChannelMailDrawerForm
+                      onFinish={refreshList}
                       id={item.id}
+                      emailAddr={item.emailAddr}
                       trigger={<a>编辑</a>}
                     />,
-                    <a onClick={() => deleteChannelMail(item.id)}>删除</a>,
+                    <Popconfirm
+                      title="确认要删除么"
+                      onConfirm={() =>
+                        deleteChannelMail(item.id).then(refreshList)
+                      }
+                    >
+                      <a>删除</a>,
+                    </Popconfirm>,
                   ],
                 };
               });

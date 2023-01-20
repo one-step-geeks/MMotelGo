@@ -4,6 +4,7 @@ import CommonCard from '@/components/CommonCard';
 import { useIntl, useHistory } from 'umi';
 import { ProList } from '@ant-design/pro-components';
 import {
+  ChannelStatusEnum,
   channelStatustrans,
   getChannelList,
 } from '@/services/ChannelController';
@@ -62,7 +63,9 @@ const TradeManage: React.FC = () => {
                         width: 200,
                       }}
                     >
-                      <div>{channelStatustrans[item.status]}</div>
+                      <div>
+                        {channelStatustrans[item.status as ChannelStatusEnum]}
+                      </div>
                     </div>
                   </div>
                 ),
