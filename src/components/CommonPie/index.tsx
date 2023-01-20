@@ -18,7 +18,7 @@ const renderStatistic = (
     style,
   );
   const R = containerWidth / 2; // r^2 = (w / 2)^2 + (h - offsetY)^2
-
+  const { fontSize } = style;
   let scale = 1;
 
   if (containerWidth < textWidth) {
@@ -34,9 +34,9 @@ const renderStatistic = (
   }
 
   const textStyleStr = `width:${containerWidth}px;`;
-  return `<div style="${textStyleStr};font-size:${scale}em;line-height:${
-    scale < 1 ? 1 : 'inherit'
-  };">${text}</div>`;
+  return `<div style="${textStyleStr};font-size:${
+    scale * fontSize
+  }px;line-height:${scale < 1 ? 1 : 'inherit'};">${text}</div>`;
 };
 
 const CommonPie: React.FC<CommonPieProps> = (props) => {
@@ -76,22 +76,20 @@ const CommonPie: React.FC<CommonPieProps> = (props) => {
           const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
           const text = datum ? datum.type : intl.formatMessage({ id: '总计' });
           return renderStatistic(d, text, {
-            fontSize: 28,
+            fontSize: 18,
           });
         },
       },
       content: {
         offsetY: 4,
-        style: {
-          fontSize: '32px',
-        },
+
         customHtml: (container, view, datum, data) => {
           const { width } = container.getBoundingClientRect();
           const text = datum
             ? `${$symbol} ${datum.value}`
             : `${$symbol} ${data?.reduce((r, d) => r + d.value, 0)}`;
           return renderStatistic(width, text, {
-            fontSize: 32,
+            fontSize: 24,
           });
         },
       },
