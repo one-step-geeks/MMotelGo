@@ -53,11 +53,11 @@ const TradeManage: React.FC = () => {
           });
         },
       },
-      // {
-      //   title: intl.formatMessage({ id: '邮箱' }),
-      //   hideInTable: true,
-      //   dataIndex: 'emailAddr',
-      // },
+      {
+        title: intl.formatMessage({ id: '邮箱' }),
+        hideInTable: true,
+        dataIndex: 'emailAddr',
+      },
       // {
       //   title: intl.formatMessage({ id: '序号' }),
       //   search: false,
@@ -93,7 +93,7 @@ const TradeManage: React.FC = () => {
         search: false,
       },
       {
-        title: intl.formatMessage({ id: '获取邮箱' }),
+        title: intl.formatMessage({ id: '邮箱' }),
         dataIndex: 'emailAddr',
         search: false,
       },
@@ -144,12 +144,26 @@ const TradeManage: React.FC = () => {
         scroll={{ x: 'max-content' }}
         columns={columns}
         request={async (params, sort, filter) => {
-          const { date = [], current, pageSize, channelOrderNo } = params;
-          const [startDate, endDate] = date;
+          const {
+            date = [],
+            current,
+            pageSize,
+            channelOrderNo,
+            channelIds,
+            emailAddr,
+          } = params;
+          const [startDate, endDate] = date || [];
+          const channelIdList = (channelIds || []).map((channelId: any) => {
+            return {
+              channelId,
+            };
+          });
           return getChannelOrderList({
             pageNum: current!,
+            emailAddr,
             channelOrderNo,
             pageSize: pageSize!,
+            channelIdList,
             startDate,
             endDate,
           });

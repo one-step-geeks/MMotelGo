@@ -104,6 +104,8 @@ export async function getChannelOrderList(data: {
   pageNum: number; //页码
   pageSize: number; //每页数据量
   channelOrderNo: string; // 渠道订单号
+  channelIdList: any[];
+  emailAddr: string;
   startDate: string; // 渠道订单生成开始时间
   endDate: string; //渠道订单生成结束时间
 }) {

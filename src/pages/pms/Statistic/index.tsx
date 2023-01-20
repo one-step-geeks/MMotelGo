@@ -47,11 +47,11 @@ const SettingContainer: React.FC = (props) => {
                   {intl.formatMessage({ id: '营业汇总' })}
                 </Menu.Item>
               ) : null}
-              {access.canSeeSubMenu(19) ? (
+              {/* {access.canSeeSubMenu(19) ? (
                 <Menu.Item key="/pms/statistic/statistic-channel">
                   {intl.formatMessage({ id: '渠道汇总' })}
                 </Menu.Item>
-              ) : null}
+              ) : null} */}
             </SubMenu>
           ) : null}
         </Menu>
