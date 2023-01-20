@@ -2,8 +2,8 @@ import React, { useMemo, useRef, useState } from 'react';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { useIntl } from 'umi';
 import {
-  getChannelList,
   getChannelOrderList,
+  queryChannels,
   syncChannel,
 } from '@/services/ChannelController';
 import { ProFormInstance } from '@ant-design/pro-form';
@@ -43,7 +43,7 @@ const TradeManage: React.FC = () => {
           mode: 'multiple',
         },
         request: () => {
-          return getChannelList().then((res) => {
+          return queryChannels().then((res) => {
             return res.data.map((item) => {
               return {
                 label: item.name,
@@ -71,9 +71,9 @@ const TradeManage: React.FC = () => {
             <Button
               type="link"
               onClick={() => {
-                if (record.id) {
-                  setOrderId(record.id);
-                  openOrderDetailDrawer(record.id);
+                if (record.orderId) {
+                  setOrderId(record.orderId);
+                  openOrderDetailDrawer(record.orderId);
                 }
               }}
             >
