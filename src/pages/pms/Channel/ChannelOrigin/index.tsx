@@ -73,9 +73,9 @@ const TradeManage: React.FC = () => {
             <Button
               type="link"
               onClick={() => {
-                if (record.orderId) {
-                  setOrderId(record.orderId);
-                  openOrderDetailDrawer(record.orderId);
+                if (record.id) {
+                  setOrderId(record.id);
+                  openOrderDetailDrawer(record.id);
                 }
               }}
             >
