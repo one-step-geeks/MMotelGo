@@ -66,7 +66,7 @@ const TradeManage: React.FC = () => {
                         deleteChannelMail(item.id).then(refreshList)
                       }
                     >
-                      <a>删除</a>,
+                      <a>删除</a>
                     </Popconfirm>,
                   ],
                 };
