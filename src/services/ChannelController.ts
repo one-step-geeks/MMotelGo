@@ -120,7 +120,7 @@ export async function getChannelOrderList(data: {
   endDate: string; //渠道订单生成结束时间
 }) {
   return request<API.Result<ChannelOrderItemType[]>>(
-    '/motel/channel/order/list',
+    '/motel/channel/mail/order/list',
     {
       method: 'POST',
       data,
@@ -138,7 +138,7 @@ export async function pullChannelOrder(data: {
   endDate: string; //渠道订单生成结束时间
 }) {
   return request<API.Result<ChannelOrderItemType[]>>(
-    '/motel/channel/order/create',
+    '/motel/channel/mail/order/create',
     {
       method: 'POST',
       data,
