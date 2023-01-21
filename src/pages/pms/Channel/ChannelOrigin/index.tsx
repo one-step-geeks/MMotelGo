@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { useIntl } from 'umi';
+import { useIntl, useRequest } from 'umi';
 import {
   getChannelOrderList,
   pullChannelOrder,
@@ -25,6 +25,8 @@ const TradeManage: React.FC = () => {
       setEditDrawerVisible(true);
     },
   );
+  const { run: pullChannelOrderRequest, loading: pullChannelOrderLoading } =
+    useRequest(pullChannelOrder, { manual: true, defaultLoading: false });
   const columns = useMemo<ProColumns[]>(() => {
     return [
       {
@@ -151,6 +153,7 @@ const TradeManage: React.FC = () => {
           actions: [
             <Button
               type="primary"
+              loading={pullChannelOrderLoading}
               onClick={() => {
                 const params = tableForm.getFieldsValue();
                 const {
@@ -169,7 +172,7 @@ const TradeManage: React.FC = () => {
                     };
                   },
                 );
-                return pullChannelOrder({
+                return pullChannelOrderRequest({
                   pageNum: current!,
                   emailAddr,
                   channelOrderNo,
