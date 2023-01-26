@@ -172,6 +172,7 @@ export async function getChannelList() {
         type: ChannelTypeEnum; // 0-邮件直连，1-OTA直连
         status: ChannelStatusEnum; // 0-未开通，1-已开通 2-未发现
         picUrl: string; // 渠道图片展示url
+        color: string;
       }[]
     >
   >('/motel/channel/list');

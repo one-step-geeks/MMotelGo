@@ -53,7 +53,16 @@ const TradeManage: React.FC = () => {
             (res as any).data = (res.data || []).map((item) => {
               return {
                 title: <Tooltip title={item.name}>{item.name}</Tooltip>,
-                avatar: item.picUrl,
+                avatar: item.picUrl || (
+                  <span
+                    style={{
+                      backgroundColor: item.color,
+                      display: 'block',
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+                ),
                 content: (
                   <div
                     style={{

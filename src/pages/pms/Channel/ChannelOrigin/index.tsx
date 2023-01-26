@@ -33,6 +33,7 @@ const TradeManage: React.FC = () => {
         title: intl.formatMessage({ id: '渠道订单号' }),
         dataIndex: 'channelOrderNo',
         hideInTable: true,
+        fixed: 'left',
       },
       {
         title: intl.formatMessage({ id: '获取时间' }),
@@ -111,6 +112,7 @@ const TradeManage: React.FC = () => {
       },
       {
         title: intl.formatMessage({ id: '操作' }),
+        fixed: 'right',
         search: false,
         render: (_, record) => {
           return (
@@ -148,6 +150,7 @@ const TradeManage: React.FC = () => {
       <ProTable
         scroll={{ x: 'max-content' }}
         columns={columns}
+        actionRef={channelOriginActionRef}
         toolbar={{
           settings: [],
           actions: [
@@ -180,7 +183,7 @@ const TradeManage: React.FC = () => {
                   channelIdList,
                   startDate,
                   endDate,
-                }).then(refreshList);
+                }).then(() => refreshList());
               }}
             >
               手动拉取订单
