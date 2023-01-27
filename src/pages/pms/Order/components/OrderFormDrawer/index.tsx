@@ -303,16 +303,17 @@ export default (props: Props) => {
                             console.log('room.checkInDayas', room.checkInDays);
                             const {
                               data: { list },
-                            } = await services.RoomStateController.getAllRoomType(
-                              {
-                                startDate: moment(room.checkInDate).format(
-                                  'YYYY-MM-DD',
-                                ),
-                                endDate: moment(room.checkInDate)
-                                  .add(room.checkInDays - 1, 'day')
-                                  .format('YYYY-MM-DD'),
-                              },
-                            );
+                            } =
+                              await services.RoomStateController.getAllRoomType(
+                                {
+                                  startDate: moment(room.startDate).format(
+                                    'YYYY-MM-DD',
+                                  ),
+                                  endDate: moment(room.startDate)
+                                    .add(room.checkInDays - 1, 'day')
+                                    .format('YYYY-MM-DD'),
+                                },
+                              );
                             console.log('list', list, 'room', room);
                             const roomState = list
                               ?.find(
@@ -348,10 +349,10 @@ export default (props: Props) => {
                             console.log('field.name', field.name);
                             const { orderRoomList } = form.getFieldsValue();
                             const fieldRow = orderRoomList[field.name];
-                            const checkInDate =
-                              fieldRow.checkInDate &&
-                              fieldRow.checkInDate.format('YYYY-MM-DD');
-                            onLoadRoomTree(value, checkInDate);
+                            const startDate =
+                              fieldRow.startDate &&
+                              fieldRow.startDate.format('YYYY-MM-DD');
+                            onLoadRoomTree(value, startDate);
                           }}
                           onSelect={(value, node) => {
                             // 更新房间的价格
