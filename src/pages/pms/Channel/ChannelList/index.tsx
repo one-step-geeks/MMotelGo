@@ -1,12 +1,14 @@
 import React from 'react';
-import { Button, Result } from 'antd';
+import { Button, Tooltip } from 'antd';
 import CommonCard from '@/components/CommonCard';
 import { useIntl, useHistory } from 'umi';
 import { ProList } from '@ant-design/pro-components';
 import {
+  ChannelStatusEnum,
   channelStatustrans,
   getChannelList,
 } from '@/services/ChannelController';
+import './style.less';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
@@ -35,6 +37,7 @@ const TradeManage: React.FC = () => {
         itemCardProps={{}}
         pagination={false}
         showActions="always"
+        className="channel-config-list"
         rowSelection={{}}
         grid={{ gutter: 16, column: 5 }}
         metas={{
@@ -49,8 +52,17 @@ const TradeManage: React.FC = () => {
           return getChannelList().then((res) => {
             (res as any).data = (res.data || []).map((item) => {
               return {
-                title: item.name,
-                avatar: item.picUrl,
+                title: <Tooltip title={item.name}>{item.name}</Tooltip>,
+                avatar: item.picUrl || (
+                  <span
+                    style={{
+                      backgroundColor: item.color,
+                      display: 'block',
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+                ),
                 content: (
                   <div
                     style={{
@@ -62,7 +74,9 @@ const TradeManage: React.FC = () => {
                         width: 200,
                       }}
                     >
-                      <div>{channelStatustrans[item.status]}</div>
+                      <div>
+                        {channelStatustrans[item.status as ChannelStatusEnum]}
+                      </div>
                     </div>
                   </div>
                 ),

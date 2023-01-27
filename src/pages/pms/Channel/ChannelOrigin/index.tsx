@@ -1,19 +1,23 @@
 import React, { useMemo, useRef, useState } from 'react';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
-import { useIntl } from 'umi';
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import { useIntl, useRequest } from 'umi';
 import {
-  getChannelList,
   getChannelOrderList,
+  pullChannelOrder,
+  queryChannels,
   syncChannel,
 } from '@/services/ChannelController';
-import { ProFormInstance } from '@ant-design/pro-form';
 import { useOrderDetailDrawer } from '../../Order/components/OrderDetailDrawer';
 import OrderFormDrawer from '../../Order/components/OrderFormDrawer';
-import { Button } from 'antd';
+import { Button, Form } from 'antd';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();
-  const drawerFormRef = useRef<ProFormInstance>();
+  const [tableForm] = Form.useForm();
+  const channelOriginActionRef = useRef<ActionType>();
+  const refreshList = () => {
+    channelOriginActionRef?.current?.reload?.();
+  };
   const [orderId, setOrderId] = useState<number | undefined>();
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
@@ -21,12 +25,15 @@ const TradeManage: React.FC = () => {
       setEditDrawerVisible(true);
     },
   );
+  const { run: pullChannelOrderRequest, loading: pullChannelOrderLoading } =
+    useRequest(pullChannelOrder, { manual: true, defaultLoading: false });
   const columns = useMemo<ProColumns[]>(() => {
     return [
       {
         title: intl.formatMessage({ id: '渠道订单号' }),
         dataIndex: 'channelOrderNo',
         hideInTable: true,
+        fixed: 'left',
       },
       {
         title: intl.formatMessage({ id: '获取时间' }),
@@ -43,7 +50,7 @@ const TradeManage: React.FC = () => {
           mode: 'multiple',
         },
         request: () => {
-          return getChannelList().then((res) => {
+          return queryChannels().then((res) => {
             return res.data.map((item) => {
               return {
                 label: item.name,
@@ -53,11 +60,11 @@ const TradeManage: React.FC = () => {
           });
         },
       },
-      // {
-      //   title: intl.formatMessage({ id: '邮箱' }),
-      //   hideInTable: true,
-      //   dataIndex: 'emailAddr',
-      // },
+      {
+        title: intl.formatMessage({ id: '邮箱' }),
+        hideInTable: true,
+        dataIndex: 'emailAddr',
+      },
       // {
       //   title: intl.formatMessage({ id: '序号' }),
       //   search: false,
@@ -93,7 +100,7 @@ const TradeManage: React.FC = () => {
         search: false,
       },
       {
-        title: intl.formatMessage({ id: '获取邮箱' }),
+        title: intl.formatMessage({ id: '邮箱' }),
         dataIndex: 'emailAddr',
         search: false,
       },
@@ -105,6 +112,7 @@ const TradeManage: React.FC = () => {
       },
       {
         title: intl.formatMessage({ id: '操作' }),
+        fixed: 'right',
         search: false,
         render: (_, record) => {
           return (
@@ -135,7 +143,6 @@ const TradeManage: React.FC = () => {
         onVisibleChange={(value) => setEditDrawerVisible(value)}
         id={orderId}
         onSubmited={() => {
-          drawerFormRef.current?.submit();
           setEditDrawerVisible(false);
           setOrderId(undefined);
         }}
@@ -143,13 +150,67 @@ const TradeManage: React.FC = () => {
       <ProTable
         scroll={{ x: 'max-content' }}
         columns={columns}
+        actionRef={channelOriginActionRef}
+        toolbar={{
+          settings: [],
+          actions: [
+            <Button
+              type="primary"
+              loading={pullChannelOrderLoading}
+              onClick={() => {
+                const params = tableForm.getFieldsValue();
+                const {
+                  date = [],
+                  current,
+                  pageSize,
+                  channelOrderNo,
+                  channelIds,
+                  emailAddr,
+                } = params;
+                const [startDate, endDate] = date || [];
+                const channelIdList = (channelIds || []).map(
+                  (channelId: any) => {
+                    return {
+                      channelId,
+                    };
+                  },
+                );
+                return pullChannelOrderRequest({
+                  pageNum: current!,
+                  emailAddr,
+                  channelOrderNo,
+                  pageSize: pageSize!,
+                  channelIdList,
+                  startDate,
+                  endDate,
+                }).then(() => refreshList());
+              }}
+            >
+              手动拉取订单
+            </Button>,
+          ],
+        }}
         request={async (params, sort, filter) => {
-          const { date = [], current, pageSize, channelOrderNo } = params;
-          const [startDate, endDate] = date;
+          const {
+            date = [],
+            current,
+            pageSize,
+            channelOrderNo,
+            channelIds,
+            emailAddr,
+          } = params;
+          const [startDate, endDate] = date || [];
+          const channelIdList = (channelIds || []).map((channelId: any) => {
+            return {
+              channelId,
+            };
+          });
           return getChannelOrderList({
             pageNum: current!,
+            emailAddr,
             channelOrderNo,
             pageSize: pageSize!,
+            channelIdList,
             startDate,
             endDate,
           });

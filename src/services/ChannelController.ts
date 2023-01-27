@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import Cookie from 'js-cookie';
+import { message } from 'antd';
 
 /** 获取渠道 */
 export async function queryChannels() {
@@ -66,6 +67,9 @@ export async function addChannelMail(data: {
   return request<API.Result<number>>('/motel/channel/mail/add', {
     method: 'POST',
     data,
+  }).then((res) => {
+    message.success('新增成功');
+    return res;
   });
 }
 
@@ -79,6 +83,9 @@ export async function editChannelMail(data: {
   return request<API.Result>('/motel/channel/mail/update', {
     method: 'POST',
     data,
+  }).then((res) => {
+    message.success('编辑成功');
+    return res;
   });
 }
 /** 删除渠道邮箱 */
@@ -88,6 +95,9 @@ export async function deleteChannelMail(id: number) {
     data: {
       id,
     },
+  }).then((res) => {
+    message.success('删除成功');
+    return res;
   });
 }
 export interface ChannelOrderItemType {
@@ -104,16 +114,43 @@ export async function getChannelOrderList(data: {
   pageNum: number; //页码
   pageSize: number; //每页数据量
   channelOrderNo: string; // 渠道订单号
+  channelIdList: { channelId: any }[];
+  emailAddr: string;
   startDate: string; // 渠道订单生成开始时间
   endDate: string; //渠道订单生成结束时间
 }) {
   return request<API.Result<ChannelOrderItemType[]>>(
-    '/motel/channel/order/list',
+    '/motel/channel/mail/order/list',
     {
       method: 'POST',
       data,
     },
   );
+}
+/** 手动拉取邮件订单 */
+export async function pullChannelOrder(data: {
+  pageNum: number; //页码
+  pageSize: number; //每页数据量
+  channelOrderNo: string; // 渠道订单号
+  channelIdList: { channelId: any }[];
+  emailAddr: string;
+  startDate: string; // 渠道订单生成开始时间
+  endDate: string; //渠道订单生成结束时间
+}) {
+  return request<API.Result<ChannelOrderItemType[]>>(
+    '/motel/channel/mail/order/create',
+    {
+      method: 'POST',
+      data,
+    },
+  ).then((res) => {
+    if (res.errorMessage) {
+      message.warn(res.errorMessage);
+    } else {
+      message.success('拉取成功');
+    }
+    return res;
+  });
 }
 export enum ChannelTypeEnum {
   OTA = 1,
@@ -139,6 +176,7 @@ export async function getChannelList() {
         type: ChannelTypeEnum; // 0-邮件直连，1-OTA直连
         status: ChannelStatusEnum; // 0-未开通，1-已开通 2-未发现
         picUrl: string; // 渠道图片展示url
+        color: string;
       }[]
     >
   >('/motel/channel/list');
