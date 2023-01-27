@@ -355,7 +355,13 @@ export default (props: Props) => {
                             onLoadRoomTree(value, startDate);
                           }}
                           onSelect={(value, node) => {
-                            // 更新房间的价格
+                            // 依据列表选中数据node更新表单中的房间列表信息
+                            /** node
+                             * id : 450
+                             * price : 500
+                             * title : "204"
+                             * value : "大套房-204"
+                             */
                             const { price, id } = node;
                             const { orderRoomList } = form.getFieldsValue();
                             const room = orderRoomList.find(
@@ -363,6 +369,9 @@ export default (props: Props) => {
                             );
                             room!.roomId = id;
                             room!.roomPrice = price;
+                            room!.totalAmount = price;
+                            room!.roomCode = node?.title;
+                            room!.roomTypeName = node?.value?.split('-')[0];
                             form.setFieldsValue({ orderRoomList });
                           }}
                         />
