@@ -144,7 +144,11 @@ export async function pullChannelOrder(data: {
       data,
     },
   ).then((res) => {
-    message.success('拉取成功');
+    if (res.errorMessage) {
+      message.warn(res.errorMessage);
+    } else {
+      message.success('拉取成功');
+    }
     return res;
   });
 }
