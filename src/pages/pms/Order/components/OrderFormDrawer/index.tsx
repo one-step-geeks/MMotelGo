@@ -127,6 +127,24 @@ export default (props: Props) => {
     }
   };
 
+  const calculateRoomPriceList = async (
+    roomId: number,
+    roomTypeName: string,
+    startDate: string,
+    endDate: string,
+  ) => {
+    const {
+      data: { list },
+    } = await services.RoomStateController.getAllRoomType({
+      startDate,
+      endDate,
+    });
+    const roomState = list
+      ?.find((item) => item.roomTypeName === roomTypeName)
+      ?.roomList?.find((r) => r.roomId === roomId);
+    return roomState?.dateList?.map((data: any) => data.price) || []; // console.log('priceList', priceList);
+  };
+
   const isEdit = !!props?.id;
   // | 'orderStatus'>
   return (
@@ -300,40 +318,29 @@ export default (props: Props) => {
                           onChange={async (value: number, oldval: number) => {
                             const { orderRoomList } = form.getFieldsValue();
                             const room = orderRoomList[index];
-                            console.log('room.checkInDayas', room.checkInDays);
-                            const {
-                              data: { list },
-                            } =
-                              await services.RoomStateController.getAllRoomType(
-                                {
-                                  startDate: moment(room.startDate).format(
-                                    'YYYY-MM-DD',
-                                  ),
-                                  endDate: moment(room.startDate)
-                                    .add(room.checkInDays - 1, 'day')
-                                    .format('YYYY-MM-DD'),
-                                },
+                            if (room) {
+                              const startDate = moment(room.startDate).format(
+                                'YYYY-MM-DD',
                               );
-                            console.log('list', list, 'room', room);
-                            const roomState = list
-                              ?.find(
-                                (lItem) =>
-                                  lItem.roomTypeName === room.roomTypeName,
-                              )
-                              ?.roomList?.find((r) => r.roomId === room.roomId);
-                            const priceList = roomState?.dateList?.map(
-                              (data: any) => data.price,
-                            );
-                            console.log('priceList', priceList);
+                              const endDate = moment(room.startDate)
+                                .add(room.checkInDays - 1, 'day')
+                                .format('YYYY-MM-DD');
+                              const priceList = await calculateRoomPriceList(
+                                room.roomId as number,
+                                room.roomTypeName as string,
+                                startDate,
+                                endDate,
+                              );
 
-                            room.priceList = priceList;
-                            room.totalAmount = priceList.reduce(
-                              (acc: number, cur: number) => {
-                                return acc + cur;
-                              },
-                              0,
-                            );
-                            form.setFieldsValue({ orderRoomList });
+                              room.priceList = priceList;
+                              room.totalAmount = priceList.reduce(
+                                (acc: number, cur: number) => {
+                                  return acc + cur;
+                                },
+                                0,
+                              );
+                              form.setFieldsValue({ orderRoomList });
+                            }
                           }}
                         />
                       </Form.Item>
@@ -354,7 +361,7 @@ export default (props: Props) => {
                               fieldRow.startDate.format('YYYY-MM-DD');
                             onLoadRoomTree(value, startDate);
                           }}
-                          onSelect={(value, node) => {
+                          onSelect={async (value, node) => {
                             // 依据列表选中数据node更新表单中的房间列表信息
                             /** node
                              * id : 450
@@ -367,12 +374,29 @@ export default (props: Props) => {
                             const room = orderRoomList.find(
                               (room) => room.roomDesc === value,
                             );
-                            room!.roomId = id;
-                            room!.roomPrice = price;
-                            room!.totalAmount = price;
-                            room!.roomCode = node?.title;
-                            room!.roomTypeName = node?.value?.split('-')[0];
-                            form.setFieldsValue({ orderRoomList });
+
+                            if (room) {
+                              room.roomId = id;
+                              room.roomPrice = price;
+                              room.totalAmount = price;
+                              room.roomCode = node?.title;
+                              room.roomTypeName = node?.value?.split('-')[0];
+
+                              const startDate = moment(room.startDate).format(
+                                'YYYY-MM-DD',
+                              );
+                              const endDate = moment(room.startDate)
+                                .add(room.checkInDays - 1, 'day')
+                                .format('YYYY-MM-DD');
+                              const priceList = await calculateRoomPriceList(
+                                room.roomId as number,
+                                room.roomTypeName as string,
+                                startDate,
+                                endDate,
+                              );
+                              room.priceList = priceList;
+                              form.setFieldsValue({ orderRoomList });
+                            }
                           }}
                         />
                       </Form.Item>
