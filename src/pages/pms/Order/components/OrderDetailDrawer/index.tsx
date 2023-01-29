@@ -36,31 +36,31 @@ export function useOrderDetailDrawer(
 
   const { data: noticeList, run: queryNoticeList } = useRequest(
     () => {
-      if (orderId) {
+      if (orderId && visible) {
         return services.OrderController.queryNoticeList(orderId);
       }
       return Promise.resolve([]);
     },
-    { refreshDeps: [orderId] },
+    { refreshDeps: [orderId, visible] },
   );
   const { data: consumeList, run: queryConsumeList } = useRequest(
     () => {
-      if (orderId) {
+      if (orderId && visible) {
         return services.OrderController.queryConsumeList(orderId);
       }
       return Promise.resolve({ data: [] });
     },
-    { refreshDeps: [orderId] },
+    { refreshDeps: [orderId, visible] },
   );
 
   const { data: payOrRefundList, run: queryPayOrRefundList } = useRequest(
     () => {
-      if (orderId) {
+      if (orderId && visible) {
         return services.OrderController.queryPayOrRefundList(orderId);
       }
       return Promise.resolve({ data: [] });
     },
-    { refreshDeps: [orderId] },
+    { refreshDeps: [orderId, visible] },
   );
   const { NoticeDrawer, openNoticeDrawer } = useNoticeDrawer(() => {
     queryNoticeList();
@@ -92,13 +92,13 @@ export function useOrderDetailDrawer(
 
   const { data, run: executeQuery } = useRequest(
     () => {
-      if (orderId) {
+      if (orderId && visible) {
         return services.OrderController.queryDetail(orderId);
       }
       return Promise.resolve();
     },
     {
-      refreshDeps: [orderId],
+      refreshDeps: [orderId, visible],
     },
   );
 
