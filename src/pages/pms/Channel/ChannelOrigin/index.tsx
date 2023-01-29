@@ -5,7 +5,7 @@ import {
   getChannelOrderList,
   pullChannelOrder,
   queryChannels,
-  syncChannel,
+  // syncChannel,
 } from '@/services/ChannelController';
 import { useOrderDetailDrawer } from '../../Order/components/OrderDetailDrawer';
 import OrderFormDrawer from '../../Order/components/OrderFormDrawer';
@@ -110,23 +110,23 @@ const TradeManage: React.FC = () => {
         dataIndex: 'emailSubject',
         search: false,
       },
-      {
-        title: intl.formatMessage({ id: '操作' }),
-        fixed: 'right',
-        search: false,
-        render: (_, record) => {
-          return (
-            <Button
-              type="link"
-              onClick={() => {
-                syncChannel(record.id);
-              }}
-            >
-              {intl.formatMessage({ id: '同步' })}
-            </Button>
-          );
-        },
-      },
+      // {
+      //   title: intl.formatMessage({ id: '操作' }),
+      //   fixed: 'right',
+      //   search: false,
+      //   render: (_, record) => {
+      //     return (
+      //       <Button
+      //         type="link"
+      //         onClick={() => {
+      //           syncChannel(record.id);
+      //         }}
+      //       >
+      //         {intl.formatMessage({ id: '同步' })}
+      //       </Button>
+      //     );
+      //   },
+      // },
       // {
       //   title: intl.formatMessage({ id: '邮件链接' }),
       //   dataIndex: 'emailLink',
