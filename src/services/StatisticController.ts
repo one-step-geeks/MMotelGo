@@ -238,7 +238,6 @@ export async function fetchSumFormData(data: DateRangeData) {
     };
     dates.forEach((dateString, index) => {
       totalItem[dateString] = dailyAllAmounts[index];
-      totalItem.total += dailyAllAmounts[index];
     });
     if (targetList.length > 0) {
       targetList.push(totalItem);

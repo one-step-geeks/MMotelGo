@@ -30,7 +30,7 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
         fixed: 'left',
         dataIndex: 'project',
         width: 100,
-        render: (_, index, ...args) => {
+        render: (_, record, index) => {
           return (index as number) < dataSource.length - 1
             ? _
             : intl.formatMessage({ id: '合计' });
