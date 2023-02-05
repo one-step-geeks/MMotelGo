@@ -25,6 +25,7 @@ const TradeStatistic: React.FC<TradeStatisticContextType> = (props) => {
           disabledDate={(date: moment.Moment) => {
             return date.isAfter(moment(), 'day');
           }}
+          allowClear={false}
         />
       </div>
 
