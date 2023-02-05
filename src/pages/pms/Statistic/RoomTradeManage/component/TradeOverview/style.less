@@ -1,0 +1,46 @@
+.overview-columns {
+  display: flex;
+  flex-direction: row;
+  .overview-column {
+    flex: 1;
+    min-width: 310px;
+    padding: 12px;
+    &:not(:first-of-type) {
+      display: flex;
+      flex-direction: row;
+    }
+    .overview-column-type {
+      color: #333;
+    }
+    .overview-column-fee {
+      font-size: 26px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+    .overview-column-rate {
+      color: #999;
+      margin-top: 4px;
+    }
+    .anticon {
+      font-size: 32px;
+      padding: 6px;
+      border-radius: 6px;
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      margin: 24px 24px 0;
+    }
+    .anticon-home {
+      color: #3d5eff;
+      background: #e7efff;
+    }
+    .anticon-strikethrough {
+      color: #4a74a7;
+      background: #edf2f7;
+    }
+    .anticon-file-done {
+      color: #f89065;
+      background: #fef4f1;
+    }
+  }
+}
