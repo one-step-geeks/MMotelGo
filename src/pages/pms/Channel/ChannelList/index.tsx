@@ -38,7 +38,7 @@ const TradeManage: React.FC = () => {
         pagination={false}
         showActions="always"
         className="channel-config-list"
-        rowSelection={{}}
+        rowSelection={false}
         grid={{ gutter: 16, column: 5 }}
         metas={{
           title: {},
