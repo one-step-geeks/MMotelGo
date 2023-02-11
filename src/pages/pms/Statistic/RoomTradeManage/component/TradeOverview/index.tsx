@@ -16,6 +16,7 @@ import { Divider } from 'antd';
 import type { TradeStatistics } from '@/services/StatisticController';
 
 import './style.less';
+import { getRangeDate } from '@/utils';
 
 const TradeOverview: React.FC = () => {
   const intl = useIntl();
@@ -24,10 +25,8 @@ const TradeOverview: React.FC = () => {
   const [state, setState] = useState<RoomBusinessSurvey>();
 
   useEffect(() => {
-    const couples = collectDateRange!.map((m) => m?.format('YYYY-MM-DD'));
     getRoomBusinessSurvey({
-      startTime: couples[0] as string,
-      endTime: couples[1] as string,
+      ...getRangeDate(collectDateRange),
     }).then((res) => {
       setState(res.data);
     });

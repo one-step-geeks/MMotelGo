@@ -6,7 +6,7 @@ import CommonCard from '@/components/CommonCard';
 import { getRoomBusinessLineChart } from '@/services/StatisticController';
 import type { TradeDaily } from '@/services/StatisticController';
 import { TradeStatisticContext } from '../../context';
-
+import { getRangeDate } from '@/utils';
 import './style.less';
 
 const TotalReceipts: React.FC = () => {
@@ -17,11 +17,9 @@ const TotalReceipts: React.FC = () => {
   const [state, setState] = useState<Array<TradeDaily>>([]);
 
   useEffect(() => {
-    const couples = collectDateRange!.map((m) => m?.format('YYYY-MM-DD'));
     getRoomBusinessLineChart({
       type: activeType,
-      startTime: couples[0] as string,
-      endTime: couples[1] as string,
+      ...getRangeDate(collectDateRange),
     }).then((res) => {
       setState(res.data);
     });
