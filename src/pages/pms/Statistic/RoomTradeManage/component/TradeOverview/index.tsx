@@ -2,7 +2,11 @@ import { useContext, useState, useEffect } from 'react';
 import { useIntl } from 'umi';
 import CommonCard from '@/components/CommonCard';
 import { TradeStatisticContext } from '../../context';
-import { getTradeStatistics } from '@/services/StatisticController';
+import {
+  getRoomBusinessSurvey,
+  getTradeStatistics,
+  RoomBusinessSurvey,
+} from '@/services/StatisticController';
 import {
   HomeOutlined,
   StrikethroughOutlined,
@@ -17,11 +21,11 @@ const TradeOverview: React.FC = () => {
   const intl = useIntl();
   const { store } = useContext(TradeStatisticContext);
   const { collectDateRange } = store;
-  const [state, setState] = useState<TradeStatistics>();
+  const [state, setState] = useState<RoomBusinessSurvey>();
 
   useEffect(() => {
     const couples = collectDateRange!.map((m) => m?.format('YYYY-MM-DD'));
-    getTradeStatistics({
+    getRoomBusinessSurvey({
       startTime: couples[0] as string,
       endTime: couples[1] as string,
     }).then((res) => {
@@ -66,15 +70,11 @@ const TradeOverview: React.FC = () => {
         <div className="overview-columns">
           <div className="overview-column">
             <div className="overview-column-type">
-              {intl.formatMessage({ id: '住宿总营业额' })}
+              {intl.formatMessage({ id: '平均房价' })}
             </div>
             <div className="overview-column-fee">
               {intl.formatMessage({ id: '¥' })}
-              {state?.total}
-            </div>
-            <div className="overview-column-rate">
-              {intl.formatMessage({ id: '日环比' })}&nbsp;
-              {(state?.dayPercent || 0) * 100}%
+              {state?.averageRoomPrice}
             </div>
           </div>
           {styledDivider}
@@ -82,15 +82,11 @@ const TradeOverview: React.FC = () => {
             <HomeOutlined></HomeOutlined>
             <div className="overview-column-stack">
               <div className="overview-column-type">
-                {intl.formatMessage({ id: '房费' })}
+                {intl.formatMessage({ id: '入住率' })}
               </div>
               <div className="overview-column-fee">
-                {intl.formatMessage({ id: '¥' })}
-                {state?.roomFees}
-              </div>
-              <div className="overview-column-rate">
-                {intl.formatMessage({ id: '占比' })}&nbsp;
-                {(state?.roomFeesPercent || 0) * 100}%
+                {state?.occupancy}
+                {intl.formatMessage({ id: '%' })}
               </div>
             </div>
           </div>
@@ -99,15 +95,11 @@ const TradeOverview: React.FC = () => {
             <StrikethroughOutlined />
             <div className="overview-column-stack">
               <div className="overview-column-type">
-                {intl.formatMessage({ id: '违约金' })}
+                {intl.formatMessage({ id: '平均客房收益' })}
               </div>
               <div className="overview-column-fee">
                 {intl.formatMessage({ id: '¥' })}
-                {state?.penalSum}
-              </div>
-              <div className="overview-column-rate">
-                {intl.formatMessage({ id: '占比' })}&nbsp;
-                {(state?.penalSumPercent || 0) * 100}%
+                {state?.averageRoomRevenue}
               </div>
             </div>
           </div>
@@ -116,15 +108,10 @@ const TradeOverview: React.FC = () => {
             <FileDoneOutlined />
             <div className="overview-column-stack">
               <div className="overview-column-type">
-                {intl.formatMessage({ id: '客房消费' })}
+                {intl.formatMessage({ id: '平均间夜数' })}
               </div>
               <div className="overview-column-fee">
-                {intl.formatMessage({ id: '¥' })}
-                {state?.consume}
-              </div>
-              <div className="overview-column-rate">
-                {intl.formatMessage({ id: '占比' })}&nbsp;
-                {(state?.consumePercent || 0) * 100}%
+                {state?.averageOvernight}
               </div>
             </div>
           </div>

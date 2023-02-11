@@ -31,7 +31,7 @@ const TradeStatistic: React.FC<TradeStatisticContextType> = (props) => {
       <TradeOverview />
 
       <div className="trade-statistic-columns">
-        <TradeDistribution />
+        {/* <TradeDistribution /> */}
         <TradeDaily />
       </div>
 

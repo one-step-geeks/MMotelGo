@@ -39,19 +39,19 @@ const TotalReceipts: React.FC = () => {
             style={{
               padding: '0 24px',
             }}
-            tab={intl.formatMessage({ id: '住宿总营业额' })}
+            tab={intl.formatMessage({ id: '平均房价' })}
             key="1"
           ></Tabs.TabPane>
           <Tabs.TabPane
-            tab={intl.formatMessage({ id: '违约金' })}
+            tab={intl.formatMessage({ id: '入住率' })}
             key="2"
           ></Tabs.TabPane>
           <Tabs.TabPane
-            tab={intl.formatMessage({ id: '客房消费' })}
+            tab={intl.formatMessage({ id: '平均客房收益' })}
             key="3"
           ></Tabs.TabPane>
           <Tabs.TabPane
-            tab={intl.formatMessage({ id: '房费' })}
+            tab={intl.formatMessage({ id: '间夜数' })}
             key="4"
           ></Tabs.TabPane>
         </Tabs>
