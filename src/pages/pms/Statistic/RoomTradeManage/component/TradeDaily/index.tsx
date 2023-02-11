@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 import { useIntl } from 'umi';
 import { Line } from '@ant-design/plots';
 import CommonCard from '@/components/CommonCard';
-import { getTradeDaily } from '@/services/StatisticController';
+import { getRoomBusinessLineChart } from '@/services/StatisticController';
 import type { TradeDaily } from '@/services/StatisticController';
 import { TradeStatisticContext } from '../../context';
 
@@ -18,7 +18,7 @@ const TotalReceipts: React.FC = () => {
 
   useEffect(() => {
     const couples = collectDateRange!.map((m) => m?.format('YYYY-MM-DD'));
-    getTradeDaily({
+    getRoomBusinessLineChart({
       type: activeType,
       startTime: couples[0] as string,
       endTime: couples[1] as string,

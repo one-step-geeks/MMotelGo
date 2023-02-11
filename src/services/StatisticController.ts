@@ -376,18 +376,12 @@ export function getRoomBusinessSurvey(params: {
   );
 }
 
-export interface RoomBusinessSurvey {
-  averageRoomPrice: string; // "平均房价",
-  occupancy: string; // "入住率",
-  averageRoomRevenue: string; // "平均客房收益",
-  averageOvernight: string; // "平均间夜数"
-}
 // 概况折线图
 export function getRoomBusinessLineChart(params: {
   startTime: string;
   endTime: string;
 }) {
-  return request<API.Result<RoomBusinessSurvey>>(
+  return request<API.Result<TradeDaily[]>>(
     '/motel/summary/roomBusiness/lineChart',
     {
       method: 'POST',
