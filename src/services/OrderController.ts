@@ -3,12 +3,13 @@ import Cookie from 'js-cookie';
 
 export enum OrderState {
   IS_ORDERED = 1,
-  IS_CHECKED,
-  IS_CHECKOUT,
-  IS_CANCELED,
-  HO_SHOW,
-  PART_CHECKED,
-  PART_CANCELED,
+  IS_CHECKED = 2,
+  IS_CHECKOUT = 3,
+  IS_CANCELED = 4,
+  HO_SHOW = 5,
+  NOT_CONFIRMED = 6,
+  PART_CHECKED = 7,
+  PART_CANCELED = 8,
 }
 
 export const OrderStateText = {
@@ -17,6 +18,7 @@ export const OrderStateText = {
   [OrderState.IS_CANCELED]: '已取消',
   [OrderState.IS_CHECKOUT]: '已退房',
   [OrderState.HO_SHOW]: '未到',
+  [OrderState.NOT_CONFIRMED]: '待确认',
   [OrderState.PART_CHECKED]: '部分入住',
   [OrderState.PART_CANCELED]: '部分退房',
 };
