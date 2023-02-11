@@ -47,6 +47,11 @@ const SettingContainer: React.FC = (props) => {
                   {intl.formatMessage({ id: '营业汇总' })}
                 </Menu.Item>
               ) : null}
+              {access.canSeeSubMenu(20) ? (
+                <Menu.Item key="/pms/statistic/statistic-trade-room">
+                  {intl.formatMessage({ id: '客房营业汇总' })}
+                </Menu.Item>
+              ) : null}
               {/* {access.canSeeSubMenu(19) ? (
                 <Menu.Item key="/pms/statistic/statistic-channel">
                   {intl.formatMessage({ id: '渠道汇总' })}

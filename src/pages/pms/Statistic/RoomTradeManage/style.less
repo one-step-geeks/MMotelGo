@@ -1,0 +1,27 @@
+.trade-statistic {
+  .trade-statistic-date-piker {
+    margin-top: 16px;
+  }
+  .trade-statistic-columns {
+    display: flex;
+    flex-direction: row;
+
+    & > :not(:first-child) {
+      margin-left: 24px;
+    }
+
+    .trade-statistic-distribution {
+      flex: 1;
+      .trade-statistic-chart-wrapper {
+        height: 260px;
+      }
+    }
+
+    .trade-statistic-daily {
+      flex: 2;
+      .trade-statistic-chart-wrapper {
+        height: 198px;
+      }
+    }
+  }
+}
