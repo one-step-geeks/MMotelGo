@@ -16,6 +16,10 @@ import {
   fetchRoomNightDetail,
   roomRentDetailExport,
   roomNightDetailExport,
+  fetchOccupancyDetail,
+  occupancyDetailExport,
+  averageRoomRevenueDetailExport,
+  fetchAverageRoomRevenueDetail,
 } from '@/services/StatisticController';
 import './style.less';
 
@@ -29,51 +33,58 @@ const PaymentDetailTable: React.FC = () => {
   const [rangeDayList, setRangeDayList] = useState<string[]>([]);
   const [rowSpanList, setRowSpanList] = useState<number[]>([]);
   const columns = useMemo<ProColumns[]>(() => {
-    return [
-      {
-        title: intl.formatMessage({ id: '房型' }),
-        fixed: 'left',
-        dataIndex: 'roomTypeName',
-        width: 100,
-        onCell: (record, index = 0) => {
-          return {
-            rowSpan: rowSpanList[index],
-          };
-        },
-      },
-      {
-        title: intl.formatMessage({ id: '房间' }),
-        fixed: 'left',
-        dataIndex: 'roomCode',
-        width: 100,
-        render: (roomCode) => {
-          return roomCode === '-' ? '' : roomCode;
-        },
-      },
-      {
-        title: intl.formatMessage({ id: '合计' }),
-        fixed: 'left',
-        dataIndex: 'total',
-        width: 100,
-        render: (price) => {
-          return `${intl.formatMessage({ id: '¥' })}${
-            price === '-' ? 0 : price
-          }`;
-        },
-      },
-      ...rangeDayList.map((item) => {
-        return {
-          title: item,
-          width: 150,
-          dataIndex: item,
-          render: (price) => {
-            return `${intl.formatMessage({ id: '¥' })}${
-              price === '-' ? 0 : price
-            }`;
+    return (
+      [
+        {
+          title: intl.formatMessage({ id: '房型' }),
+          fixed: 'left',
+          dataIndex: 'roomTypeName',
+          width: 100,
+          onCell: (record, index = 0) => {
+            return {
+              rowSpan:
+                typeof rowSpanList[index] === 'number' ? rowSpanList[index] : 1,
+            };
           },
-        } as ProColumns;
-      }),
-    ];
+        },
+        [RoomTradeManageEnum.ROOM_COST, RoomTradeManageEnum.JIAN_YE].includes(
+          activeKey as any,
+        ) && {
+          title: intl.formatMessage({ id: '房间' }),
+          fixed: 'left',
+          dataIndex: 'roomCode',
+          width: 100,
+          render: (roomCode) => {
+            return roomCode === '-' ? '' : roomCode;
+          },
+        },
+        {
+          title: intl.formatMessage({ id: '合计' }),
+          fixed: 'left',
+          dataIndex: 'total',
+          width: 100,
+          render: (price) => {
+            return `${
+              activeKey === RoomTradeManageEnum.OCCUPANCY
+                ? ''
+                : intl.formatMessage({ id: '¥' })
+            }${price === '-' ? 0 : price}`;
+          },
+        },
+        ...rangeDayList.map((item) => {
+          return {
+            title: item,
+            width: 150,
+            dataIndex: item,
+            render: (price) => {
+              return `${intl.formatMessage({ id: '¥' })}${
+                price === '-' ? 0 : price
+              }`;
+            },
+          } as ProColumns;
+        }),
+      ] as ProColumns[]
+    ).filter(Boolean);
   }, [rangeDayList, rowSpanList]);
   return (
     <div className="payment-detail">
@@ -98,10 +109,18 @@ const PaymentDetailTable: React.FC = () => {
                 <Button
                   onClick={() => {
                     const timeParams = getRangeDate(collectDateRange);
-                    const request =
-                      activeKey === RoomTradeManageEnum.ROOM_COST
-                        ? roomRentDetailExport
-                        : roomNightDetailExport;
+                    let request = roomNightDetailExport;
+                    if (activeKey === RoomTradeManageEnum.ROOM_COST) {
+                      request = roomRentDetailExport;
+                    }
+                    if (activeKey === RoomTradeManageEnum.OCCUPANCY) {
+                      request = occupancyDetailExport as any;
+                    }
+                    if (
+                      activeKey === RoomTradeManageEnum.AVERAGE_ROOM_REVENUE
+                    ) {
+                      request = averageRoomRevenueDetailExport as any;
+                    }
                     request({
                       ...timeParams,
                     });
@@ -123,6 +142,14 @@ const PaymentDetailTable: React.FC = () => {
                     key: RoomTradeManageEnum.JIAN_YE,
                     label: RoomTradeManageEnum.JIAN_YE,
                   },
+                  {
+                    key: RoomTradeManageEnum.OCCUPANCY,
+                    label: RoomTradeManageEnum.OCCUPANCY,
+                  },
+                  {
+                    key: RoomTradeManageEnum.AVERAGE_ROOM_REVENUE,
+                    label: RoomTradeManageEnum.AVERAGE_ROOM_REVENUE,
+                  },
                 ],
                 onChange: (key) => {
                   setActiveKey(key as any);
@@ -134,15 +161,22 @@ const PaymentDetailTable: React.FC = () => {
             }}
             scroll={{
               x: 'max-content',
+              y: 500,
             }}
             search={false}
             rowKey="paymentId"
             request={async (params) => {
               const timeParams = getRangeDate(collectDateRange);
-              const request =
-                activeKey === RoomTradeManageEnum.ROOM_COST
-                  ? fetchRoomRentDetail
-                  : fetchRoomNightDetail;
+              let request = fetchRoomNightDetail;
+              if (activeKey === RoomTradeManageEnum.ROOM_COST) {
+                request = fetchRoomRentDetail;
+              }
+              if (activeKey === RoomTradeManageEnum.OCCUPANCY) {
+                request = fetchOccupancyDetail as any;
+              }
+              if (activeKey === RoomTradeManageEnum.AVERAGE_ROOM_REVENUE) {
+                request = fetchAverageRoomRevenueDetail as any;
+              }
               return request({
                 ...timeParams,
               }).then((res) => {
