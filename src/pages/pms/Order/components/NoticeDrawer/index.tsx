@@ -1,6 +1,7 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import services from '@/services';
 import moment from 'moment';
+import { useIntl } from 'umi';
 import {
   DrawerForm,
   ProFormDateTimePicker,
@@ -12,6 +13,7 @@ import { useEffect, useState } from 'react';
 interface FormOrder {}
 
 export function useNoticeDrawer(onSuccess: () => void) {
+  const intl = useIntl();
   const [form] = Form.useForm<FormOrder>();
   const [visible, setVisible] = useState(false);
   const [notice, setNotice] = useState<ORDER.OrderNotice | undefined>();
@@ -25,7 +27,7 @@ export function useNoticeDrawer(onSuccess: () => void) {
 
   const NoticeDrawer = (
     <DrawerForm
-      title={notice?.id ? '修改提醒' : '添加提醒'}
+      title={intl.formatMessage({ id: notice?.id ? '修改提醒' : '添加提醒' })}
       form={form}
       layout="horizontal"
       grid
@@ -62,14 +64,14 @@ export function useNoticeDrawer(onSuccess: () => void) {
               remindTime: formattedRemindTime,
               remark,
             });
-            message.success('修改成功');
+            message.success(intl.formatMessage({ id: '修改成功' }));
           } else {
             await services.OrderController.addNotice({
               orderId,
               remindTime: formattedRemindTime,
               remark,
             });
-            message.success('添加成功');
+            message.success(intl.formatMessage({ id: '添加成功' }));
           }
           setVisible(false);
           form.resetFields();
@@ -79,17 +81,17 @@ export function useNoticeDrawer(onSuccess: () => void) {
       }}
     >
       <ProFormDateTimePicker
-        rules={[{ required: true, message: '请选择提醒时间' }]}
+        // rules={[{ required: true, message: '请选择提醒时间' }]}
         name="remindTime"
-        placeholder="请选择提醒时间"
-        label="提醒时间"
+        // placeholder="请选择提醒时间"
+        label={intl.formatMessage({ id: '提醒时间' })}
         fieldProps={{ format: 'MM/DD/YYYY HH:mm:ss' }}
       />
       <ProFormTextArea
-        rules={[{ required: true, message: '请输入提醒内容' }]}
+        // rules={[{ required: true, message: '请输入提醒内容' }]}
         name="remark"
-        label="提醒内容"
-        placeholder="请输入提醒内容"
+        label={intl.formatMessage({ id: '提醒内容' })}
+        // placeholder="请输入提醒内容"
         fieldProps={{
           maxLength: 200,
           showCount: true,

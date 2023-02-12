@@ -5,7 +5,6 @@ import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
 import { getWeekDay, getCalendarDate } from '@/utils';
 import OrderDrawer from './components/OrderDrawer';
 import EmptyDrawer from './components/EmptyDrawer';
-// import AddOrderDrawer from './components/AddOrderDrawer';
 import CloseRoomModal from './components/CloseRoomModal';
 import RoomCodeBox from './components/RoomCodeBox';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
@@ -93,9 +92,10 @@ const RoomStatePage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
-  const openOrCloseList = useMemo(() => processOpenAndClose(selectedRooms), [
-    selectedRooms,
-  ]);
+  const openOrCloseList = useMemo(
+    () => processOpenAndClose(selectedRooms),
+    [selectedRooms],
+  );
 
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {

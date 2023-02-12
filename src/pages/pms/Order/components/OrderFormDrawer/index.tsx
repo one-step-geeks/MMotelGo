@@ -21,7 +21,7 @@ import type { DefaultOptionType } from 'antd/es/select';
 import services from '@/services';
 import { OrderState } from '@/services/OrderController';
 import moment from 'moment';
-import { useRequest } from 'umi';
+import { useRequest, useIntl } from 'umi';
 
 import './style.less';
 
@@ -40,6 +40,7 @@ export interface FormOrder extends ORDER.OrderBase {
 }
 
 export default (props: Props) => {
+  const intl = useIntl();
   const [form] = Form.useForm<FormOrder>();
   const [treeData, setTreeData] = useState<Omit<DefaultOptionType, 'label'>[]>(
     [],
@@ -111,7 +112,9 @@ export default (props: Props) => {
               return {
                 id: roomId as number,
                 value: `${roomTypeName}-${roomCode}`,
-                title: isOccupyOrSelected ? `${roomCode} 已占用` : roomCode,
+                title: isOccupyOrSelected
+                  ? `${roomCode} ${intl.formatMessage({ id: '已占用' })}`
+                  : roomCode,
                 isLeaf: true,
                 price: roomPrice,
                 disabled: isOccupyOrSelected,
@@ -149,7 +152,7 @@ export default (props: Props) => {
   // | 'orderStatus'>
   return (
     <DrawerForm<Omit<FormOrder, 'id' | 'status'>>
-      title={isEdit ? '编辑订单' : '新建订单'}
+      title={intl.formatMessage({ id: isEdit ? '编辑订单' : '新建订单' })}
       form={form}
       layout="horizontal"
       grid
@@ -196,13 +199,15 @@ export default (props: Props) => {
             await services.OrderController[isEdit ? 'update' : 'add'](
               submitData,
             );
-            message.success(isEdit ? '保存成功' : '新建成功');
+            message.success(
+              intl.formatMessage({ id: isEdit ? '保存成功' : '新建成功' }),
+            );
             form.resetFields();
             props.onSubmited();
             return true;
           } catch (err) {}
         } else {
-          message.warn('姓名/电话至少填一个');
+          message.warn(intl.formatMessage({ id: '姓名/电话至少填一个' }));
         }
       }}
       submitter={{
@@ -215,35 +220,35 @@ export default (props: Props) => {
                 props.submit();
               }}
             >
-              提交订单
+              {intl.formatMessage({ id: '提交订单' })}
             </Button>,
           ];
         },
       }}
     >
-      <ProCard title="基本信息">
+      <ProCard title={intl.formatMessage({ id: '基本信息' })}>
         <ProForm.Group>
           <ProFormText
             colProps={{ md: 12 }}
             labelAlign="right"
             name="reserveName"
             width="md"
-            label="姓名"
-            placeholder="请输入姓名"
+            label={intl.formatMessage({ id: '姓名' })}
+            placeholder={intl.formatMessage({ id: '请输入姓名' })}
           />
           <ProFormText
             colProps={{ md: 12 }}
             labelAlign="right"
             name="reservePhone"
             width="md"
-            label="电话"
-            placeholder="请输入电话"
+            label={intl.formatMessage({ id: '电话' })}
+            placeholder={intl.formatMessage({ id: '请输入电话' })}
           />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormSelect
             colProps={{ md: 12 }}
-            label="渠道"
+            label={intl.formatMessage({ id: '渠道' })}
             name="channelSettingId"
             fieldProps={{
               optionItemRender(item) {
@@ -271,7 +276,7 @@ export default (props: Props) => {
       </ProCard>
 
       <ProCard
-        title="房间信息"
+        title={intl.formatMessage({ id: '房间信息' })}
         extra={`共${roomsValue && roomsValue.length}间房`}
       >
         <Form.List name="orderRoomList">
@@ -307,10 +312,15 @@ export default (props: Props) => {
                           min={1}
                           formatter={(value) => {
                             const number = Math.max(Number(value), 1);
-                            return `${number}晚`;
+                            return `${number}${intl.formatMessage({
+                              id: '晚',
+                            })}`;
                           }}
                           parser={(value) => {
-                            const parsed = value!.replace(/晚/g, '');
+                            const parsed = value!.replace(
+                              /intl.formatMessage({ id: '晚' })/g,
+                              '',
+                            );
                             console.log('parsed', parsed);
                             return Number(parsed);
                           }}
@@ -350,7 +360,7 @@ export default (props: Props) => {
                           treeDataSimpleMode
                           style={{ width: '35%' }}
                           dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                          placeholder="请选择房间"
+                          placeholder={intl.formatMessage({ id: '请选择房间' })}
                           treeData={treeData}
                           onDropdownVisibleChange={(value) => {
                             console.log('field.name', field.name);
@@ -451,11 +461,15 @@ export default (props: Props) => {
                                   <Input.Group compact>
                                     <ProFormText
                                       name={[personField.name, 'name']}
-                                      placeholder="入住人姓名"
+                                      placeholder={intl.formatMessage({
+                                        id: '入住人姓名',
+                                      })}
                                     ></ProFormText>
                                     <ProFormText
                                       name={[personField.name, 'phoneNo']}
-                                      placeholder="联系方式"
+                                      placeholder={intl.formatMessage({
+                                        id: '联系方式',
+                                      })}
                                     ></ProFormText>
                                     <DeleteOutlined
                                       style={{
@@ -478,7 +492,7 @@ export default (props: Props) => {
                                 }}
                                 icon={<PlusOutlined />}
                               >
-                                添加入住人
+                                {intl.formatMessage({ id: '添加入住人' })}
                               </Button>
                             </Form.Item>
                           </>
@@ -499,7 +513,7 @@ export default (props: Props) => {
                   }}
                   icon={<PlusOutlined />}
                 >
-                  添加房间
+                  {intl.formatMessage({ id: '添加房间' })}
                 </Button>
               </Form.Item>
             </>
@@ -513,7 +527,7 @@ export default (props: Props) => {
             showCount: true,
           }}
           name="remark"
-          placeholder="备注信息"
+          placeholder={intl.formatMessage({ id: '备注信息' })}
         />
       </ProCard>
     </DrawerForm>

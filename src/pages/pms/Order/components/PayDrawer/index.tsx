@@ -1,6 +1,7 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import services from '@/services';
 import moment from 'moment';
+import { useIntl } from 'umi';
 import {
   DrawerForm,
   ProFormDatePicker,
@@ -35,13 +36,14 @@ export const payOrRefundOptions = [
 ];
 
 export function usePayOrRefundDrawer(onSuccess: () => void) {
+  const intl = useIntl();
   const [form] = Form.useForm<FormOrder>();
   const [orderId, setOrderId] = useState<number | undefined>();
   const [payType, setPayType] = useState('pay');
   const [visible, setVisible] = useState(false);
   const PayOrRefundDrawer = (
     <DrawerForm
-      title="添加收退款"
+      title={intl.formatMessage({ id: '添加收退款' })}
       form={form}
       className="order-pay-drawer"
       layout="horizontal"
@@ -60,7 +62,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
           <>
             <Space>
               <ArrowLeftOutlined />
-              返回
+              {intl.formatMessage({ id: '返回' })}
             </Space>
           </>
         ),
@@ -80,7 +82,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
             feeDate: moment(feeDate).format('YYYY-MM-DD'),
             ...rest,
           });
-          message.success('添加成功');
+          message.success(intl.formatMessage({ id: '添加成功' }));
           setVisible(false);
           form.resetFields();
           onSuccess();
@@ -97,13 +99,13 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
           });
         }}
       >
-        <Tabs.TabPane tab="收款" key="pay" />
-        <Tabs.TabPane tab="退款" key="refund" />
+        <Tabs.TabPane tab={intl.formatMessage({ id: '收款' })} key="pay" />
+        <Tabs.TabPane tab={intl.formatMessage({ id: '退款' })} key="refund" />
       </Tabs>
 
       <ProFormRadio.Group
         name="type"
-        label="项目"
+        label={intl.formatMessage({ id: '项目' })}
         options={
           payType === 'pay'
             ? payOrRefundOptions.slice(0, 2)
@@ -112,8 +114,9 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
       />
 
       <ProFormSelect
-        label="支付方式"
-        rules={[{ required: true, message: '请选择支付方式' }]}
+        label={intl.formatMessage({ id: '支付方式' })}
+        // , message: '请选择支付方式'
+        rules={[{ required: true }]}
         name="feeConfigId"
         request={async () => {
           const { data } = await services.FinanceController.queryPaymentTypes();
@@ -125,10 +128,11 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
       />
 
       <ProFormDigit
-        rules={[{ required: true, message: '请输入金额' }]}
-        label="金额"
+        // , message: '请输入金额'
+        rules={[{ required: true }]}
+        label={intl.formatMessage({ id: '金额' })}
         name="amount"
-        placeholder="请输入金额"
+        // placeholder="请输入金额"
       />
       {/* 
       <ProFormText
@@ -141,8 +145,8 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
       <ProFormDatePicker
         name="feeDate"
         fieldProps={{ format: 'MM/DD/YYYY' }}
-        placeholder="请选择日期"
-        label="日期"
+        // placeholder="请选择日期"
+        label={intl.formatMessage({ id: '日期' })}
       />
 
       <ProFormTextArea
@@ -151,8 +155,8 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
           showCount: true,
         }}
         name="remark"
-        label="备注"
-        placeholder="请输入备注"
+        label={intl.formatMessage({ id: '备注' })}
+        // placeholder="请输入备注"
       />
     </DrawerForm>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'umi';
+import { useHistory, useIntl } from 'umi';
 import { Typography, Layout, Menu } from 'antd';
 import { FileDoneOutlined } from '@ant-design/icons';
 
@@ -7,6 +7,7 @@ const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
 
 const OrderContainer: React.FC = (props) => {
+  const intl = useIntl();
   const history = useHistory();
   const pathname = history.location.pathname;
 
@@ -22,9 +23,17 @@ const OrderContainer: React.FC = (props) => {
             history.push(key);
           }}
         >
-          <SubMenu key="order" icon={<FileDoneOutlined />} title="订单管理">
-            <Menu.Item key="/pms/order/all">所有订单</Menu.Item>
-            <Menu.Item key="/pms/order/unarrange">未排房</Menu.Item>
+          <SubMenu
+            key="order"
+            icon={<FileDoneOutlined />}
+            title={intl.formatMessage({ id: '订单管理' })}
+          >
+            <Menu.Item key="/pms/order/all">
+              {intl.formatMessage({ id: '所有订单' })}
+            </Menu.Item>
+            <Menu.Item key="/pms/order/unarrange">
+              {intl.formatMessage({ id: '未排房' })}
+            </Menu.Item>
             {/* <Menu.Item key="/pms/order/unhandle">未处理</Menu.Item> */}
           </SubMenu>
         </Menu>
