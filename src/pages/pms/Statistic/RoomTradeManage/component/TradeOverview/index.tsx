@@ -83,10 +83,7 @@ const TradeOverview: React.FC = () => {
               <div className="overview-column-type">
                 {intl.formatMessage({ id: '入住率' })}
               </div>
-              <div className="overview-column-fee">
-                {state?.occupancy}
-                {intl.formatMessage({ id: '%' })}
-              </div>
+              <div className="overview-column-fee">{state?.occupancy}</div>
             </div>
           </div>
           {styledDivider}

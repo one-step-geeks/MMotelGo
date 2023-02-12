@@ -2,6 +2,7 @@ import { bufferDownload } from '@/utils';
 import { message } from 'antd';
 import moment from 'moment';
 import { request } from 'umi';
+import Big from 'big.js';
 
 interface DateRangeData {
   startTime: number;
@@ -66,6 +67,8 @@ export const paymentDetailTrans = {
 export enum RoomTradeManageEnum {
   ROOM_COST = '房费报表',
   JIAN_YE = '间夜报表',
+  OCCUPANCY = '入住率报表',
+  AVERAGE_ROOM_REVENUE = '平均客房收益',
 }
 interface SelectPaymentRecordParams extends DateRangeData {
   type: PaymentDetailTypeEnum; // --1 收款 2 收押金 3 退款 4 退押金 5 净收款
@@ -136,6 +139,7 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
       data,
     },
   ).then((res) => {
+    console.log(res);
     const { paymentDetailList, totalAmountList } = res.data || {};
     const paymentDaySet = new Set<string>();
     const newPaymentDetailList: PaymentDetailItem[] =
@@ -158,10 +162,12 @@ export async function fetchPaymentDetail(data: FetchPaymentDetailParams) {
     const totalItem: PaymentDetailItem = {
       paymentName: '合计',
       paymentId: Math.random(),
-      total: totalAmountList[0] || 0,
+      total: totalAmountList?.[0] || 0,
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {
-      totalItem[dateString] = totalAmountList[index + 1];
+      if (totalAmountList) {
+        totalItem[dateString] = totalAmountList[index + 1];
+      }
     });
     if (newPaymentDetailList.length > 0) {
       newPaymentDetailList.push(totalItem);
@@ -221,7 +227,7 @@ export async function fetchSumFormData(data: DateRangeData) {
     const { allTotalAmount, dailyAllAmounts, dates, list } = res.data || {};
 
     const targetList: PaymentItem[] = [];
-    list.forEach((paymentDetail) => {
+    list?.forEach((paymentDetail) => {
       const { name, list: subList } = paymentDetail;
       subList.forEach((item) => {
         const { dailyAmounts, totalAmount, name: subName } = item;
@@ -242,7 +248,7 @@ export async function fetchSumFormData(data: DateRangeData) {
       detail: '',
       total: allTotalAmount,
     };
-    dates.forEach((dateString, index) => {
+    dates?.forEach((dateString, index) => {
       totalItem[dateString] = dailyAllAmounts[index];
     });
     if (targetList.length > 0) {
@@ -378,6 +384,7 @@ export function getRoomBusinessSurvey(params: {
 
 // 概况折线图
 export function getRoomBusinessLineChart(params: {
+  type: string;
   startTime: string;
   endTime: string;
 }) {
@@ -472,10 +479,12 @@ export async function fetchRoomRentDetail(data: FetchPaymentDetailParams) {
     const totalItem: RoomPaymentDetailItem = {
       roomTypeName: '合计',
       roomTypeId: Math.random(),
-      total: totalAmountList[0] || 0,
+      total: totalAmountList?.[0] || 0,
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {
-      totalItem[dateString] = totalAmountList[index + 1];
+      if (totalAmountList) {
+        totalItem[dateString] = totalAmountList[index + 1];
+      }
     });
     if (newPaymentDetailList.length > 0) {
       newPaymentDetailList.push(totalItem);
@@ -550,7 +559,7 @@ export async function fetchRoomNightDetail(data: FetchPaymentDetailParams) {
     const totalItem: RoomPaymentDetailItem = {
       roomTypeName: '合计',
       roomTypeId: Math.random(),
-      total: totalAmountList[0] || 0,
+      total: totalAmountList?.[0] || 0,
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {
       totalItem[dateString] = totalAmountList[index + 1];
@@ -593,6 +602,201 @@ export async function roomNightDetailExport(data: DateRangeData) {
     },
   ).then((buffer) => {
     bufferDownload(buffer, `间夜报表.xlsx`);
+    message.success('下载成功');
+  });
+}
+
+export interface OccupancyDetailItemType {
+  date: string;
+  occupancy: string;
+}
+export interface OccupancyDetailType {
+  roomTypeId: number;
+  roomTypeName: string;
+  totalOccupancy: string;
+  occupancyDateDtoList: OccupancyDetailItemType[];
+}
+export interface OccupancyDetailItem {
+  roomTypeName: string;
+  total: string;
+  roomTypeId: number;
+  [x: string]: any;
+}
+
+// 入住率报表, 已格式化可做Protable的dateSource
+export async function fetchOccupancyDetail(data: FetchPaymentDetailParams) {
+  return request<API.Result<OccupancyDetailType[]>>(
+    '/motel/summary/roomBusiness/occupancyDetail',
+    {
+      method: 'POST',
+      data,
+    },
+  ).then((res) => {
+    const { data } = res || {};
+    const paymentDaySet = new Set<string>();
+    const newPaymentDetailList: OccupancyDetailItem[] = [];
+    let totalRowSpanList: number[] = [];
+    const totalItem: OccupancyDetailItem = {
+      roomTypeName: '合计',
+      roomTypeId: Math.random(),
+      total: '0.00%',
+    };
+    data?.forEach((item) => {
+      const { roomTypeId, roomTypeName, totalOccupancy, occupancyDateDtoList } =
+        item || {};
+      const indexList: number[] = [];
+      totalItem.total =
+        new Big(totalItem.total.replace('%', ''))
+          .add(new Big(totalOccupancy.replace('%', '')))
+          .toFixed(2) + '%';
+      const detailItem: OccupancyDetailItem = {
+        roomTypeName,
+        roomTypeId,
+        roomId: Math.random(),
+        total: totalOccupancy,
+      };
+      occupancyDateDtoList?.forEach((occupancyDate, i) => {
+        const { date, occupancy } = occupancyDate;
+
+        if (totalItem[date]) {
+          totalItem[date] =
+            new Big(totalItem[date].replace('%', ''))
+              .add(new Big(occupancy.replace('%', '')))
+              .toFixed(2) + '%';
+        } else {
+          totalItem[date] =
+            new Big(occupancy.replace('%', '')).toFixed(2) + '%';
+        }
+
+        detailItem[date] = occupancy;
+        paymentDaySet.add(date);
+      });
+      newPaymentDetailList.push(detailItem);
+
+      if (occupancyDateDtoList.length > 0) {
+        indexList[occupancyDateDtoList.length] = 1;
+      }
+    });
+    if (newPaymentDetailList.length > 0) {
+      newPaymentDetailList.push(totalItem);
+    }
+    return {
+      list: newPaymentDetailList,
+      dayList: [...paymentDaySet.values()],
+      totalRowSpanList,
+    };
+  });
+}
+
+// 入住率报表导出
+export async function occupancyDetailExport(data: DateRangeData) {
+  return request<ArrayBuffer>(
+    '/motel/summary/roomBusiness/occupancyDetailExport',
+    {
+      method: 'POST',
+      data,
+      responseType: 'arrayBuffer',
+    },
+  ).then((buffer) => {
+    bufferDownload(buffer, `入住率报表.xlsx`);
+    message.success('下载成功');
+  });
+}
+
+export interface AverageRoomRevenueDetailItemType {
+  date: string;
+  averageRoomRevenue: string;
+}
+export interface AverageRoomRevenueDetailType {
+  roomTypeId: number;
+  roomTypeName: string;
+  totalRevenue: string;
+  averageRoomRevenueDateDtoList: AverageRoomRevenueDetailItemType[];
+}
+export interface AverageRoomRevenueDetailItem {
+  roomTypeName: string;
+  total: string;
+  roomTypeId: number;
+  [x: string]: any;
+}
+
+// 入住率报表, 已格式化可做Protable的dateSource
+export async function fetchAverageRoomRevenueDetail(
+  data: FetchPaymentDetailParams,
+) {
+  return request<API.Result<AverageRoomRevenueDetailType[]>>(
+    '/motel/summary/roomBusiness/averageRoomRevenueDetail',
+    {
+      method: 'POST',
+      data,
+    },
+  ).then((res) => {
+    const { data } = res || {};
+    const paymentDaySet = new Set<string>();
+    const newPaymentDetailList: AverageRoomRevenueDetailItem[] = [];
+    let totalRowSpanList: number[] = [];
+    const totalItem: AverageRoomRevenueDetailItem = {
+      roomTypeName: '合计',
+      roomTypeId: Math.random(),
+      total: '0',
+    };
+    data?.forEach((item) => {
+      const {
+        roomTypeId,
+        roomTypeName,
+        totalRevenue,
+        averageRoomRevenueDateDtoList,
+      } = item || {};
+      const indexList: number[] = [];
+      totalItem.total = new Big(totalItem.total).add(totalRevenue).toString();
+      const detailItem: OccupancyDetailItem = {
+        roomTypeName,
+        roomTypeId,
+        roomId: Math.random(),
+        total: totalRevenue,
+      };
+      averageRoomRevenueDateDtoList?.forEach((averageRoomRevenueDate, i) => {
+        const { date, averageRoomRevenue } = averageRoomRevenueDate;
+
+        if (totalItem[date]) {
+          totalItem[date] = new Big(totalItem[date])
+            .add(averageRoomRevenue)
+            .toString();
+        } else {
+          totalItem[date] = averageRoomRevenue;
+        }
+
+        detailItem[date] = averageRoomRevenue;
+        paymentDaySet.add(date);
+      });
+      newPaymentDetailList.push(detailItem);
+
+      if (averageRoomRevenueDateDtoList.length > 0) {
+        indexList[averageRoomRevenueDateDtoList.length] = 1;
+      }
+    });
+    if (newPaymentDetailList.length > 0) {
+      newPaymentDetailList.push(totalItem);
+    }
+    return {
+      list: newPaymentDetailList,
+      dayList: [...paymentDaySet.values()],
+      totalRowSpanList,
+    };
+  });
+}
+
+// 平均客房收益报表导出
+export async function averageRoomRevenueDetailExport(data: DateRangeData) {
+  return request<ArrayBuffer>(
+    '/motel/summary/roomBusiness/averageRoomRevenueDetailExport',
+    {
+      method: 'POST',
+      data,
+      responseType: 'arrayBuffer',
+    },
+  ).then((buffer) => {
+    bufferDownload(buffer, `平均客房收益报表.xlsx`);
     message.success('下载成功');
   });
 }
