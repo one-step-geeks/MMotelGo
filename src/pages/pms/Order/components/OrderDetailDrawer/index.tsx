@@ -563,7 +563,10 @@ export function useOrderDetailDrawer(
 
             <ProCard
               title={intl.formatMessage({ id: '房间信息' })}
-              extra={`共${data?.orderRoomList?.length}间房`}
+              extra={intl.formatMessage(
+                { id: 'compound.orderRoomCount' },
+                { count: data?.orderRoomList?.length },
+              )}
             >
               <Table
                 bordered

@@ -125,8 +125,13 @@ export function useOperateDrawer(onSuccess: () => void) {
           {intl.formatMessage({ id: '全选' })}
         </Checkbox>
         <span>
-          已选{selectedRoomIndexs.length}间，共
-          {operateData?.orderRoomList?.length}间
+          {intl.formatMessage(
+            { id: 'compound.orderRoomOverview' },
+            {
+              selectedCount: selectedRoomIndexs.length,
+              totalCount: operateData?.orderRoomList?.length,
+            },
+          )}
         </span>
       </div>
       <div className="room-list">

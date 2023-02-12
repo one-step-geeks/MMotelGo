@@ -343,4 +343,10 @@ export default {
   价格: 'Price',
   消费项分类: 'Classification of Consumption Items',
   名称: 'Name',
+  'compound.orderRoomCount': '{count} room(s) in total',
+  'compound.orderRoomOverview': '{selectedCount} of {totalCount} selected',
+  // {
+  //   orderRoomCount: '{count} room(s) in total',
+  //   orderRoomOverview: '{selectedCount} of {totalCount} selected'
+  // },
 };

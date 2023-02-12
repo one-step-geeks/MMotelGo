@@ -202,4 +202,6 @@ export default {
   可售: '可售',
   占用: '占用',
   不可售: '不可售',
+  'compound.orderRoomCount': '共{count}间房',
+  'compound.orderRoomOverview': '已选{selectedCount}间，共{totalCount}间',
 };

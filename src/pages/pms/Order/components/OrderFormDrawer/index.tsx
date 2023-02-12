@@ -277,7 +277,10 @@ export default (props: Props) => {
 
       <ProCard
         title={intl.formatMessage({ id: '房间信息' })}
-        extra={`共${roomsValue && roomsValue.length}间房`}
+        extra={intl.formatMessage(
+          { id: 'compound.orderRoomCount' },
+          { count: roomsValue && roomsValue.length },
+        )}
       >
         <Form.List name="orderRoomList">
           {(fields, { add, remove }, { errors }) => (
