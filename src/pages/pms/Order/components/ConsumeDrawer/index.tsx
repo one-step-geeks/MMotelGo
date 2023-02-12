@@ -47,7 +47,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
           <>
             <Space>
               <ArrowLeftOutlined />
-              intl
+              {intl.formatMessage({ id: '返回' })}
             </Space>
           </>
         ),
@@ -78,7 +78,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
       }}
     >
       <ProFormSelect
-        label="项目"
+        label={intl.formatMessage({ id: '项目' })}
         // rules={[{ required: true, message: '请选择项目' }]}
         name="consumptionSetId"
         fieldProps={{
@@ -105,7 +105,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
         // rules={[{ required: true, message: '请输入数量' }]}
         // placeholder="请输入数量"
         name="count"
-        label={intl.formatMessage({ id: '数量' })}
+        label={intl.formatMessage({ id: 'Consumption.数量' })}
       />
 
       <ProFormDigit

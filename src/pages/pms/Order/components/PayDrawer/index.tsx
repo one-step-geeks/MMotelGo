@@ -130,7 +130,7 @@ export function usePayOrRefundDrawer(onSuccess: () => void) {
       <ProFormDigit
         // , message: '请输入金额'
         rules={[{ required: true }]}
-        label={intl.formatMessage({ id: '金额' })}
+        label={intl.formatMessage({ id: 'Order.金额' })}
         name="amount"
         // placeholder="请输入金额"
       />

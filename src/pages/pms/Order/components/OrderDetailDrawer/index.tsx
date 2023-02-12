@@ -211,7 +211,7 @@ export function useOrderDetailDrawer(
 
   const payOrRefundColumns: ColumnsType<ORDER.OrderPayOrRefund> = [
     {
-      title: intl.formatMessage({ id: '项目' }),
+      title: intl.formatMessage({ id: 'TableColumn.项目' }),
       dataIndex: 'type',
       key: 'type',
       align: 'center',
@@ -477,14 +477,14 @@ export function useOrderDetailDrawer(
                   </Space>
                 }
                 <Space>
-                  <Button
+                  {/* <Button
                     onClick={() => {
                       message.info('打印暂未实现...');
                     }}
                     key="打印"
                   >
                     {intl.formatMessage({ id: '打印' })}
-                  </Button>
+                  </Button> */}
                   <Button onClick={modifyOrder} type="primary" key="修改订单">
                     {intl.formatMessage({ id: '修改订单' })}
                   </Button>

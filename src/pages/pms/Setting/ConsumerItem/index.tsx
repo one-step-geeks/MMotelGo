@@ -1,10 +1,10 @@
 import { Button, Typography, Switch, message, Popconfirm } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ProColumns } from '@ant-design/pro-components';
+import { InlineErrorFormItem, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import useAddConsumerItemModal from './components/AddConsumerItemModal';
 import { ConsumerItemClassifyEnum } from '@/constants';
-import Cookie from 'js-cookie';
+import { useIntl } from 'umi';
 import services from '@/services';
 
 const { Link } = Typography;
@@ -12,34 +12,39 @@ const { Link } = Typography;
 type TableListItem = Partial<SETTING.ConsumerItem>;
 
 export default () => {
-  const {
-    openAddConsumerItemModal,
-    addConsumerItemModal,
-  } = useAddConsumerItemModal();
+  const intl = useIntl();
+  const { openAddConsumerItemModal, addConsumerItemModal } =
+    useAddConsumerItemModal();
 
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: '分类',
+      title: intl.formatMessage({ id: '分类' }),
       dataIndex: 'classify',
       valueEnum: {
-        [ConsumerItemClassifyEnum.BREAKFAST]: '早餐消费',
-        [ConsumerItemClassifyEnum.ROOM_CONSUMPTION]: '客房消费',
-        [ConsumerItemClassifyEnum.COMPENSATION]: '赔偿',
-        [ConsumerItemClassifyEnum.OTHER]: '其他',
+        [ConsumerItemClassifyEnum.BREAKFAST]: intl.formatMessage({
+          id: '早餐消费',
+        }),
+        [ConsumerItemClassifyEnum.ROOM_CONSUMPTION]: intl.formatMessage({
+          id: '客房消费',
+        }),
+        [ConsumerItemClassifyEnum.COMPENSATION]: intl.formatMessage({
+          id: '赔偿',
+        }),
+        [ConsumerItemClassifyEnum.OTHER]: intl.formatMessage({ id: '其他' }),
       },
     },
     {
-      title: '消费项名称',
+      title: intl.formatMessage({ id: '消费项名称' }),
       ellipsis: true,
       dataIndex: 'name',
     },
     {
-      title: '价格',
+      title: intl.formatMessage({ id: '价格' }),
       width: 120,
       dataIndex: 'price',
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: '状态' }),
       width: 160,
       dataIndex: 'status',
       render: (_, record) => {
@@ -52,9 +57,9 @@ export default () => {
                   id: record.id,
                   status: checked ? 1 : 0,
                 });
-                message.success('操作成功');
+                message.success(intl.formatMessage({ id: '操作成功' }));
               } catch (error) {
-                message.error('操作失败');
+                message.error(intl.formatMessage({ id: '操作失败' }));
               }
             }}
           />
@@ -62,7 +67,7 @@ export default () => {
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: '操作' }),
       fixed: 'right',
       width: 140,
       key: 'option',
@@ -73,7 +78,7 @@ export default () => {
             await services.SettingController.deleteConsumerItem({
               id: record.id,
             });
-            message.success('删除成功！');
+            message.success(intl.formatMessage({ id: '删除成功' }));
             action?.reload();
           } catch (error) {}
         };
@@ -84,15 +89,15 @@ export default () => {
               openAddConsumerItemModal(action, record);
             }}
           >
-            编辑
+            {intl.formatMessage({ id: '编辑' })}
           </Link>,
           <Popconfirm
             key="status"
             placement="topRight"
-            title="此操作将永久删除, 是否继续？"
+            title={intl.formatMessage({ id: '此操作将永久删除, 是否继续？' })}
             onConfirm={deleteConsumerItem}
           >
-            <Link>删除</Link>
+            <Link>{intl.formatMessage({ id: '删除' })}</Link>
           </Popconfirm>,
         ];
       },
@@ -130,7 +135,7 @@ export default () => {
               openAddConsumerItemModal(action);
             }}
           >
-            添加消费项
+            {intl.formatMessage({ id: '添加消费项' })}
           </Button>,
         ]}
       />

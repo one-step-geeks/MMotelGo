@@ -149,6 +149,7 @@ export default {
   操作成功: 'Success',
   下载成功: 'Success',
   失败: 'Fail',
+  操作操作: 'Fail',
   '30天': '30days',
   '15天': '15days',
   '7天': '7days',
@@ -204,14 +205,13 @@ export default {
   占用: 'Occupied',
   不可售: 'Not For Sale',
 
-  // 订单模块 ================== 😭
+  // 订单模块 start
 
   订单管理: 'Order Management',
   所有订单: 'All Orders',
   '渠道单号/订单号': 'Channel order no/order no',
   联系人: 'Contact person',
   手机号: 'Mobile Phone Number',
-  房型: 'Type of room',
   入住时间: 'Check in Time',
   日期选择: 'Date Selection',
   离店时间: 'Departure time',
@@ -227,6 +227,7 @@ export default {
   搜索姓名: 'Search the name',
   搜索手机号: 'Search mobile phone number',
   '搜索渠道单号/订单号': 'Search channel order no/order no',
+
   '订单&渠道号/姓名/手机号/房间号': 'Keywords',
   导出报表: 'Export report forms',
   已占用: 'Occupied',
@@ -253,9 +254,9 @@ export default {
   录入人: 'Entry Person',
   消费日期: 'Consumption Date',
   消费备注: 'Consumption Remark',
-  // 项目: 'Project', 冲突保留大写比较好
+  'TableColumn.项目': 'Project',
   支付方式: 'Payment Method',
-  // 金额: 'The Amount', 冲突保留amount比price好
+  'Order.金额': 'The Amount',
   日期: 'Date',
   入住日期: 'Check-in Date',
   房价: 'Price',
@@ -281,11 +282,11 @@ export default {
   订单编号: 'Order Number',
   返回: 'Back',
   新增入住人: 'Add Resident',
-  // 数量: 'Consumption Count', 冲突应采用此
+  'Consumption.数量': 'Consumption Count',
   订单操作: 'Order Operation',
-  办理入住: 'Check In',
   取消预定: 'Cancellation',
   撤销入住: 'Cancel Check-in',
+  办理入住: 'Check In',
   办理退房: 'Check Out',
   办理入住成功: 'Success',
   取消预定成功: 'Success',
@@ -300,7 +301,6 @@ export default {
   退押金: 'Deposit Refund',
   打印: 'Print',
   订单创建: 'Order Creation',
-  入住: 'Check In',
   退房: 'Check Out',
   增加: 'Increase',
   增加住客: 'Add Guests',
@@ -320,23 +320,27 @@ export default {
   部分入住: 'Partial Occupancy',
   部分退房: 'Partial Check Out',
   待确认: 'Not Confirmed',
+  无: 'n/a',
 
-  // 可能会被用到的
-  // 间房: 'Room in Total',
-  // 营业额概况: 'Turnover Overview',
-  // 住宿总营业额: 'Total Turnover of Accommodation',
-  // 违约金: 'Liquidated Damages',
-  // 房费消费: 'Room Consumption',
-  // 日环比: 'Day-to-day Ratio',
-  // 占比: 'Proportion',
-  // 营业汇总统计: 'Business Summary Statistics',
-  // 总计: 'Total',
-  // 每日营业统计: 'Daily Business Statistics',
-  // 客房消费: 'Room Consumption',
-  // 分类: 'Classification',
-  // 价格: 'Price',
-  // 状态: 'State',
-  // 消费项分类: 'Classification of Consumption Items',
-  // 名称: 'Name',
-  // 订单模块 ==================  😀
+  // 营业汇总
+  营业额概况: 'Turnover Overview',
+  住宿总营业额: 'Total Turnover of Accommodation',
+  违约金: 'Liquidated Damages',
+  房费消费: 'Room Consumption',
+  日环比: 'Day-to-day Ratio',
+  占比: 'Proportion',
+  营业汇总统计: 'Business Summary Statistics',
+  总计: 'Total',
+  每日营业统计: 'Daily Business Statistics',
+  客房消费: 'Room Consumption',
+  // 消费项设置
+  分类: 'Classification',
+  早餐消费: 'Breakfast Classification',
+  赔偿: 'Compensation',
+  消费项名称: 'Compensation Name',
+  '此操作将永久删除, 是否继续？':
+    'Operation cause permanently deleted, want to continue?',
+  价格: 'Price',
+  消费项分类: 'Classification of Consumption Items',
+  名称: 'Name',
 };

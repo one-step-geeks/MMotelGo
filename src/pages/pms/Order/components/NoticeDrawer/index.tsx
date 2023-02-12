@@ -40,7 +40,7 @@ export function useNoticeDrawer(onSuccess: () => void) {
           <>
             <Space>
               <ArrowLeftOutlined />
-              返回
+              {intl.formatMessage({ id: '返回' })}
             </Space>
           </>
         ),

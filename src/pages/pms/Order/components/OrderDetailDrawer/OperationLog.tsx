@@ -57,9 +57,10 @@ const OperationLog: React.FC<Props> = (props) => {
               &nbsp;{intl.formatMessage({ id: '操作人' })}:{record.creator}
               &nbsp;
               {intl.formatMessage({
-                id: OperationTypeTexts[
-                  record.operationType as OperationTypeKeys
-                ],
+                id:
+                  OperationTypeTexts[
+                    record.operationType as OperationTypeKeys
+                  ] || '无',
               })}
             </div>
             <div style={{ fontSize: '14px', paddingTop: '6px' }}>
