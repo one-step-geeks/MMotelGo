@@ -321,10 +321,9 @@ export default (props: Props) => {
                           }}
                           parser={(value) => {
                             const parsed = value!.replace(
-                              /intl.formatMessage({ id: '晚' })/g,
+                              intl.formatMessage({ id: '晚' }),
                               '',
                             );
-                            console.log('parsed', parsed);
                             return Number(parsed);
                           }}
                           style={{ width: '15%' }}
