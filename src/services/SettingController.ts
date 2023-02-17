@@ -305,6 +305,20 @@ export async function sortMakeNote(params?: { idList?: number[] }) {
   });
 }
 
+/** 启用的消费项列表 */
+export async function getEnableConsumerItemList() {
+  return request<API.Result<Array<SETTING.ConsumerItem>>>(
+    '/motel/config/consumptionItem/selectListByCondition',
+    {
+      method: 'POST',
+      data: {
+        storeId: Cookie.get('storeId'),
+        status: 1,
+      },
+    },
+  );
+}
+
 /** 消费项列表 */
 export async function getConsumerItemList(params?: {
   storeId?: number;
