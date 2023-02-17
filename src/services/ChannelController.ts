@@ -48,6 +48,16 @@ export async function deleteChannel(id: number) {
   });
 }
 
+/**  排序渠道 */
+export async function sortChannels(orderIds: Array<number>) {
+  return request<API.Result>('/motel/config/channelSet/sort', {
+    method: 'POST',
+    data: {
+      idList: orderIds,
+    },
+  });
+}
+
 /** 渠道邮箱列表 */
 export async function getChannelMailList() {
   return request<
