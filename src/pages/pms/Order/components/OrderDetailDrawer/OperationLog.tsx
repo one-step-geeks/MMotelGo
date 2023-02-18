@@ -3,6 +3,7 @@ import services from '@/services';
 import { Card, Button, Skeleton, Empty } from 'antd';
 import { Timeline } from 'antd';
 import moment from 'moment';
+import { useIntl } from 'umi';
 
 interface Props {
   orderId: number;
@@ -41,6 +42,7 @@ const OperationTypeTexts = {
 };
 
 const OperationLog: React.FC<Props> = (props) => {
+  const intl = useIntl();
   const { data } = useRequest(() => {
     return services.OrderController.queryOperationLog(props.orderId);
   });
@@ -52,8 +54,14 @@ const OperationLog: React.FC<Props> = (props) => {
           <Timeline.Item>
             <div style={{ fontSize: '13px', color: '#666' }}>
               {moment(record.createTime).format('MM/DD/YYYY HH:mm:ss')}
-              &nbsp;操作人:{record.creator}&nbsp;
-              {OperationTypeTexts[record.operationType as OperationTypeKeys]}
+              &nbsp;{intl.formatMessage({ id: '操作人' })}:{record.creator}
+              &nbsp;
+              {intl.formatMessage({
+                id:
+                  OperationTypeTexts[
+                    record.operationType as OperationTypeKeys
+                  ] || '无',
+              })}
             </div>
             <div style={{ fontSize: '14px', paddingTop: '6px' }}>
               {record.remark}

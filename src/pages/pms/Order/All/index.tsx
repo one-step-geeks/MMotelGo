@@ -6,8 +6,7 @@ import {
   ProFormInstance,
 } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
-import moment from 'moment';
-import { useRequest, useLocation } from 'umi';
+import { useRequest, useLocation, useIntl } from 'umi';
 import services from '@/services';
 import { bufferDownload } from '@/utils';
 import { OrderStateOptions, OrderPayOptions } from '@/services/OrderController';
@@ -45,6 +44,7 @@ enum DateType {
   createDate,
 }
 const OrderContainer: React.FC = (props) => {
+  const intl = useIntl();
   const location = useLocation();
   const isNotArranged = location.pathname === '/pms/order/unarrange';
   const ref = useRef<ProFormInstance>();
@@ -90,7 +90,7 @@ const OrderContainer: React.FC = (props) => {
 
   const columns: ProColumns<ORDER.OrderListItemFlatted>[] = [
     {
-      title: '渠道单号/订单号',
+      title: intl.formatMessage({ id: '渠道单号/订单号' }),
       key: 'channelOrderNo',
       dataIndex: 'channelOrderNo',
       search: false,
@@ -115,7 +115,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '渠道',
+      title: intl.formatMessage({ id: '渠道' }),
       ellipsis: true,
       key: 'channelSettingId',
       dataIndex: 'channelSettingId',
@@ -133,7 +133,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '联系人',
+      title: intl.formatMessage({ id: '联系人' }),
       key: 'reserveName',
       dataIndex: 'reserveName',
       width: 120,
@@ -143,7 +143,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '手机号',
+      title: intl.formatMessage({ id: '手机号' }),
       key: 'reservePhone',
       dataIndex: 'reservePhone',
       width: 145,
@@ -153,7 +153,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '房型',
+      title: intl.formatMessage({ id: '房型' }),
       dataIndex: 'roomTypeName',
       key: 'roomTypeName',
       valueEnum: convertOptionToEnums(roomTypeOptions),
@@ -161,14 +161,14 @@ const OrderContainer: React.FC = (props) => {
       width: 100,
     },
     {
-      title: '房间号',
+      title: intl.formatMessage({ id: '房间号' }),
       dataIndex: 'roomCode',
       key: 'roomCode',
       search: false,
       width: 100,
     },
     {
-      title: '入住时间',
+      title: intl.formatMessage({ id: '入住时间' }),
       dataIndex: 'startDate',
       key: 'startDate',
       valueType: 'date',
@@ -176,7 +176,7 @@ const OrderContainer: React.FC = (props) => {
       width: 120,
     },
     {
-      title: '日期选择',
+      title: intl.formatMessage({ id: '日期选择' }),
       dataIndex: 'queryDate',
       key: 'queryDate',
       valueType: 'date',
@@ -197,9 +197,15 @@ const OrderContainer: React.FC = (props) => {
                 handleDateTypeChange(value);
               }}
             >
-              <Option value={1}>入住时间</Option>
-              <Option value={2}>离店时间</Option>
-              <Option value={3}>创建时间</Option>
+              <Option value={1}>
+                {intl.formatMessage({ id: '入住时间' })}
+              </Option>
+              <Option value={2}>
+                {intl.formatMessage({ id: '离店时间' })}
+              </Option>
+              <Option value={3}>
+                {intl.formatMessage({ id: '创建时间' })}
+              </Option>
             </Select>
             <ProFormDateRangePicker
               {...fieldProps}
@@ -211,14 +217,13 @@ const OrderContainer: React.FC = (props) => {
                 };
               }}
               name="checkInTimeRanger"
-              placeholder={['开始时间', '开始时间']}
             />
           </div>
         );
       },
     },
     {
-      title: '离店时间',
+      title: intl.formatMessage({ id: '离店时间' }),
       dataIndex: 'endDate',
       key: 'endDate',
       valueType: 'date',
@@ -226,14 +231,14 @@ const OrderContainer: React.FC = (props) => {
       search: false,
     },
     {
-      title: '间夜',
+      title: intl.formatMessage({ id: '间夜' }),
       dataIndex: 'checkInDays',
       key: 'checkInDays',
       width: 80,
       search: false,
     },
     {
-      title: '订单状态',
+      title: intl.formatMessage({ id: '订单状态' }),
       dataIndex: 'status',
       key: 'status',
       width: 100,
@@ -247,7 +252,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '房费',
+      title: intl.formatMessage({ id: '房费' }),
       dataIndex: 'totalRoomAmount',
       key: 'totalRoomAmount',
       width: 120,
@@ -257,7 +262,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '订单总金额',
+      title: intl.formatMessage({ id: '订单总金额' }),
       dataIndex: 'totalAmount',
       key: 'totalAmount',
       width: 120,
@@ -270,7 +275,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '结账状态',
+      title: intl.formatMessage({ id: '结账状态' }),
       dataIndex: 'payStatus',
       key: 'payStatus',
       width: 105,
@@ -285,7 +290,7 @@ const OrderContainer: React.FC = (props) => {
       },
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: '创建时间' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTime',
@@ -324,8 +329,8 @@ const OrderContainer: React.FC = (props) => {
   const handleOnExport = async () => {
     const queryParam = generateQueryParam(ref.current?.getFieldsValue());
     const buffer = await services.OrderController.exportList(queryParam);
-    bufferDownload(buffer, `订单列表.xlsx`);
-    message.success('下载成功');
+    bufferDownload(buffer, `${intl.formatMessage({ id: '订单列表' })}.xlsx`);
+    message.success(`${intl.formatMessage({ id: '下载成功' })}`);
   };
 
   const generateQueryParam = (params: Record<string, any>) => {
@@ -375,11 +380,17 @@ const OrderContainer: React.FC = (props) => {
             onChange={(e) => handleQueryTabChange(e.target.value)}
             buttonStyle="solid"
           >
-            <Radio.Button value={QueryType.ALL}>全部</Radio.Button>
-            <Radio.Button value={QueryType.TODAY_ARRIVE}>今日预抵</Radio.Button>
-            <Radio.Button value={QueryType.TODAY_LEAVE}>今日预离</Radio.Button>
+            <Radio.Button value={QueryType.ALL}>
+              {intl.formatMessage({ id: '全部' })}
+            </Radio.Button>
+            <Radio.Button value={QueryType.TODAY_ARRIVE}>
+              {intl.formatMessage({ id: '今日预抵' })}
+            </Radio.Button>
+            <Radio.Button value={QueryType.TODAY_LEAVE}>
+              {intl.formatMessage({ id: '今日预离' })}
+            </Radio.Button>
             <Radio.Button value={QueryType.TODAY_CREAYED}>
-              今日新办
+              {intl.formatMessage({ id: '今日新办' })}
             </Radio.Button>
           </Radio.Group>
         ) : null}
@@ -390,7 +401,7 @@ const OrderContainer: React.FC = (props) => {
           {/* e => handleKeywordChange(e.target.value) */}
           {/* 订单号/渠道单号/姓名/手机号/房间号 */}
           <Select
-            placeholder="搜索类型"
+            placeholder={intl.formatMessage({ id: '搜索类型' })}
             // showSearch
             optionFilterProp="children"
             // onSearch={value => {
@@ -402,16 +413,26 @@ const OrderContainer: React.FC = (props) => {
               // console.log('onChange e.target.value', e, el);
             }}
           >
-            <Option value="channelOrderNo">搜索订单号/渠道单号</Option>
-            <Option value="reserveName">搜索姓名</Option>
-            <Option value="reservePhone">搜索手机号</Option>
-            <Option value="roomCode">房间号</Option>
+            <Option value="channelOrderNo">
+              {intl.formatMessage({ id: '搜索渠道单号/订单号' })}
+            </Option>
+            <Option value="reserveName">
+              {intl.formatMessage({ id: '搜索姓名' })}
+            </Option>
+            <Option value="reservePhone">
+              {intl.formatMessage({ id: '搜索手机号' })}
+            </Option>
+            <Option value="roomCode">
+              {intl.formatMessage({ id: '房间号' })}
+            </Option>
           </Select>
 
           <Input.Search
             disabled={!param.searchType}
             style={{ width: '340px' }}
-            placeholder="订单&渠道号/姓名/手机号/房间号"
+            placeholder={intl.formatMessage({
+              id: '订单&渠道号/姓名/手机号/房间号',
+            })}
             // onChange={e => handleKeywordChange(e.target.value)}
             onSearch={(e) => {
               console.log('onSearch', e);
@@ -430,7 +451,7 @@ const OrderContainer: React.FC = (props) => {
             模拟预定
           </Button> */}
           <Button type="primary" onClick={handleOnExport}>
-            导出报表
+            {intl.formatMessage({ id: '导出报表' })}
           </Button>
         </Space>
       </div>
@@ -515,13 +536,13 @@ const OrderContainer: React.FC = (props) => {
           });
           ref.current?.submit();
         }}
-        showTotal={(total, range) => {
-          return (
-            <div>
-              第 {range[0]}-{range[1]} 条/总共 {total} 条
-            </div>
-          );
-        }}
+        // showTotal={(total, range) => {
+        //   return (
+        //     <div>
+        //       第 {range[0]}-{range[1]} 条/总共 {total} 条
+        //     </div>
+        //   );
+        // }}
       />
 
       {OrderDetailDrawer}

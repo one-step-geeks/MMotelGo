@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Drawer, Table, message, Space, Tabs } from 'antd';
 import services from '@/services';
-import { useRequest } from 'umi';
+import { useRequest, useIntl } from 'umi';
 import type { ColumnsType } from 'antd/es/table';
 import { ProCard } from '@ant-design/pro-components';
 import './style.less';
@@ -24,6 +24,7 @@ import OperatinoLog from './OperationLog';
 export function useOrderDetailDrawer(
   gotoEdit?: (data: ORDER.OrderBase) => void,
 ) {
+  const intl = useIntl();
   const [orderId, setOrderId] = useState<number | undefined>();
   const [visible, setVisible] = useState(false);
   const [activeTabKey, setActiveTabKey] = useState('orderDetail');
@@ -108,7 +109,7 @@ export function useOrderDetailDrawer(
 
   const noticeColumns: ColumnsType<ORDER.OrderNotice> = [
     {
-      title: '提醒时间',
+      title: intl.formatMessage({ id: '提醒时间' }),
       dataIndex: 'remindTime',
       align: 'center',
       key: 'remindTime',
@@ -118,7 +119,7 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '提醒内容',
+      title: intl.formatMessage({ id: '提醒内容' }),
       dataIndex: 'remark',
       key: 'remark',
       render(value) {
@@ -126,7 +127,7 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: '操作' }),
       key: 'action',
       align: 'center',
       render: (_, record) => (
@@ -141,7 +142,7 @@ export function useOrderDetailDrawer(
             onClick={async () => {
               await services.OrderController.deleteNotice(record.id);
               queryNoticeList();
-              message.success('删除成功');
+              message.success(intl.formatMessage({ id: '删除成功' }));
             }}
           />
         </Space>
@@ -151,13 +152,13 @@ export function useOrderDetailDrawer(
 
   const consumeColumns: ColumnsType<ORDER.OrderConsume> = [
     {
-      title: '消费项目',
+      title: intl.formatMessage({ id: '消费项目' }),
       dataIndex: 'consumptionSetName',
       align: 'center',
       key: 'consumptionSetName',
     },
     {
-      title: '消费金额',
+      title: intl.formatMessage({ id: '消费金额' }),
       dataIndex: 'price',
       align: 'center',
       key: 'price',
@@ -166,13 +167,13 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '录入人',
+      title: intl.formatMessage({ id: '录入人' }),
       dataIndex: 'creator',
       align: 'center',
       key: 'creator',
     },
     {
-      title: '消费日期',
+      title: intl.formatMessage({ id: '消费日期' }),
       dataIndex: 'consumeDate',
       align: 'center',
       key: 'consumeDate',
@@ -181,13 +182,13 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '备注',
+      title: intl.formatMessage({ id: '备注' }),
       align: 'center',
       dataIndex: 'remark',
       key: 'remark',
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: '操作' }),
       key: 'action',
       align: 'center',
       render: (_, record) => (
@@ -198,7 +199,7 @@ export function useOrderDetailDrawer(
               await services.OrderController.deleteConsume(record.id);
               queryConsumeList();
               executeQuery();
-              message.success('删除成功');
+              message.success(intl.formatMessage({ id: '删除成功' }));
             }}
           >
             删除
@@ -210,7 +211,7 @@ export function useOrderDetailDrawer(
 
   const payOrRefundColumns: ColumnsType<ORDER.OrderPayOrRefund> = [
     {
-      title: '项目',
+      title: intl.formatMessage({ id: 'TableColumn.项目' }),
       dataIndex: 'type',
       key: 'type',
       align: 'center',
@@ -222,13 +223,13 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '支付方式',
+      title: intl.formatMessage({ id: '支付方式' }),
       align: 'center',
       dataIndex: 'feeConfigName',
       key: 'feeConfigName',
     },
     {
-      title: '金额',
+      title: intl.formatMessage({ id: '金额' }),
       dataIndex: 'amount',
       align: 'center',
       key: 'amount',
@@ -237,7 +238,7 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '日期',
+      title: intl.formatMessage({ id: '日期' }),
       dataIndex: 'feeDate',
       align: 'center',
       key: 'feeDate',
@@ -246,13 +247,13 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '备注',
+      title: intl.formatMessage({ id: '备注' }),
       dataIndex: 'remark',
       align: 'center',
       key: 'remark',
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: '操作' }),
       key: 'action',
       align: 'center',
       render: (_, record) => (
@@ -263,7 +264,7 @@ export function useOrderDetailDrawer(
               await services.OrderController.deletePayOrRefund(record.id);
               queryPayOrRefundList();
               executeQuery();
-              message.success('删除成功');
+              message.success(intl.formatMessage({ id: '删除成功' }));
             }}
           >
             删除
@@ -274,7 +275,7 @@ export function useOrderDetailDrawer(
   ];
   const roomColumns: ColumnsType<ORDER.OrderRoom> = [
     {
-      title: '入住日期',
+      title: intl.formatMessage({ id: '入住日期' }),
       dataIndex: 'startDate',
       key: 'startDate',
       align: 'center',
@@ -284,13 +285,13 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '房间号',
+      title: intl.formatMessage({ id: '房间号' }),
       width: 80,
       align: 'center',
       dataIndex: 'roomCode',
     },
     // {
-    //   title: '间夜',
+    //   title: intl.formatMessage({ id: '间夜' }),
     //   width: 62,
     //   align: 'center',
     //   dataIndex: 'checkInDays',
@@ -298,7 +299,7 @@ export function useOrderDetailDrawer(
     //   render: (value) => `${value}夜`,
     // },
     {
-      title: '房价',
+      title: intl.formatMessage({ id: '房价' }),
       width: 82,
       align: 'center',
       dataIndex: 'totalAmount',
@@ -308,14 +309,14 @@ export function useOrderDetailDrawer(
       },
     },
     {
-      title: '入住人数',
+      title: intl.formatMessage({ id: '入住人数' }),
       width: 82,
       align: 'center',
       dataIndex: 'checkInPersonCount',
       key: 'checkInPersonCount',
     },
     {
-      title: '客房状态',
+      title: intl.formatMessage({ id: '客房状态' }),
       dataIndex: 'status',
       width: 82,
       align: 'center',
@@ -324,18 +325,18 @@ export function useOrderDetailDrawer(
         const option = OrderStateOptions.find(
           (option) => option.value === value,
         );
-        return option && option.label;
+        return option && intl.formatMessage({ id: option.label });
       },
     },
     {
-      title: '入住人',
+      title: intl.formatMessage({ id: '入住人' }),
       width: 82,
       align: 'center',
       dataIndex: 'checkInPersonName',
       key: 'checkInPersonName',
     },
     {
-      title: '联系方式',
+      title: intl.formatMessage({ id: '联系方式' }),
       ellipsis: true,
       width: 120,
       align: 'center',
@@ -343,7 +344,7 @@ export function useOrderDetailDrawer(
       key: 'checkInPersonPhoneNo',
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: '操作' }),
       width: 125,
       align: 'center',
       fixed: 'right',
@@ -356,7 +357,7 @@ export function useOrderDetailDrawer(
               openOccupantDrawer(orderId as number, record);
             }}
           >
-            {/* <PlusOutlined /> */}+ 新增入住人
+            {/* <PlusOutlined /> */}+ {intl.formatMessage({ id: '新增入住人' })}
           </Button>
         </>
       ),
@@ -419,15 +420,24 @@ export function useOrderDetailDrawer(
     footerOperations = null;
   }
   if (roomStatusList?.includes(OrderState.IS_ORDERED)) {
-    sideButtons.push({ value: OperationType.CANCEL_OBSERVE, text: '取消预定' });
+    sideButtons.push({
+      value: OperationType.CANCEL_OBSERVE,
+      text: intl.formatMessage({ id: '取消预定' }),
+    });
     mainButtons.push({
       value: OperationType.CONFIRM_CHECKIN,
-      text: '办理入住',
+      text: intl.formatMessage({ id: '办理入住' }),
     });
   }
   if (roomStatusList?.includes(OrderState.IS_CHECKED)) {
-    sideButtons.push({ value: OperationType.CANCEL_CHECKIN, text: '撤销入住' });
-    mainButtons.push({ value: OperationType.CHECK_OUT, text: '办理退房' });
+    sideButtons.push({
+      value: OperationType.CANCEL_CHECKIN,
+      text: intl.formatMessage({ id: '撤销入住' }),
+    });
+    mainButtons.push({
+      value: OperationType.CHECK_OUT,
+      text: intl.formatMessage({ id: '办理退房' }),
+    });
   }
   const OrderDetailDrawer = (
     <>
@@ -435,7 +445,7 @@ export function useOrderDetailDrawer(
         width={640}
         destroyOnClose
         maskClosable={false}
-        title="订单详情"
+        title={intl.formatMessage({ id: '订单详情' })}
         placement="right"
         className="order-detail-drawer"
         onClose={() => {
@@ -467,16 +477,16 @@ export function useOrderDetailDrawer(
                   </Space>
                 }
                 <Space>
-                  <Button
+                  {/* <Button
                     onClick={() => {
                       message.info('打印暂未实现...');
                     }}
                     key="打印"
                   >
-                    打印
-                  </Button>
+                    {intl.formatMessage({ id: '打印' })}
+                  </Button> */}
                   <Button onClick={modifyOrder} type="primary" key="修改订单">
-                    修改订单
+                    {intl.formatMessage({ id: '修改订单' })}
                   </Button>
                   {mainButtons.map((btn) => (
                     <Button
@@ -499,7 +509,10 @@ export function useOrderDetailDrawer(
             setActiveTabKey(value);
           }}
         >
-          <Tabs.TabPane tab="订单详情" key="orderDetail">
+          <Tabs.TabPane
+            tab={intl.formatMessage({ id: '订单详情' })}
+            key="orderDetail"
+          >
             <div className="basic-section">
               <div className="reserve-row">
                 <div>
@@ -508,7 +521,10 @@ export function useOrderDetailDrawer(
                   </div>
                   <div className="check-in">
                     <span>
-                      {data?.order.status && OrderStateText[data?.order.status]}
+                      {data?.order.status &&
+                        intl.formatMessage({
+                          id: OrderStateText[data?.order.status],
+                        })}
                     </span>
                   </div>
                 </div>
@@ -528,17 +544,17 @@ export function useOrderDetailDrawer(
               </div>
               <div className="fee-row">
                 <div>
-                  订单金额
+                  {intl.formatMessage({ id: '订单金额' })}
                   <br />
                   <span className="fee">A$ {data?.order.totalAmount}</span>
                 </div>
                 <div>
-                  已付金额
+                  {intl.formatMessage({ id: '已付金额' })}
                   <br />
                   <span className="fee">A$ {data?.order.paidAmount}</span>
                 </div>
                 <div>
-                  还需付款
+                  {intl.formatMessage({ id: '还需付款' })}
                   <br />
                   <span className="fee">A$ {data?.order.remainAmount}</span>
                 </div>
@@ -546,8 +562,11 @@ export function useOrderDetailDrawer(
             </div>
 
             <ProCard
-              title="房间信息"
-              extra={`共${data?.orderRoomList?.length}间房`}
+              title={intl.formatMessage({ id: '房间信息' })}
+              extra={intl.formatMessage(
+                { id: 'compound.orderRoomCount' },
+                { count: data?.orderRoomList?.length },
+              )}
             >
               <Table
                 bordered
@@ -562,7 +581,7 @@ export function useOrderDetailDrawer(
             <ProCard
               title={
                 <>
-                  消费信息：
+                  {intl.formatMessage({ id: '消费信息' })}
                   <span
                     style={{
                       color: 'red',
@@ -588,7 +607,7 @@ export function useOrderDetailDrawer(
                       openConsumeDrawer(orderId as number);
                     }}
                   >
-                    + 添加消费
+                    + {intl.formatMessage({ id: '添加消费项' })}
                   </Button>
                 </>
               }
@@ -605,7 +624,7 @@ export function useOrderDetailDrawer(
             <ProCard
               title={
                 <>
-                  收退款信息：
+                  {intl.formatMessage({ id: '收退款信息' })}
                   <Space>
                     <span
                       style={{
@@ -614,7 +633,7 @@ export function useOrderDetailDrawer(
                         fontSize: '12px',
                       }}
                     >
-                      收款：A$
+                      {intl.formatMessage({ id: '收款' })}：A$
                       {payOrRefundList
                         ?.filter(
                           (c: ORDER.OrderPayOrRefund) =>
@@ -632,7 +651,7 @@ export function useOrderDetailDrawer(
                         fontSize: '12px',
                       }}
                     >
-                      退款：A$
+                      {intl.formatMessage({ id: '退款' })}：A$
                       {payOrRefundList
                         ?.filter(
                           (c: ORDER.OrderPayOrRefund) =>
@@ -653,7 +672,7 @@ export function useOrderDetailDrawer(
                       openPayOrRefundDrawer(orderId as number);
                     }}
                   >
-                    + 添加收退款
+                    + {intl.formatMessage({ id: '添加收退款' })}
                   </Button>
                 </>
               }
@@ -668,7 +687,7 @@ export function useOrderDetailDrawer(
               />
             </ProCard>
             <ProCard
-              title="提醒信息"
+              title={intl.formatMessage({ id: '提醒信息' })}
               extra={
                 <>
                   <Button
@@ -677,7 +696,7 @@ export function useOrderDetailDrawer(
                       openNoticeDrawer(orderId as number);
                     }}
                   >
-                    + 添加提醒
+                    + {intl.formatMessage({ id: '添加提醒' })}
                   </Button>
                 </>
               }
@@ -694,16 +713,19 @@ export function useOrderDetailDrawer(
             </ProCard>
             <ProCard>
               <div className="custom-form-item">
-                <label>备注：</label>
+                <label>{intl.formatMessage({ id: '备注' })}：</label>
                 <div>{data?.order.remark}</div>
               </div>
               <div className="custom-form-item">
-                <label>订单编号：</label>
+                <label>{intl.formatMessage({ id: '订单编号' })}：</label>
                 {data?.order.channelOrderNo}
               </div>
             </ProCard>
           </Tabs.TabPane>
-          <Tabs.TabPane tab="操作日志" key="operationLog">
+          <Tabs.TabPane
+            tab={intl.formatMessage({ id: '操作日志' })}
+            key="operationLog"
+          >
             <OperatinoLog orderId={orderId as number} />
           </Tabs.TabPane>
         </Tabs>

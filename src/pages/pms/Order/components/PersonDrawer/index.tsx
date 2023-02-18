@@ -5,6 +5,7 @@ import {
 } from '@ant-design/icons';
 import services from '@/services';
 import moment from 'moment';
+import { useIntl } from 'umi';
 import { DrawerForm, ProFormText } from '@ant-design/pro-components';
 import { message, Input, Space, Form, Button } from 'antd';
 import { useEffect, useState } from 'react';
@@ -13,6 +14,7 @@ import './style.less';
 interface FormOrder {}
 
 export function useOccupantDrawer(onSuccess: () => void) {
+  const intl = useIntl();
   const [form] = Form.useForm<FormOrder>();
   const [visible, setVisible] = useState(false);
   const [room, setRoom] = useState<ORDER.OrderRoom | undefined>();
@@ -34,7 +36,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
 
   const OccupantDrawer = (
     <DrawerForm
-      title={'新增入住人'}
+      title={intl.formatMessage({ id: '新增入住人' })}
       form={form}
       className="order-person-drawer"
       layout="horizontal"
@@ -50,7 +52,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
           <>
             <Space>
               <ArrowLeftOutlined />
-              返回
+              {intl.formatMessage({ id: '返回' })}
             </Space>
           </>
         ),
@@ -69,7 +71,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
             orderRoomId: room?.id,
             ...values,
           });
-          message.success('添加成功');
+          message.success(intl.formatMessage({ id: '添加成功' }));
           setVisible(false);
           form.resetFields();
           onSuccess();
@@ -78,11 +80,17 @@ export function useOccupantDrawer(onSuccess: () => void) {
       }}
     >
       <div className="room-sticky">
-        <span>{moment(room?.startDate).format('MM-DD')}入住</span>
+        <span>
+          {moment(room?.startDate).format('MM-DD')}
+          {intl.formatMessage({ id: '入住' })}
+        </span>
         <span>
           {room?.roomTypeName}/{room?.roomCode}
         </span>
-        <span>{room?.checkInDays}晚</span>
+        <span>
+          {room?.checkInDays}
+          {intl.formatMessage({ id: '晚' })}
+        </span>
         <span>A$ {room?.totalAmount}</span>
       </div>
 
@@ -94,15 +102,15 @@ export function useOccupantDrawer(onSuccess: () => void) {
                 <Form.Item className="person-row" key={field.key}>
                   <Input.Group compact>
                     <ProFormText
-                      rules={[
-                        { required: true, message: '入住人姓名不能为空' },
-                      ]}
+                      // rules={[
+                      //   { required: true, message: '入住人姓名不能为空' },
+                      // ]}
                       name={[field.name, 'nickName']}
-                      placeholder="入住人姓名"
+                      placeholder={intl.formatMessage({ id: '入住人姓名' })}
                     ></ProFormText>
                     <ProFormText
                       name={[field.name, 'phoneNo']}
-                      placeholder="联系方式"
+                      placeholder={intl.formatMessage({ id: '联系方式' })}
                     ></ProFormText>
                     <DeleteOutlined
                       style={{
@@ -125,7 +133,7 @@ export function useOccupantDrawer(onSuccess: () => void) {
                 }}
                 icon={<PlusOutlined />}
               >
-                添加入住人
+                {intl.formatMessage({ id: '添加入住人' })}
               </Button>
             </Form.Item>
           </>

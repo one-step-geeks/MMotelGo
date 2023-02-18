@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { useIntl } from 'umi';
 import services from '@/services';
 import { DrawerForm, ProFormTextArea } from '@ant-design/pro-components';
 import { message, Space, Form, Checkbox, Button } from 'antd';
@@ -10,6 +11,7 @@ import './style.less';
 export interface FormOrder {}
 
 export function useOperateDrawer(onSuccess: () => void) {
+  const intl = useIntl();
   const [operateData, setOperateData] = useState<OperateData>();
   const [form] = Form.useForm<FormOrder>();
   const [visible, setVisible] = useState(false);
@@ -20,8 +22,10 @@ export function useOperateDrawer(onSuccess: () => void) {
 
   const title =
     operateData?.operationType === undefined
-      ? '订单操作'
-      : OperationTypeText[operateData?.operationType];
+      ? intl.formatMessage({ id: '订单操作' })
+      : intl.formatMessage({
+          id: OperationTypeText[operateData?.operationType],
+        });
 
   const handleRoomChecked = (index: number, value: boolean) => {
     const checkedIndexs = value
@@ -49,7 +53,7 @@ export function useOperateDrawer(onSuccess: () => void) {
           <>
             <Space>
               <ArrowLeftOutlined />
-              返回
+              {intl.formatMessage({ id: '返回' })}
             </Space>
           </>
         ),
@@ -73,7 +77,7 @@ export function useOperateDrawer(onSuccess: () => void) {
             operationType: operateData?.operationType,
             remark: values.remark,
           });
-          message.success(`${title}成功`);
+          message.success(intl.formatMessage({ id: `${title}成功` }));
           setVisible(false);
           form.resetFields();
           onSuccess();
@@ -88,7 +92,9 @@ export function useOperateDrawer(onSuccess: () => void) {
               type="primary"
               onClick={() => {
                 if (selectedRoomIndexs.length === 0) {
-                  return message.error('请至少选择1条记录');
+                  return message.error(
+                    intl.formatMessage({ id: '请至少选择1条记录' }),
+                  );
                 }
                 props.submit();
               }}
@@ -116,11 +122,16 @@ export function useOperateDrawer(onSuccess: () => void) {
             selectedRoomIndexs.length === operateData?.orderRoomList.length
           }
         >
-          全选
+          {intl.formatMessage({ id: '全选' })}
         </Checkbox>
         <span>
-          已选{selectedRoomIndexs.length}间，共
-          {operateData?.orderRoomList?.length}间
+          {intl.formatMessage(
+            { id: 'compound.orderRoomOverview' },
+            {
+              selectedCount: selectedRoomIndexs.length,
+              totalCount: operateData?.orderRoomList?.length,
+            },
+          )}
         </span>
       </div>
       <div className="room-list">
@@ -137,24 +148,32 @@ export function useOperateDrawer(onSuccess: () => void) {
                 {room.roomTypeName}/{room.roomCode}
               </Checkbox>
               <div>
-                {moment(room.checkInDate).format('YYYY-MM-DD')}至
+                {moment(room.checkInDate).format('YYYY-MM-DD')}
+                {intl.formatMessage({ id: '至' })}
                 {moment(room.endDate)
                   .add(room.checkInDays)
                   .format('YYYY-MM-DD')}
-                ，共{room.checkInDays}晚
+                ，{intl.formatMessage({ id: '共' })}
+                {room.checkInDays}
+                {intl.formatMessage({ id: '晚' })}
                 <br />
-                房费：A$ {room.totalAmount}
+                {intl.formatMessage({ id: '房费' })}：A$ {room.totalAmount}
               </div>
             </div>
           );
         })}
       </div>
       <div className="fee-overview">
-        <div>订单总额：A$ {selectedRoomFeeTotal}</div>
         <div>
-          <span>已付金额：A$ {operateData?.order?.paidAmount || 0} </span>
+          {intl.formatMessage({ id: '订单总额' })}：A$ {selectedRoomFeeTotal}
+        </div>
+        <div>
+          <span>
+            {intl.formatMessage({ id: '已付金额' })}：A${' '}
+            {operateData?.order?.paidAmount || 0}{' '}
+          </span>
           <span className="emphisis">
-            还需收款：A${' '}
+            {intl.formatMessage({ id: '还需收款' })}：A${' '}
             {Math.max(
               0,
               selectedRoomFeeTotal - (operateData?.order?.paidAmount || 0),
@@ -165,7 +184,7 @@ export function useOperateDrawer(onSuccess: () => void) {
 
       <ProFormTextArea
         name="remark"
-        placeholder={`请填写${title}备注`}
+        // placeholder={`请填写${title}备注`}
         fieldProps={{}}
       />
     </DrawerForm>
