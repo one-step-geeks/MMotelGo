@@ -66,6 +66,7 @@ const EmptyBox: React.FC<Props> = (props) => {
             type="secondary"
             className="btn"
             onClick={() => {
+              setVisible(false);
               setSelectedRooms([]);
               selectService.sendCancelInfo();
             }}
@@ -75,14 +76,20 @@ const EmptyBox: React.FC<Props> = (props) => {
           <Text
             type="secondary"
             className="btn"
-            onClick={selectService.sendCloseRoom}
+            onClick={() => {
+              selectService.sendCloseRoom();
+            }}
           >
             {intl.formatMessage({ id: '关房' })}
           </Text>
           <Text
             type="secondary"
             className="btn"
-            onClick={selectService.sendAddOrder}
+            onClick={() => {
+              setVisible(false);
+
+              selectService.sendAddOrder();
+            }}
           >
             {intl.formatMessage({ id: '预订' })}
           </Text>
@@ -153,6 +160,7 @@ const EmptyBox: React.FC<Props> = (props) => {
             type="secondary"
             className="btn"
             onClick={() => {
+              setVisible(false);
               setSelectedRooms([]);
               selectService.sendCancelInfo();
             }}
@@ -162,14 +170,19 @@ const EmptyBox: React.FC<Props> = (props) => {
           <Text
             type="secondary"
             className="btn"
-            onClick={selectService.sendOpenRoom}
+            onClick={() => {
+              selectService.sendOpenRoom();
+            }}
           >
             {intl.formatMessage({ id: '开房' })}
           </Text>
           <Text
             type="secondary"
             className="btn"
-            onClick={selectService.sendAddOrder}
+            onClick={() => {
+              setVisible(false);
+              selectService.sendAddOrder();
+            }}
           >
             {intl.formatMessage({ id: '预订' })}
           </Text>

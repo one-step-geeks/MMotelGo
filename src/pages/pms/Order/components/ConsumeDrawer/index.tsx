@@ -21,7 +21,7 @@ export function useConsumeDrawer(onSuccess: () => void) {
   const [visible, setVisible] = useState(false);
   const [notice, setConsume] = useState<ORDER.OrderConsume | undefined>();
   const [orderId, setOrderId] = useState<number | undefined>();
-
+  const [canConfirm, setCanConfirm] = useState(false);
   useEffect(() => {
     if (notice) {
       form.setFieldsValue(notice);
@@ -59,6 +59,19 @@ export function useConsumeDrawer(onSuccess: () => void) {
         },
       }}
       submitTimeout={2000}
+      onValuesChange={(_, values) => {
+        const { consumptionSetId } = values || {};
+        if (consumptionSetId) {
+          setCanConfirm(true);
+        } else {
+          setCanConfirm(false);
+        }
+      }}
+      submitter={{
+        submitButtonProps: {
+          disabled: !canConfirm,
+        },
+      }}
       onFinish={async (values) => {
         try {
           const { consumptionSetId, consumeDate, ...rest } = values;
