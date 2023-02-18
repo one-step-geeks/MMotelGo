@@ -96,6 +96,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
             type="secondary"
             className="btn"
             onClick={() => {
+              setVisible(false);
               setSelectedRooms([]);
               selectService.sendCancelInfo();
             }}
@@ -120,7 +121,10 @@ const RoomCodeBox: React.FC<Props> = (props) => {
           <Text
             type="secondary"
             className="btn"
-            onClick={selectService.sendAddOrder}
+            onClick={() => {
+              setVisible(false);
+              selectService.sendAddOrder();
+            }}
           >
             {intl.formatMessage({ id: '预订' })}
           </Text>
@@ -128,7 +132,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
       }
       overlayClassName="room-box-action-popover"
       placement="rightTop"
-      visible={visible}
+      open={visible}
     >
       <div
         className={className}
