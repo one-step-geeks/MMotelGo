@@ -20,7 +20,7 @@ export default () => {
     <PageContainer pageHeaderRender={() => <></>} ghost>
       <ProCard
         ghost
-        title={intl.formatMessage({ id: '渠道设置' })}
+        title={intl.formatMessage({ id: '自定义渠道设置' })}
         bordered
         extra={[
           <Button

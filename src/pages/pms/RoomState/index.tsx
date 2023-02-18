@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, useEffect, useMemo } from 'react';
-import { useIntl, useRequest, useHistory, useModel } from 'umi';
+import { useIntl, useRequest, useHistory, useModel, useLocation } from 'umi';
 import { ColumnsType } from 'antd/lib/table';
 import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
 import { getWeekDay, getCalendarDate } from '@/utils';
@@ -16,6 +16,7 @@ import OrderFormDrawer from '../Order/components/OrderFormDrawer';
 import { selectService } from './components/service';
 import services from '@/services';
 import moment from 'moment';
+import querystring from 'querystring';
 import './style.less';
 
 export function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
@@ -86,16 +87,21 @@ type AlignType = 'left' | 'center' | 'right';
 const RoomStatePage: React.FC = () => {
   const intl = useIntl();
   const history = useHistory();
+  const location = useLocation();
+  const { defaultDuration } = querystring.parse(
+    location.search.replace('?', ''),
+  );
   const [expand, setExpand] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
   const [closeVisible, setCloseVisible] = useState(false);
-  const [duration, setDuration] = useState(7);
+  const [duration, setDuration] = useState(Number(defaultDuration) || 7);
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const { selectedRooms, setSelectedRooms } = useModel('state');
 
-  const openOrCloseList = useMemo(() => processOpenAndClose(selectedRooms), [
-    selectedRooms,
-  ]);
+  const openOrCloseList = useMemo(
+    () => processOpenAndClose(selectedRooms),
+    [selectedRooms],
+  );
 
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
@@ -404,11 +410,14 @@ const RoomStatePage: React.FC = () => {
       <Space className="roome-state-calendar-header">
         <Space>
           <Radio.Group
-            defaultValue={duration}
+            value={duration}
             buttonStyle="solid"
             onChange={(e) => {
               const dur = e.target.value;
               setCalendarList(getCalendarDate(dur, selectedDate));
+              history.replace(
+                `/pms/room-state/calendar?defaultDuration=${dur}`,
+              );
               setDuration(dur);
             }}
           >

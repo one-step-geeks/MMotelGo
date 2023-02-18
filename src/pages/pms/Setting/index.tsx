@@ -38,7 +38,7 @@ const SettingContainer: React.FC = (props) => {
             >
               {access.canSeeSubMenu(18) ? (
                 <Menu.Item key="/pms/setting/channel-manage">
-                  {intl.formatMessage({ id: '渠道设置' })}
+                  {intl.formatMessage({ id: '自定义渠道设置' })}
                 </Menu.Item>
               ) : null}
               {access.canSeeSubMenu(18) ? (
