@@ -13,25 +13,48 @@ import {
 import { message, Input, Space, Form, Checkbox, Button } from 'antd';
 import { useEffect, useState } from 'react';
 
-interface FormOrder {}
+interface FormOrder {
+  consumptionSet?: {
+    label: string;
+    value: number;
+    price?: number;
+  };
+  count: number;
+  price: number;
+}
 
 export function useConsumeDrawer(onSuccess: () => void) {
   const intl = useIntl();
   const [form] = Form.useForm<FormOrder>();
   const [visible, setVisible] = useState(false);
-  const [notice, setConsume] = useState<ORDER.OrderConsume | undefined>();
+  const [consume, setConsume] = useState<ORDER.OrderConsume | undefined>();
   const [orderId, setOrderId] = useState<number | undefined>();
   const [canConfirm, setCanConfirm] = useState(false);
+
   useEffect(() => {
-    if (notice) {
-      form.setFieldsValue(notice);
+    if (consume) {
+      const { consumptionSetId, consumptionSetName, ...rest } = consume;
+      form.setFieldsValue({
+        ...rest,
+        consumptionSet: {
+          value: consumptionSetId,
+          label: consumptionSetName,
+        },
+      });
     }
-  }, [notice]);
+  }, [consume]);
+
+  const handleChange = () => {
+    const { consumptionSet, count } = form.getFieldsValue();
+    if (consumptionSet && count) {
+      form.setFieldsValue({ price: consumptionSet?.price! * count });
+    }
+  };
 
   const ConsumeDrawer = (
     <DrawerForm
       title={intl.formatMessage({
-        id: notice?.id ? '修改消费项' : '添加消费项',
+        id: consume?.id ? '修改消费项' : '添加消费项',
       })}
       form={form}
       layout="horizontal"
@@ -60,8 +83,8 @@ export function useConsumeDrawer(onSuccess: () => void) {
       }}
       submitTimeout={2000}
       onValuesChange={(_, values) => {
-        const { consumptionSetId } = values || {};
-        if (consumptionSetId) {
+        const { consumptionSet } = values || {};
+        if (consumptionSet) {
           setCanConfirm(true);
         } else {
           setCanConfirm(false);
@@ -74,11 +97,11 @@ export function useConsumeDrawer(onSuccess: () => void) {
       }}
       onFinish={async (values) => {
         try {
-          const { consumptionSetId, consumeDate, ...rest } = values;
+          const { consumptionSet, consumeDate, ...rest } = values;
           await services.OrderController.addConsume({
             orderId,
-            consumptionSetId: consumptionSetId.value,
-            consumptionSetName: consumptionSetId.label,
+            consumptionSetId: consumptionSet.value,
+            consumptionSetName: consumptionSet.label,
             consumeDate: moment(consumeDate).format('YYYY-MM-DD'),
             ...rest,
           });
@@ -92,22 +115,21 @@ export function useConsumeDrawer(onSuccess: () => void) {
     >
       <ProFormSelect
         label={intl.formatMessage({ id: '项目' })}
-        // rules={[{ required: true, message: '请选择项目' }]}
-        name="consumptionSetId"
+        rules={[
+          { required: true, message: intl.formatMessage({ id: '请选择项目' }) },
+        ]}
+        name="consumptionSet"
         fieldProps={{
           labelInValue: true,
         }}
+        onChange={handleChange}
         request={async () => {
-          const { data } = await services.SettingController.getConsumerItemList(
-            {
-              current: 1,
-              pageSize: 100,
-            },
-          );
-          const { list } = data || {};
-          return list?.map((row) => ({
+          const { data = [] } =
+            await services.SettingController.getEnableConsumerItemList();
+          return data.map((row) => ({
             label: row.name,
             value: row.id,
+            price: row.price,
           }));
         }}
       />
@@ -115,14 +137,20 @@ export function useConsumeDrawer(onSuccess: () => void) {
       {/* <Form.Item name='consumptionSetName' noStyle/> */}
 
       <ProFormText
-        // rules={[{ required: true, message: '请输入数量' }]}
+        rules={[
+          { required: true, message: intl.formatMessage({ id: '请输入数量' }) },
+        ]}
         // placeholder="请输入数量"
+        initialValue={1}
+        onChange={handleChange}
         name="count"
         label={intl.formatMessage({ id: 'Consumption.数量' })}
       />
 
       <ProFormDigit
-        // rules={[{ required: true, message: '请输入金额' }]}
+        rules={[
+          { required: true, message: intl.formatMessage({ id: '请输入金额' }) },
+        ]}
         label={intl.formatMessage({ id: '金额' })}
         name="price"
         // placeholder="请输入金额"
