@@ -3,6 +3,7 @@ import envConfig from '@/utils/env';
 import { message } from 'antd';
 import Cookie from 'js-cookie';
 import { isLoginPath } from '@/utils';
+import { getLocale } from 'umi';
 
 const { APP_BASE_URL } = envConfig;
 
@@ -48,6 +49,7 @@ export const commonRequestInterceptor = (
       headers: {
         ...(options?.headers || null),
         'x-auth': Cookie.get('token'),
+        locale: getLocale(),
       },
     },
   };
