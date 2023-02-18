@@ -6,10 +6,11 @@ import './room-code.less';
 interface Props {
   room: ROOM_STATE.StateTableData;
   roomList?: ROOM_STATE.Room[];
+  onStatusChange: (status: number) => void;
 }
 
 const RoomCodeBox: React.FC<Props> = (props) => {
-  const { room, roomList } = props;
+  const { room, roomList, onStatusChange } = props;
 
   const [dirty, setDirty] = useState(false);
 
@@ -39,6 +40,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
           roomId: room.roomId,
           status,
         });
+        onStatusChange(status);
       }}
     ></div>
   );
