@@ -498,22 +498,44 @@ export async function fetchRoomRentDetail(data: FetchPaymentDetailParams) {
   });
 }
 
+export interface RoomPaymentNightDateItemType {
+  roomCode: string;
+  roomId: number;
+  total: number;
+  nightDateDtoList: PaymentDateItemType[];
+}
+export interface RoomPaymentNightDetailItemType {
+  roomTypeName: string;
+  roomTypeId: number;
+  totalList: number[];
+  roomNightInfoList: RoomPaymentNightDateItemType[];
+}
+export interface RoomPaymentNightDetailType {
+  detailList: RoomPaymentNightDetailItemType[];
+  totalNum: number[];
+}
+export interface RoomPaymentNightDetailItem {
+  roomTypeName: string;
+  total: number;
+  roomTypeId: number;
+  [x: string]: any;
+}
 // 间夜报表, 已格式化可做Protable的dateSource
 export async function fetchRoomNightDetail(data: FetchPaymentDetailParams) {
-  return request<API.Result<RoomPaymentDetailType>>(
+  return request<API.Result<RoomPaymentNightDetailType>>(
     '/motel/summary/roomBusiness/roomNightDetail',
     {
       method: 'POST',
       data,
     },
   ).then((res) => {
-    const { detailList, totalAmountList } = res.data || {};
+    const { detailList, totalNum } = res.data || {};
     const paymentDaySet = new Set<string>();
     let totalRowSpanList: number[] = [];
     const newPaymentDetailList: RoomPaymentDetailItem[] = [];
 
     detailList?.map((detail, index) => {
-      const { roomTypeId, roomTypeName, roomRentInfoList } = detail;
+      const { roomTypeId, roomTypeName, roomNightInfoList } = detail;
       const indexList: number[] = [];
       const allAmountDetail: RoomPaymentDetailItem = {
         roomTypeName,
@@ -523,13 +545,13 @@ export async function fetchRoomNightDetail(data: FetchPaymentDetailParams) {
         total: 0,
       };
 
-      roomRentInfoList.forEach((roomRentInfo, i) => {
+      roomNightInfoList.forEach((roomRentInfo, i) => {
         if (i === 0) {
-          indexList[i] = roomRentInfoList.length + 1;
+          indexList[i] = roomNightInfoList.length + 1;
         } else {
           indexList[i] = 0;
         }
-        const { rentDateDtoList, roomCode, roomId, total } = roomRentInfo;
+        const { nightDateDtoList, roomCode, roomId, total } = roomRentInfo;
         const detailItem: RoomPaymentDetailItem = {
           roomTypeName,
           roomTypeId,
@@ -538,7 +560,7 @@ export async function fetchRoomNightDetail(data: FetchPaymentDetailParams) {
           total: total,
         };
         allAmountDetail.total += total;
-        rentDateDtoList.forEach((dateInfo) => {
+        nightDateDtoList.forEach((dateInfo) => {
           const { date, price } = dateInfo;
           detailItem[date] = price;
           if (allAmountDetail[date]) {
@@ -550,19 +572,19 @@ export async function fetchRoomNightDetail(data: FetchPaymentDetailParams) {
         });
         newPaymentDetailList.push(detailItem);
       });
-      if (roomRentInfoList.length > 0) {
+      if (roomNightInfoList.length > 0) {
         newPaymentDetailList.push(allAmountDetail);
-        indexList[roomRentInfoList.length] = 0;
+        indexList[roomNightInfoList.length] = 0;
       }
       totalRowSpanList = totalRowSpanList.concat(indexList);
     }) || [];
     const totalItem: RoomPaymentDetailItem = {
       roomTypeName: '合计',
       roomTypeId: Math.random(),
-      total: totalAmountList?.[0] || 0,
+      total: totalNum?.[0] || 0,
     };
     [...paymentDaySet.values()].forEach((dateString, index) => {
-      totalItem[dateString] = totalAmountList[index + 1];
+      totalItem[dateString] = totalNum[index + 1];
     });
     if (newPaymentDetailList.length > 0) {
       newPaymentDetailList.push(totalItem);

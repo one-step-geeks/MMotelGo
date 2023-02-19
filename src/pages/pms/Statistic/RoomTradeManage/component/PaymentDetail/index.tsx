@@ -33,6 +33,12 @@ const PaymentDetailTable: React.FC = () => {
   const [rangeDayList, setRangeDayList] = useState<string[]>([]);
   const [rowSpanList, setRowSpanList] = useState<number[]>([]);
   const columns = useMemo<ProColumns[]>(() => {
+    const priceSymbol = [
+      RoomTradeManageEnum.OCCUPANCY,
+      RoomTradeManageEnum.JIAN_YE,
+    ].includes(activeKey as any)
+      ? ''
+      : intl.formatMessage({ id: '¥' });
     return (
       [
         {
@@ -64,11 +70,7 @@ const PaymentDetailTable: React.FC = () => {
           dataIndex: 'total',
           width: 100,
           render: (price) => {
-            return `${
-              activeKey === RoomTradeManageEnum.OCCUPANCY
-                ? ''
-                : intl.formatMessage({ id: '¥' })
-            }${price === '-' ? 0 : price}`;
+            return `${priceSymbol}${price === '-' ? 0 : price}`;
           },
         },
         ...rangeDayList.map((item) => {
@@ -77,9 +79,7 @@ const PaymentDetailTable: React.FC = () => {
             width: 150,
             dataIndex: item,
             render: (price) => {
-              return `${intl.formatMessage({ id: '¥' })}${
-                price === '-' ? 0 : price
-              }`;
+              return `${priceSymbol}${price === '-' ? 0 : price}`;
             },
           } as ProColumns;
         }),
