@@ -96,6 +96,7 @@ const RoomStatePage: React.FC = () => {
   const [duration, setDuration] = useState(Number(defaultDuration) || 7);
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const { selectedRooms, setSelectedRooms } = useModel('state');
+  const [roomTypeList, setRoomTypeList] = useState<ROOM_STATE.RoomType[]>([]);
 
   const openOrCloseList = useMemo(
     () => processOpenAndClose(selectedRooms),
@@ -153,9 +154,11 @@ const RoomStatePage: React.FC = () => {
   );
 
   // 获取房态列表
-  const { data: statusData, loading: statusLoading } = useRequest(async () => {
+  const { loading: statusLoading } = useRequest(async () => {
     return services.RoomStateController.getRoomStatusList({
       roomTypeIdList: [],
+    }).then((res) => {
+      setRoomTypeList(res.data.roomTypeList);
     });
   });
 
@@ -388,10 +391,22 @@ const RoomStatePage: React.FC = () => {
             return (
               <RoomCodeBox
                 room={record}
-                roomList={statusData?.roomTypeList?.reduce(
+                roomList={roomTypeList.reduce(
                   (all, rt) => [...all, ...rt.roomList!],
                   [] as ROOM_STATE.Room[],
                 )}
+                onStatusChange={(status) => {
+                  const copiedRoomTypeList = [...roomTypeList];
+                  const room = copiedRoomTypeList
+                    ?.find(
+                      (roomType) => roomType.roomTypeId === record.roomTypeId,
+                    )
+                    ?.roomList?.find((room) => room.roomId === record.roomId);
+                  if (room) {
+                    room.roomStatus = status;
+                    setRoomTypeList(copiedRoomTypeList);
+                  }
+                }}
               />
             );
           },
@@ -402,7 +417,7 @@ const RoomStatePage: React.FC = () => {
   ];
 
   const dataSource = getCalendarRows(rowData?.list);
-  console.log('dataSource', dataSource);
+  console.log('dataSource', dataSource, rowData?.list);
 
   return (
     <div className="roome-state-container">
