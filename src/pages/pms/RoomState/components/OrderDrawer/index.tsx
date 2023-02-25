@@ -9,7 +9,7 @@ interface Props {
 }
 
 const OrderDrawer: React.FC<Props> = (props) => {
-  const { order, record } = props;
+  const { order, record, dateItem } = props;
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
     () => {
@@ -22,6 +22,7 @@ const OrderDrawer: React.FC<Props> = (props) => {
       <OrderBox
         order={order}
         record={record}
+        dateItem={dateItem}
         onOrder={() => {
           openOrderDetailDrawer(order?.orderId!);
         }}

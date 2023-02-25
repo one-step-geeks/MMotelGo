@@ -296,7 +296,10 @@ const RoomStatePage: React.FC = () => {
                 console.log('order', order ? 'true' : 'false');
 
                 if (order) {
-                  return <OrderDrawer record={record} order={order} />;
+                  const dateItem = record.dateList?.find((_item) => {
+                    return _item.date === item.date
+                  })
+                  return <OrderDrawer dateItem={dateItem} record={record} order={order} />;
                 }
                 return <EmptyDrawer record={record} date={item.date} />;
               },
