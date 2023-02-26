@@ -1,5 +1,12 @@
 import React, { ReactNode, useState, useEffect, useMemo } from 'react';
-import { useIntl, useRequest, useHistory, useModel, useLocation } from 'umi';
+import {
+  useIntl,
+  useRequest,
+  useHistory,
+  useModel,
+  useLocation,
+  useRouteMatch,
+} from 'umi';
 import { ColumnsType } from 'antd/lib/table';
 import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
 import { getWeekDay, getCalendarDate } from '@/utils';
@@ -102,6 +109,10 @@ const RoomStatePage: React.FC = () => {
     () => processOpenAndClose(selectedRooms),
     [selectedRooms],
   );
+
+  useEffect(() => {
+    setSelectedRooms([]);
+  }, [location]);
 
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {

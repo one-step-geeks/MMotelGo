@@ -143,7 +143,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
             roomCode: room.roomCode,
             roomTypeId: room.roomTypeId,
             roomTypeName: room.roomTypeName,
-            // price,
+            price: room.price,
           };
           if (!selected) {
             setVisible(true);

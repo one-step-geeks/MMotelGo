@@ -10,7 +10,7 @@ import {
   Select,
   Checkbox,
 } from 'antd';
-import { useRequest, useIntl, useModel } from 'umi';
+import { useRequest, useIntl, useModel, useLocation } from 'umi';
 import { useOrderDetailDrawer } from '../Order/components/OrderDetailDrawer';
 import CloseRoomModal from './components/CloseRoomModal';
 import SingleDayBox from './components/SingleDayBox';
@@ -28,6 +28,7 @@ const { Option } = Select;
 
 const SingleDay: React.FC = () => {
   const intl = useIntl();
+  const location = useLocation();
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const [sortType, setSortType] = useState(1);
   const [statusList, setStatusList] = useState<number[]>([]);
@@ -44,6 +45,10 @@ const SingleDay: React.FC = () => {
       // TODO
     },
   );
+
+  useEffect(() => {
+    setSelectedRooms([]);
+  }, [location]);
 
   const openOrCloseList = useMemo(
     () => processOpenAndClose(selectedRooms),
@@ -287,9 +292,6 @@ const SingleDay: React.FC = () => {
       <OrderFormDrawer
         visible={addVisible}
         onVisibleChange={(v) => {
-          if (!v) {
-            selectService.sendCancelInfo();
-          }
           setAddVisible(v);
         }}
         rooms={processOrderRoom(selectedRooms)}
