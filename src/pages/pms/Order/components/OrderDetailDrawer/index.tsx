@@ -163,7 +163,7 @@ export function useOrderDetailDrawer(
       align: 'center',
       key: 'price',
       render(value, record, index) {
-        return `A$ ${record.price * record.count}`;
+        return `A$ ${record.price}`;
       },
     },
     {
@@ -603,7 +603,7 @@ export function useOrderDetailDrawer(
                     A${' '}
                     {consumeList?.reduce(
                       (acc: number, cur: ORDER.OrderConsume) => {
-                        return acc + cur.price * cur.count;
+                        return acc + cur.price;
                       },
                       0,
                     )}
