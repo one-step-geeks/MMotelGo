@@ -114,6 +114,11 @@ export interface PaymentDateItemType {
   date: string;
   price: number;
 }
+export interface PaymentNightDateItemType {
+  date: string;
+  num: number;
+}
+
 export interface PaymentDetailItemType {
   paymentName: string;
   paymentId: number;
@@ -344,7 +349,7 @@ export async function getTradeDistributions(params: {
 
 export interface TradeDaily {
   date: string;
-  value: number;
+  value: any;
 }
 
 // 美日汇总统计
@@ -502,7 +507,7 @@ export interface RoomPaymentNightDateItemType {
   roomCode: string;
   roomId: number;
   total: number;
-  nightDateDtoList: PaymentDateItemType[];
+  nightDateDtoList: PaymentNightDateItemType[];
 }
 export interface RoomPaymentNightDetailItemType {
   roomTypeName: string;
@@ -561,12 +566,12 @@ export async function fetchRoomNightDetail(data: FetchPaymentDetailParams) {
         };
         allAmountDetail.total += total;
         nightDateDtoList.forEach((dateInfo) => {
-          const { date, price } = dateInfo;
-          detailItem[date] = price;
+          const { date, num } = dateInfo;
+          detailItem[date] = num;
           if (allAmountDetail[date]) {
-            allAmountDetail[date] += price;
+            allAmountDetail[date] += num;
           } else {
-            allAmountDetail[date] = price;
+            allAmountDetail[date] = num;
           }
           paymentDaySet.add(date);
         });
