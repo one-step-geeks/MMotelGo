@@ -7,6 +7,7 @@ export default defineConfig({
   dynamicImport: {
     loading: '@/components/Loading',
   },
+  hash: true,
   dva: false,
   publicPath: NODE_ENV === 'production' ? '/MMotelGo/' : '/',
   theme: {
@@ -47,5 +48,5 @@ export default defineConfig({
   mfsu: {},
   fastRefresh: {},
   // 优化 moment 包大小
-  // ignoreMomentLocale: true,
+  ignoreMomentLocale: true,
 });
