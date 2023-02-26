@@ -10,6 +10,7 @@ import {
 import { useModel, useIntl } from 'umi';
 import { selectService } from '../service';
 import moment from 'moment';
+import classnames from 'classnames';
 import './style.less';
 
 const { Text } = Typography;
@@ -98,7 +99,7 @@ const EmptyBox: React.FC<Props> = (props) => {
       overlayClassName="room-box-action-popover"
       placement="leftBottom"
       getPopupContainer={(p) => p}
-      visible={visible}
+      open={visible}
     >
       {!selected ? (
         <div
@@ -191,10 +192,15 @@ const EmptyBox: React.FC<Props> = (props) => {
       overlayClassName="room-box-action-popover"
       placement="leftBottom"
       getPopupContainer={(p) => p}
-      visible={visible}
+      open={visible}
     >
       <div
-        className={selected ? 'room-closed-box selected' : 'room-closed-box'}
+        className={classnames(
+          selected ? 'room-closed-box selected' : 'room-closed-box',
+          status === 9 && 'room-closed-box-repair',
+          status === 10 && 'room-closed-box-stop',
+          status === 11 && 'room-closed-box-keep',
+        )}
         onClick={() => {
           const info = {
             date,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Drawer, Table, message, Space, Tabs } from 'antd';
+import { Button, Drawer, Table, message, Space, Tabs, Tag } from 'antd';
 import services from '@/services';
 import { useRequest, useIntl } from 'umi';
 import type { ColumnsType } from 'antd/es/table';
@@ -20,7 +20,7 @@ import { useOccupantDrawer } from '../PersonDrawer';
 import { usePayOrRefundDrawer, payOrRefundOptions } from '../PayDrawer';
 import { useOperateDrawer } from '../OperateDrawer';
 import OperatinoLog from './OperationLog';
-
+import classnames from 'classnames';
 export function useOrderDetailDrawer(
   gotoEdit?: (data: ORDER.OrderBase) => void,
 ) {
@@ -519,14 +519,25 @@ export function useOrderDetailDrawer(
                   <div className="reserver">
                     {data?.order.reserveName} {data?.order.reservePhone}
                   </div>
-                  <div className="check-in">
-                    <span>
-                      {data?.order.status &&
-                        intl.formatMessage({
-                          id: OrderStateText[data?.order.status],
-                        })}
-                    </span>
-                  </div>
+                  <Tag
+                    color={classnames(
+                      data?.order?.status === OrderState.IS_CANCELED && '',
+                      data?.order?.status === OrderState.IS_CHECKED && 'lime',
+                      data?.order?.status === OrderState.IS_CHECKOUT && 'gold',
+                      data?.order?.status === OrderState.IS_ORDERED && 'green',
+                      data?.order?.status === OrderState.NOT_CONFIRMED && 'red',
+                      data?.order?.status === OrderState.PART_CANCELED &&
+                        'volcano',
+                      data?.order?.status === OrderState.PART_CHECKED &&
+                        'magenta',
+                      data?.order?.status === OrderState.HO_SHOW && 'cyan',
+                    )}
+                  >
+                    {data?.order.status &&
+                      intl.formatMessage({
+                        id: (OrderStateText as any)[data?.order?.status as any],
+                      })}
+                  </Tag>
                 </div>
                 <div>
                   <span className="channel-tag">

@@ -19,7 +19,7 @@ declare namespace ORDER {
   interface OrderBase {
     id: number;
     channelSettingId: number;
-    status: 1 | 2;
+    status: any;
     remark: string;
     reserveName: string;
     reservePhone: string;
@@ -75,7 +75,7 @@ declare namespace ORDER {
     roomPrice?: number;
     totalAmount?: number;
     checkInPersonCount?: number;
-    status?: number;
+    status?: any;
     priceList: Array<number>; // 房间价格（跨多天)
   }
 

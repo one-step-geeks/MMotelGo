@@ -17,7 +17,7 @@ export default () => {
   } = useRequest(services.ChannelController.queryChannels);
 
   return (
-    <PageContainer pageHeaderRender={() => <></>} ghost>
+    <PageContainer pageHeaderRender={() => null} ghost>
       <ProCard
         ghost
         title={intl.formatMessage({ id: '自定义渠道设置' })}
@@ -34,34 +34,32 @@ export default () => {
           </Button>,
         ]}
       >
-        <>
-          <SortableList
-            dataSource={(types || []).sort((a, b) => a.sort! - b.sort!)}
-            style={{
-              display: 'inline',
-            }}
-            onChange={async (list) => {
-              await services.ChannelController.sortChannels(
-                list.map((d) => d.id) as Array<number>,
-              );
-              message.success('排序成功');
-            }}
-            renderItem={(item) => {
-              return <ChannelCard onChange={executeReq} value={item} />;
-            }}
-          />
-          {newType ? (
-            <div style={{ display: 'inline' }}>
-              <ChannelCard
-                onChange={() => {
-                  setNewType(undefined);
-                  executeReq();
-                }}
-                value={newType}
-              />
-            </div>
-          ) : null}
-        </>
+        <SortableList
+          dataSource={(types || []).sort((a, b) => a.sort! - b.sort!)}
+          style={{
+            display: 'inline',
+          }}
+          onChange={async (list) => {
+            await services.ChannelController.sortChannels(
+              list.map((d) => d.id) as Array<number>,
+            );
+            message.success('排序成功');
+          }}
+          renderItem={(item) => {
+            return <ChannelCard onChange={executeReq} value={item} />;
+          }}
+        />
+        {newType ? (
+          <div style={{ display: 'inline' }}>
+            <ChannelCard
+              onChange={() => {
+                setNewType(undefined);
+                executeReq();
+              }}
+              value={newType}
+            />
+          </div>
+        ) : null}
       </ProCard>
     </PageContainer>
   );
