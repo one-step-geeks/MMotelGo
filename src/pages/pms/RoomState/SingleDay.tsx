@@ -55,6 +55,10 @@ const SingleDay: React.FC = () => {
     [selectedRooms],
   );
 
+  const changeRoomStatus = (info: { status: number; roomId: number }) => {
+    return services.RoomStateController.changeRoomStatus(info);
+  };
+
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
@@ -74,6 +78,10 @@ const SingleDay: React.FC = () => {
           setSelectedRooms([]);
           selectService.sendCancelInfo();
           refreshAllState();
+          break;
+        case 'DIRTY_ROOM':
+        case 'CLEAN_ROOM':
+          changeRoomStatus(info).then(refreshAllStatus);
           break;
         default:
           break;
@@ -111,11 +119,18 @@ const SingleDay: React.FC = () => {
   );
 
   // 获取房态列表
-  const { data: statusData, loading: statusLoading } = useRequest(async () => {
-    return services.RoomStateController.getRoomStatusList({
-      roomTypeIdList: [],
-    });
-  });
+  const {
+    data: statusData,
+    loading: statusLoading,
+    run: refreshAllStatus,
+  } = useRequest(
+    async () => {
+      return services.RoomStateController.getRoomStatusList({
+        roomTypeIdList: [],
+      });
+    },
+    { refreshDeps: [] },
+  );
 
   const {
     data,

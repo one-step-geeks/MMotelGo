@@ -347,4 +347,6 @@ export default {
   'Consumption.数量': '数量',
   'compound.orderRoomCount': '共{count}间房',
   'compound.orderRoomOverview': '已选{selectedCount}间，共{totalCount}间',
+  转脏房: '转脏房',
+  转净房: '转净房',
 };
