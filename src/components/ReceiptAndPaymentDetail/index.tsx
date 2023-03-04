@@ -142,7 +142,6 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
                 ...timeParams,
                 type: Number(activeKey),
               }).then((res) => {
-                console.log(res);
                 setRangeDayList(res.paymentDayList);
                 return {
                   data: res.list,

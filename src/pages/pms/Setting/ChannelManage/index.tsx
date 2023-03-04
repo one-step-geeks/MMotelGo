@@ -7,6 +7,8 @@ import SortableList from '@/components/SortableList';
 import ChannelCard from './components/ChannelCard';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import channelExample from '@/assets/images/channelExample.png';
+import channelExampleEn from '@/assets/images/channelExampleEn.png';
+import { getLocale } from 'umi';
 
 export default () => {
   const intl = useIntl();
@@ -27,7 +29,13 @@ export default () => {
             {intl.formatMessage({ id: '自定义渠道设置' })}{' '}
             <Popover
               title={intl.formatMessage({ id: '使用场景' })}
-              content={<img src={channelExample} />}
+              content={
+                <img
+                  src={
+                    getLocale() === 'en-US' ? channelExampleEn : channelExample
+                  }
+                />
+              }
             >
               <QuestionCircleOutlined style={{ marginLeft: 4 }} />
             </Popover>
