@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useRequest, useIntl } from 'umi';
-import { Button, message } from 'antd';
+import { Button, message, Popover } from 'antd';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
 import services from '@/services';
 import SortableList from '@/components/SortableList';
 import ChannelCard from './components/ChannelCard';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import channelExample from '@/assets/images/channelExample.png';
 
 export default () => {
   const intl = useIntl();
@@ -20,7 +22,17 @@ export default () => {
     <PageContainer pageHeaderRender={() => null} ghost>
       <ProCard
         ghost
-        title={intl.formatMessage({ id: '自定义渠道设置' })}
+        title={
+          <>
+            {intl.formatMessage({ id: '自定义渠道设置' })}{' '}
+            <Popover
+              title={intl.formatMessage({ id: '使用场景' })}
+              content={<img src={channelExample} />}
+            >
+              <QuestionCircleOutlined style={{ marginLeft: 4 }} />
+            </Popover>
+          </>
+        }
         bordered
         extra={[
           <Button

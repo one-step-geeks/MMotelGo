@@ -8,6 +8,7 @@ declare namespace ORDER {
     reserveEmail?: string;
     reserveName?: string;
     totalAmount?: number;
+    roomStatus?: number;
     roomList: {
       roomCode: string;
       roomId: number;

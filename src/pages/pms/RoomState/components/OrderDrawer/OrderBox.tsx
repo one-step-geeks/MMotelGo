@@ -17,7 +17,10 @@ const OrderBox: React.FC<Props> = (props) => {
   console.log(order, record, dateItem);
   return (
     <div
-      className={classnames('room-order-box', `status-${dateItem.status || 1}`)}
+      className={classnames(
+        'room-order-box',
+        `status-${order?.roomStatus || dateItem.status || 1}`,
+      )}
       onClick={onOrder}
     >
       <Text>{order?.reserveName || 'none'}</Text>

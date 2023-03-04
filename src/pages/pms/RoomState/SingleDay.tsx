@@ -36,14 +36,14 @@ const SingleDay: React.FC = () => {
   const [closeVisible, setCloseVisible] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
 
-  const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer(
-    () => {
-      // TODO
-    },
-    () => {
-      // TODO
-    },
-  );
+  const { OrderDetailDrawer, openOrderDetailDrawer } =
+    useOrderDetailDrawer();
+    // () => {
+    //   // TODO
+    // },
+    // () => {
+    //   // TODO
+    // },
 
   const openOrCloseList = useMemo(
     () => processOpenAndClose(selectedRooms),
@@ -179,12 +179,14 @@ const SingleDay: React.FC = () => {
                       return (
                         <SingleDayBox
                           key={room.roomId}
-                          room={{
-                            ...room,
-                            roomTypeId: item.roomTypeId,
-                            roomTypeName: item.roomTypeName,
-                          }}
-                          order={order}
+                          room={
+                            {
+                              ...room,
+                              roomTypeId: item.roomTypeId,
+                              roomTypeName: item.roomTypeName,
+                            } as any
+                          }
+                          order={order as any}
                           date={selectedDate.format('YYYY-MM-DD')}
                           roomList={statusData?.roomTypeList?.reduce(
                             (all, rt) => [...all, ...rt.roomList!],
@@ -288,12 +290,14 @@ const SingleDay: React.FC = () => {
         visible={addVisible}
         onVisibleChange={(v) => {
           if (!v) {
+            setSelectedRooms([]);
             selectService.sendCancelInfo();
           }
           setAddVisible(v);
         }}
         rooms={processOrderRoom(selectedRooms)}
         onSubmited={() => {
+          setSelectedRooms([]);
           selectService.sendCancelInfo();
           setAddVisible(false);
           refreshAllOrder();

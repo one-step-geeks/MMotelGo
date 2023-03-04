@@ -11,6 +11,7 @@ import { selectService } from './service';
 import { useModel, useIntl } from 'umi';
 import services from '@/services';
 import moment from 'moment';
+import classnames from 'classnames';
 import './room-code.less';
 
 const { Text } = Typography;
@@ -19,9 +20,11 @@ interface Props {
   room: ROOM_STATE.SingleDayRoom & {
     roomTypeId: number;
     roomTypeName: string;
+    roomStateStatus: number;
+    roomStateStatusDesc: string;
   };
   roomList?: ROOM_STATE.Room[];
-  order?: ORDER.OrderData;
+  order?: ORDER.OrderData & { roomStatus: number };
   date?: string;
 }
 
@@ -32,7 +35,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   const [visible, setVisible] = useState(false);
   const [dirty, setDirty] = useState(false);
   const { selectedRooms, setSelectedRooms } = useModel('state');
-
+  console.log(room, order);
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
@@ -64,9 +67,10 @@ const RoomCodeBox: React.FC<Props> = (props) => {
 
   const isRoomClosed = [9, 10, 11].includes(room.status);
 
-  const className = `room-single-box${dirty ? ' dirty' : ''}${
-    selected ? ' selected' : ''
-  }${order ? ' ordered' : ''}${isRoomClosed ? ' closed' : ''}`;
+  const className = classnames(
+    `room-single-box${dirty ? ' dirty' : ''}${selected ? ' selected' : ''}`,
+    `room-single-box-${order?.roomStatus || room.status}`,
+  );
 
   async function changeRoomStatus() {
     setDirty(!dirty);

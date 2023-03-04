@@ -523,7 +523,8 @@ export function useOrderDetailDrawer(
                     color={classnames(
                       data?.order?.status === OrderState.IS_CANCELED && '',
                       data?.order?.status === OrderState.IS_CHECKED && 'lime',
-                      data?.order?.status === OrderState.IS_CHECKOUT && 'gold',
+                      data?.order?.status === OrderState.IS_CHECKOUT &&
+                        'orange',
                       data?.order?.status === OrderState.IS_ORDERED && 'green',
                       data?.order?.status === OrderState.NOT_CONFIRMED && 'red',
                       data?.order?.status === OrderState.PART_CANCELED &&
