@@ -23,8 +23,8 @@ const OrderBox: React.FC<Props> = (props) => {
       )}
       onClick={onOrder}
     >
-      <Text>{order?.reserveName || 'none'}</Text>
-      <Text className="orgin-source">{order?.channelTypeName || '自来客'}</Text>
+      <div>{order?.reserveName || 'none'}</div>
+      <div className="orgin-source">{order?.channelTypeName || '自来客'}</div>
     </div>
   );
 };

@@ -32,5 +32,15 @@ export const selectService = {
     subject.next({
       type: 'OPEN_ROOM',
     }),
+  sendRoomAsDirty: (info: { status: number; roomId: number }) =>
+    subject.next({
+      type: 'DIRTY_ROOM',
+      ...info,
+    }),
+  sendRoomAsClean: (info: { status: number; roomId: number }) =>
+    subject.next({
+      type: 'CLEAN_ROOM',
+      ...info,
+    }),
   getSelectedInfo: () => subject.asObservable(),
 };

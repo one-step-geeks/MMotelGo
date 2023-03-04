@@ -122,6 +122,24 @@ const RoomCodeBox: React.FC<Props> = (props) => {
               ? intl.formatMessage({ id: '开房' })
               : intl.formatMessage({ id: '关房' })}
           </Text>
+
+          <Text
+            type="secondary"
+            className="btn"
+            onClick={() => {
+              setVisible(false);
+              const status = dirty ? 15 : 14;
+              const roomId = room.roomId;
+
+              if (dirty) {
+                selectService.sendRoomAsClean({ status, roomId });
+              } else {
+                selectService.sendRoomAsDirty({ status, roomId });
+              }
+            }}
+          >
+            {intl.formatMessage({ id: dirty ? '转净房' : '转脏房' })}
+          </Text>
           <Text
             type="secondary"
             className="btn"
@@ -147,7 +165,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
             roomCode: room.roomCode,
             roomTypeId: room.roomTypeId,
             roomTypeName: room.roomTypeName,
-            // price,
+            price: room.price,
           };
           if (!selected) {
             setVisible(true);

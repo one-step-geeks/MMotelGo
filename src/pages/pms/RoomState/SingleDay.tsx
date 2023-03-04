@@ -10,7 +10,7 @@ import {
   Select,
   Checkbox,
 } from 'antd';
-import { useRequest, useIntl, useModel } from 'umi';
+import { useRequest, useIntl, useModel, useLocation } from 'umi';
 import { useOrderDetailDrawer } from '../Order/components/OrderDetailDrawer';
 import CloseRoomModal from './components/CloseRoomModal';
 import SingleDayBox from './components/SingleDayBox';
@@ -28,6 +28,7 @@ const { Option } = Select;
 
 const SingleDay: React.FC = () => {
   const intl = useIntl();
+  const location = useLocation();
   const [selectedDate, setSelectedDate] = useState<moment.Moment>(moment());
   const [sortType, setSortType] = useState(1);
   const [statusList, setStatusList] = useState<number[]>([]);
@@ -36,19 +37,26 @@ const SingleDay: React.FC = () => {
   const [closeVisible, setCloseVisible] = useState(false);
   const [addVisible, setAddVisible] = useState(false);
 
-  const { OrderDetailDrawer, openOrderDetailDrawer } =
-    useOrderDetailDrawer();
-    // () => {
-    //   // TODO
-    // },
-    // () => {
-    //   // TODO
-    // },
+  const { OrderDetailDrawer, openOrderDetailDrawer } = useOrderDetailDrawer();
+  // () => {
+  //   // TODO
+  // },
+  // () => {
+  //   // TODO
+  // },
+
+  useEffect(() => {
+    setSelectedRooms([]);
+  }, [location]);
 
   const openOrCloseList = useMemo(
     () => processOpenAndClose(selectedRooms),
     [selectedRooms],
   );
+
+  const changeRoomStatus = (info: { status: number; roomId: number }) => {
+    return services.RoomStateController.changeRoomStatus(info);
+  };
 
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
@@ -69,6 +77,10 @@ const SingleDay: React.FC = () => {
           setSelectedRooms([]);
           selectService.sendCancelInfo();
           refreshAllState();
+          break;
+        case 'DIRTY_ROOM':
+        case 'CLEAN_ROOM':
+          changeRoomStatus(info).then(refreshAllStatus);
           break;
         default:
           break;
@@ -106,11 +118,18 @@ const SingleDay: React.FC = () => {
   );
 
   // 获取房态列表
-  const { data: statusData, loading: statusLoading } = useRequest(async () => {
-    return services.RoomStateController.getRoomStatusList({
-      roomTypeIdList: [],
-    });
-  });
+  const {
+    data: statusData,
+    loading: statusLoading,
+    run: refreshAllStatus,
+  } = useRequest(
+    async () => {
+      return services.RoomStateController.getRoomStatusList({
+        roomTypeIdList: [],
+      });
+    },
+    { refreshDeps: [] },
+  );
 
   const {
     data,

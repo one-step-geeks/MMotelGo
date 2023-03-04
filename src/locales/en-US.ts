@@ -349,6 +349,8 @@ export default {
   名称: 'Name',
   'compound.orderRoomCount': '{count} room(s) in total',
   'compound.orderRoomOverview': '{selectedCount} of {totalCount} selected',
+  转脏房: 'Mark Dirty',
+  转净房: 'Mark Clean',
   // {
   //   orderRoomCount: '{count} room(s) in total',
   //   orderRoomOverview: '{selectedCount} of {totalCount} selected'
