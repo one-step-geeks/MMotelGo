@@ -58,6 +58,25 @@
   }
   &-dirty {
     background: #ccc;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-image: url('~@/assets/images/dirty.svg');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      right: 6px;
+      top: 6px;
+    }
+
+    &:hover {
+      &::before {
+        display: none;
+      }
+    }
   }
   &.selected {
     border: 1px solid #053dc8;
