@@ -28,7 +28,7 @@ const ShopMange: React.FC = () => {
     <Skeleton loading={loading}>
       <Form className="shop-manage-container" form={form}>
         <Descriptions
-          title="门店基本信息"
+          title={intl.formatMessage({ id: '门店基本信息' })}
           layout="vertical"
           column={4}
           extra={

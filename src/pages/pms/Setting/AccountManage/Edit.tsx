@@ -102,7 +102,7 @@ export default () => {
               return (
                 <Tabs.TabPane
                   key={moduleName}
-                  tab={moduleName}
+                  tab={intl.formatMessage({ id: moduleName })}
                   tabKey={moduleName}
                 >
                   <Space direction="vertical" style={{ width: '100%' }}>
@@ -113,7 +113,7 @@ export default () => {
                         <Card
                           size="small"
                           headStyle={{ background: '#f2f3f6' }}
-                          title={mainMenuName}
+                          title={intl.formatMessage({ id: mainMenuName })}
                           key={mainMenuId}
                         >
                           {subMenuList?.map((subMenu) => {
