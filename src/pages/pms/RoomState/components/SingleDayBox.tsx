@@ -68,7 +68,9 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   const isRoomClosed = [9, 10, 11].includes(room.status);
 
   const className = classnames(
-    `room-single-box${dirty ? ' dirty' : ''}${selected ? ' selected' : ''}`,
+    `room-single-box${dirty ? ' room-single-box-dirty' : ''}${
+      selected ? ' selected' : ''
+    }`,
     `room-single-box-${order?.roomStatus || room.status}`,
   );
 
