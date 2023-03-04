@@ -349,4 +349,8 @@ export default {
   'compound.orderRoomOverview': '已选{selectedCount}间，共{totalCount}间',
   转脏房: '转脏房',
   转净房: '转净房',
+  自定义渠道设置: '自定义渠道设置',
+  'menu.自定义渠道设置': '自定义渠道设置',
+  使用场景: '使用场景',
+  客房营业汇总: '客房营业汇总',
 };
