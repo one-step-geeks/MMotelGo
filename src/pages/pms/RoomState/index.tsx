@@ -18,6 +18,7 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 // import TodayOverviewModal from './components/TodayOverviewModal';
 // import ChangeLogModal from './components/ChangeLogModal';
 // import RoomSituationModal from './components/RoomSituationModal';
+import SingleDay from './SingleDay';
 import OrderFormDrawer from '../Order/components/OrderFormDrawer';
 import { selectService } from './components/service';
 import services from '@/services';
@@ -317,7 +318,7 @@ const RoomStatePage: React.FC = () => {
                   });
                   return (
                     <OrderDrawer
-                      dateItem={dateItem}
+                      dateItem={dateItem as any}
                       record={record}
                       order={order}
                     />
@@ -469,14 +470,10 @@ const RoomStatePage: React.FC = () => {
             <Radio.Button value={7}>
               {intl.formatMessage({ id: '7天' })}
             </Radio.Button>
+            <Radio.Button value={-1}>
+              {intl.formatMessage({ id: '单日房态' })}
+            </Radio.Button>
           </Radio.Group>
-          <Button
-            onClick={() => {
-              history.push('/pms/room-state/single-day');
-            }}
-          >
-            {intl.formatMessage({ id: '单日房态' })}
-          </Button>
         </Space>
         {/* <Space>
           <TodayOverviewModal />
@@ -484,20 +481,23 @@ const RoomStatePage: React.FC = () => {
           <ChangeLogModal />
         </Space> */}
       </Space>
-
-      <Table<ROOM_STATE.StateTableData>
-        bordered
-        size="small"
-        sticky={{ offsetHeader: 48 }}
-        loading={rowLoading || orderLoading || stockLoading || statusLoading}
-        className="roome-state-calendar-table"
-        rowClassName="state-table-row"
-        scroll={{ x: 'scroll' }}
-        columns={columns}
-        dataSource={dataSource}
-        pagination={false}
-        rowKey="id"
-      />
+      {duration === -1 ? (
+        <SingleDay />
+      ) : (
+        <Table<ROOM_STATE.StateTableData>
+          bordered
+          size="small"
+          sticky={{ offsetHeader: 48 }}
+          loading={rowLoading || orderLoading || stockLoading || statusLoading}
+          className="roome-state-calendar-table"
+          rowClassName="state-table-row"
+          scroll={{ x: 'scroll' }}
+          columns={columns}
+          dataSource={dataSource}
+          pagination={false}
+          rowKey="id"
+        />
+      )}
       <OrderFormDrawer
         visible={addVisible}
         onVisibleChange={(v) => {
