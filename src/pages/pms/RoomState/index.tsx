@@ -65,10 +65,13 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
   }
 
   const trueResult: Omit<ORDER.OrderRoom, 'roomDesc' | 'key'>[] = [];
+  // 循环遍历房间
   for (let i = 0; i < result.length; i++) {
     const ele = result[i];
     const { dateList, ...rest } = ele;
+    // 循环遍历房间的日期
     for (let j = 0; j < dateList.length; j++) {
+      // 如果是日期的开始，或是间断日期第一个，例如[2/3,2/5,2/6] 应该被拆分成两条数据 [2/3, 2/5-2/6]
       if (j === 0 || moment(dateList[j]).diff(dateList[j - 1], 'days') !== 1) {
         trueResult.push({
           ...rest,
@@ -76,15 +79,17 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
           checkInDays: 1,
           totalAmount: rest.priceList[j],
           roomPrice: rest.priceList[j],
+          priceList: [rest.priceList[j]],
         });
       } else {
         trueResult[trueResult.length - 1].checkInDays! += 1;
+        trueResult[trueResult.length - 1].priceList.push(rest.priceList[j]);
         trueResult[trueResult.length - 1].totalAmount! +=
           rest.priceList[j] || 0;
       }
     }
   }
-  console.log(trueResult);
+  console.log('trueResult', trueResult);
   return trueResult;
 }
 
