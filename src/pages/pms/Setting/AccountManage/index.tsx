@@ -126,7 +126,7 @@ export default () => {
             history.push('/pms/setting/account-list/add-or-edit');
           }}
         >
-          添加
+          {intl.formatMessage({ id: '添加' })}
         </Button>,
       ]}
     />

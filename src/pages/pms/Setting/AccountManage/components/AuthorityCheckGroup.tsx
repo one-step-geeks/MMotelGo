@@ -2,6 +2,7 @@ import { systemMenuOptions } from '@/constants';
 import { Checkbox, Form, Space, Tooltip } from 'antd';
 import { InfoCircleTwoTone } from '@ant-design/icons';
 import React, { useState } from 'react';
+import { useIntl } from 'umi';
 
 const FormItem = Form.Item;
 
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const AuthorityCheckGroup = (props: Props) => {
+  const intl = useIntl();
   const {
     menu,
     checkedValues,
@@ -75,7 +77,7 @@ const AuthorityCheckGroup = (props: Props) => {
                 checked={checkAll}
                 indeterminate={halfCheck}
               >
-                {menuName}
+                {intl.formatMessage({ id: menuName })}
               </Checkbox>
             );
           }}
@@ -92,9 +94,13 @@ const AuthorityCheckGroup = (props: Props) => {
           {authorityList?.map((item) => {
             return (
               <Checkbox key={item.authorityId} value={item.authorityId}>
-                {systemMenuOptions?.find?.(
-                  (opt) => opt.value === item.authorityType,
-                )?.label || item.authorityType}
+                {intl.formatMessage({
+                  id:
+                    systemMenuOptions?.find?.(
+                      (opt) => opt.value === item.authorityType,
+                    )?.label || item.authorityType,
+                })}
+
                 {item.remark ? (
                   <Tooltip title={item.remark}>
                     <InfoCircleTwoTone style={{ marginLeft: 5 }} />

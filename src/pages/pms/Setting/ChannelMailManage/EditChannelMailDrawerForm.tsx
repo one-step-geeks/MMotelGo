@@ -18,7 +18,7 @@ const EditChannelMailDrawerForm: React.FC<EditChannelMailDrawerFormProps> = (
   return (
     <DrawerForm
       width={500}
-      title="渠道邮箱配置"
+      title={intl.formatMessage({ id: '渠道邮箱配置' })}
       form={editChannelMailDrawerForm}
       onVisibleChange={(open) => {
         if (open) {

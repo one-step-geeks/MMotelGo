@@ -28,20 +28,20 @@ const SettingRoomsPage: React.FC = () => {
       dataIndex: 'defaultPrice',
       render: (_, record) => {
         if (record.defaultPriceType === 1) {
-          return record?.defaultPrice ? '¥' + record.defaultPrice : '-';
+          return record?.defaultPrice ? 'A$ ' + record.defaultPrice : '-';
         }
         return (
           <Space direction="vertical">
             <div>
-              <span>平日:</span>
+              <span>{intl.formatMessage({ id: '平日' })}:</span>
               <span>
-                {record?.weekDayPrice ? '¥' + record.weekDayPrice : '-'}
+                {record?.weekDayPrice ? 'A$ ' + record.weekDayPrice : '-'}
               </span>
             </div>
             <div>
-              <span>周末:</span>
+              <span>{intl.formatMessage({ id: '周末' })}:</span>
               <span>
-                {record?.weekEndPrice ? '¥' + record.weekEndPrice : '-'}
+                {record?.weekEndPrice ? 'A$ ' + record.weekEndPrice : '-'}
               </span>
             </div>
           </Space>

@@ -281,8 +281,8 @@ const OrderContainer: React.FC = (props) => {
       width: 105,
       order: 6 - 5,
       valueEnum: convertOptionToEnums(OrderPayOptions),
-      renderText(_, record) {
-        const option = OrderPayOptions.find((o) => o.value === record.status);
+      renderText(value) {
+        const option = OrderPayOptions.find((o) => o.value === value);
         return option && option.label;
       },
       onCell: (_) => {
