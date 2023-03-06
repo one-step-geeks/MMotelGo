@@ -33,13 +33,13 @@ const SettingRoomsPage: React.FC = () => {
         return (
           <Space direction="vertical">
             <div>
-              <span>平日：</span>
+              <span>平日:</span>
               <span>
                 {record?.weekDayPrice ? '¥' + record.weekDayPrice : '-'}
               </span>
             </div>
             <div>
-              <span>周末：</span>
+              <span>周末:</span>
               <span>
                 {record?.weekEndPrice ? '¥' + record.weekEndPrice : '-'}
               </span>
