@@ -159,6 +159,13 @@ const RoomStatePage: React.FC = () => {
     run: refreshAllState,
   } = useRequest(
     async () => {
+      if (duration === -1) {
+        return {
+          data: {
+            list: [],
+          },
+        };
+      }
       return services.RoomStateController.getAllRoomType({
         startDate: selectedDate.clone().format('YYYY-MM-DD'),
         endDate: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
@@ -182,11 +189,22 @@ const RoomStatePage: React.FC = () => {
   // 获取房态剩余房间-rows
   const { data: stockData, loading: stockLoading } = useRequest(
     async () => {
-      return services.RoomStateController.getRoomStateStock({
-        startDate: selectedDate.clone().format('YYYY-MM-DD'),
-        endDate: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
-        list: [],
-      });
+      if (duration !== -1) {
+        return services.RoomStateController.getRoomStateStock({
+          startDate: selectedDate.clone().format('YYYY-MM-DD'),
+          endDate: selectedDate
+            .clone()
+            .add(duration, 'day')
+            .format('YYYY-MM-DD'),
+          list: [],
+        });
+      } else {
+        return {
+          data: {
+            list: [],
+          },
+        };
+      }
     },
     {
       refreshDeps: [selectedDate, duration],
