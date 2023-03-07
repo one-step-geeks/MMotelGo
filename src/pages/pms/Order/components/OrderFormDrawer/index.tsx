@@ -415,7 +415,6 @@ export default (props: Props) => {
 
                       <Form.Item name={[field.name, 'totalAmount']} noStyle>
                         <InputNumber
-                          readOnly
                           style={{ width: '20%' }}
                           formatter={(value) => {
                             let feeValue = value;
