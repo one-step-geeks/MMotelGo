@@ -8,7 +8,7 @@ import {
   useRouteMatch,
 } from 'umi';
 import { ColumnsType } from 'antd/lib/table';
-import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
+import { Space, Typography, Table, DatePicker, Radio, Button, Tag } from 'antd';
 import { getWeekDay, getCalendarDate } from '@/utils';
 import OrderDrawer from './components/OrderDrawer';
 import EmptyDrawer from './components/EmptyDrawer';
@@ -25,6 +25,7 @@ import services from '@/services';
 import moment from 'moment';
 import querystring from 'querystring';
 import './style.less';
+import { OrderState } from '@/services/OrderController';
 
 export function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
   const result: ROOM_STATE.CloseRoomInfo[] = [];
@@ -493,6 +494,16 @@ const RoomStatePage: React.FC = () => {
             </Radio.Button>
           </Radio.Group>
         </Space>
+        <Space>
+          <div>{intl.formatMessage({ id: '图例' })}: </div>
+          <Tag color="green">已预定</Tag>
+          <Tag color="lime">已入住</Tag>
+          <Tag color="orange">已退房</Tag>
+          <Tag color="warning">停用房</Tag>
+          <Tag color="error">维修房</Tag>
+          <Tag color="processing">保留房</Tag>
+          <Tag color="default">脏房</Tag>
+        </Space>
         {/* <Space>
           <TodayOverviewModal />
           <RoomSituationModal />
@@ -502,50 +513,55 @@ const RoomStatePage: React.FC = () => {
       {duration === -1 ? (
         <SingleDay />
       ) : (
-        <Table<ROOM_STATE.StateTableData>
-          bordered
-          size="small"
-          sticky={{ offsetHeader: 48 }}
-          loading={rowLoading || orderLoading || stockLoading || statusLoading}
-          className="roome-state-calendar-table"
-          rowClassName="state-table-row"
-          scroll={{ x: 'scroll' }}
-          columns={columns}
-          dataSource={dataSource}
-          pagination={false}
-          rowKey="id"
-        />
+        <>
+          <Table<ROOM_STATE.StateTableData>
+            bordered
+            size="small"
+            sticky={{ offsetHeader: 48 }}
+            loading={
+              rowLoading || orderLoading || stockLoading || statusLoading
+            }
+            className="roome-state-calendar-table"
+            rowClassName="state-table-row"
+            scroll={{ x: 'scroll' }}
+            columns={columns}
+            dataSource={dataSource}
+            pagination={false}
+            rowKey="id"
+          />
+
+          <OrderFormDrawer
+            visible={addVisible}
+            onVisibleChange={(v) => {
+              if (!v) {
+                setSelectedRooms([]);
+                selectService.sendCancelInfo();
+              }
+              setAddVisible(v);
+            }}
+            rooms={processOrderRoom(selectedRooms)}
+            onSubmited={() => {
+              setSelectedRooms([]);
+              selectService.sendCancelInfo();
+              setAddVisible(false);
+              refreshAllOrder();
+            }}
+          />
+          <CloseRoomModal
+            visible={closeVisible}
+            stateList={openOrCloseList}
+            onSubmit={() => {
+              setSelectedRooms([]);
+              selectService.sendCancelInfo();
+              setCloseVisible(false);
+              refreshAllState();
+            }}
+            onClose={() => {
+              setCloseVisible(false);
+            }}
+          />
+        </>
       )}
-      <OrderFormDrawer
-        visible={addVisible}
-        onVisibleChange={(v) => {
-          if (!v) {
-            setSelectedRooms([]);
-            selectService.sendCancelInfo();
-          }
-          setAddVisible(v);
-        }}
-        rooms={processOrderRoom(selectedRooms)}
-        onSubmited={() => {
-          setSelectedRooms([]);
-          selectService.sendCancelInfo();
-          setAddVisible(false);
-          refreshAllOrder();
-        }}
-      />
-      <CloseRoomModal
-        visible={closeVisible}
-        stateList={openOrCloseList}
-        onSubmit={() => {
-          setSelectedRooms([]);
-          selectService.sendCancelInfo();
-          setCloseVisible(false);
-          refreshAllState();
-        }}
-        onClose={() => {
-          setCloseVisible(false);
-        }}
-      />
     </div>
   );
 };
