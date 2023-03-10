@@ -125,9 +125,15 @@ const RoomStatePage: React.FC = () => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
         case 'ADD_ORDER':
+          if (duration === -1) {
+            return;
+          }
           setAddVisible(true);
           break;
         case 'CLOSE_ROOM':
+          if (duration === -1) {
+            return;
+          }
           setCloseVisible(true);
           break;
         case 'OPEN_ROOM':
@@ -146,7 +152,7 @@ const RoomStatePage: React.FC = () => {
     return () => {
       subs.unsubscribe();
     };
-  }, [openOrCloseList]);
+  }, [openOrCloseList, duration]);
 
   // 生成房态日历-columns
   const [calendarList, setCalendarList] = useState(() => {
@@ -502,7 +508,7 @@ const RoomStatePage: React.FC = () => {
           <Tag color="warning">停用房</Tag>
           <Tag color="error">维修房</Tag>
           <Tag color="processing">保留房</Tag>
-          <Tag color="default">脏房</Tag>
+          <Tag color="#ccc">脏房</Tag>
         </Space>
         {/* <Space>
           <TodayOverviewModal />
