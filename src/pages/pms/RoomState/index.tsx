@@ -502,13 +502,13 @@ const RoomStatePage: React.FC = () => {
         </Space>
         <Space>
           <div>{intl.formatMessage({ id: '图例' })}: </div>
-          <Tag color="green">已预定</Tag>
-          <Tag color="lime">已入住</Tag>
-          <Tag color="orange">已退房</Tag>
-          <Tag color="warning">停用房</Tag>
-          <Tag color="error">维修房</Tag>
-          <Tag color="processing">保留房</Tag>
-          <Tag color="#ccc">脏房</Tag>
+          <Tag color="green">{intl.formatMessage({ id: '已预定' })}</Tag>
+          <Tag color="lime">{intl.formatMessage({ id: '已入住' })}</Tag>
+          <Tag color="orange">{intl.formatMessage({ id: '已退房' })}</Tag>
+          <Tag color="warning">{intl.formatMessage({ id: '停用房' })}</Tag>
+          <Tag color="error">{intl.formatMessage({ id: '维修房' })}</Tag>
+          <Tag color="processing">{intl.formatMessage({ id: '保留房' })}</Tag>
+          <Tag color="#ccc">{intl.formatMessage({ id: '脏房' })}</Tag>
         </Space>
         {/* <Space>
           <TodayOverviewModal />
