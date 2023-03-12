@@ -5,6 +5,7 @@ import OrderBox from './OrderBox';
 
 interface Props {
   record?: ROOM_STATE.StateTableData;
+  dateItem?: any;
   order?: ORDER.OrderData;
 }
 

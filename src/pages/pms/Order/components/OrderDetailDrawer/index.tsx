@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Drawer, Table, message, Space, Tabs, Tag } from 'antd';
 import services from '@/services';
@@ -21,6 +21,7 @@ import { usePayOrRefundDrawer, payOrRefundOptions } from '../PayDrawer';
 import { useOperateDrawer } from '../OperateDrawer';
 import OperatinoLog from './OperationLog';
 import classnames from 'classnames';
+
 export function useOrderDetailDrawer(
   gotoEdit?: (data: ORDER.OrderBase) => void,
 ) {
@@ -106,6 +107,15 @@ export function useOrderDetailDrawer(
   if (data && data.orderRoomList) {
     data.orderRoomList.forEach((d) => (d.key = d.roomId!));
   }
+
+  const roomTotalFee = useMemo(() => {
+    const roomList = data?.orderRoomList || [];
+    return (
+      roomList?.reduce((acc, cur) => {
+        return acc + (cur.totalAmount || 0);
+      }, 0) || 0
+    );
+  }, [data?.orderRoomList]);
 
   const noticeColumns: ColumnsType<ORDER.OrderNotice> = [
     {
@@ -372,10 +382,7 @@ export function useOrderDetailDrawer(
     return value;
   };
 
-  let footerOperations;
-  const orderStatus = data?.order.status;
   const roomStatusList = data?.orderRoomList.map(({ status }) => status);
-  // const roomStatusSet = new Set(roomStatusList);
 
   const modifyOrder = () => {
     setVisible(false);
@@ -416,9 +423,6 @@ export function useOrderDetailDrawer(
 
   console.log('roomStatusList', roomStatusList);
 
-  if (activeTabKey === 'operationLog') {
-    footerOperations = null;
-  }
   if (roomStatusList?.includes(OrderState.IS_ORDERED)) {
     sideButtons.push({
       value: OperationType.CANCEL_OBSERVE,
@@ -574,7 +578,9 @@ export function useOrderDetailDrawer(
             </div>
 
             <ProCard
-              title={intl.formatMessage({ id: '房间信息' })}
+              title={
+                intl.formatMessage({ id: '房间信息' }) + `：A$ ${roomTotalFee}`
+              }
               extra={intl.formatMessage(
                 { id: 'compound.orderRoomCount' },
                 { count: data?.orderRoomList?.length },

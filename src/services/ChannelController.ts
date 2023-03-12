@@ -8,7 +8,7 @@ export async function queryChannels() {
     '/motel/config/channelSet/list',
     {
       method: 'POST',
-      data: { storeId: Cookie.get('storeId') as number },
+      data: { storeId: Cookie.get('storeId') as number, type: 2 },
     },
   );
 }

@@ -8,7 +8,7 @@ import {
   useRouteMatch,
 } from 'umi';
 import { ColumnsType } from 'antd/lib/table';
-import { Space, Typography, Table, DatePicker, Radio, Button } from 'antd';
+import { Space, Typography, Table, DatePicker, Radio, Button, Tag } from 'antd';
 import { getWeekDay, getCalendarDate } from '@/utils';
 import OrderDrawer from './components/OrderDrawer';
 import EmptyDrawer from './components/EmptyDrawer';
@@ -18,12 +18,14 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 // import TodayOverviewModal from './components/TodayOverviewModal';
 // import ChangeLogModal from './components/ChangeLogModal';
 // import RoomSituationModal from './components/RoomSituationModal';
+import SingleDay from './SingleDay';
 import OrderFormDrawer from '../Order/components/OrderFormDrawer';
 import { selectService } from './components/service';
 import services from '@/services';
 import moment from 'moment';
 import querystring from 'querystring';
 import './style.less';
+import { OrderState } from '@/services/OrderController';
 
 export function processOpenAndClose(list: ROOM_STATE.SelectTableData[]) {
   const result: ROOM_STATE.CloseRoomInfo[] = [];
@@ -123,9 +125,15 @@ const RoomStatePage: React.FC = () => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
         case 'ADD_ORDER':
+          if (duration === -1) {
+            return;
+          }
           setAddVisible(true);
           break;
         case 'CLOSE_ROOM':
+          if (duration === -1) {
+            return;
+          }
           setCloseVisible(true);
           break;
         case 'OPEN_ROOM':
@@ -144,7 +152,7 @@ const RoomStatePage: React.FC = () => {
     return () => {
       subs.unsubscribe();
     };
-  }, [openOrCloseList]);
+  }, [openOrCloseList, duration]);
 
   // 生成房态日历-columns
   const [calendarList, setCalendarList] = useState(() => {
@@ -158,6 +166,13 @@ const RoomStatePage: React.FC = () => {
     run: refreshAllState,
   } = useRequest(
     async () => {
+      if (duration === -1) {
+        return {
+          data: {
+            list: [],
+          },
+        };
+      }
       return services.RoomStateController.getAllRoomType({
         startDate: selectedDate.clone().format('YYYY-MM-DD'),
         endDate: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
@@ -181,11 +196,22 @@ const RoomStatePage: React.FC = () => {
   // 获取房态剩余房间-rows
   const { data: stockData, loading: stockLoading } = useRequest(
     async () => {
-      return services.RoomStateController.getRoomStateStock({
-        startDate: selectedDate.clone().format('YYYY-MM-DD'),
-        endDate: selectedDate.clone().add(duration, 'day').format('YYYY-MM-DD'),
-        list: [],
-      });
+      if (duration !== -1) {
+        return services.RoomStateController.getRoomStateStock({
+          startDate: selectedDate.clone().format('YYYY-MM-DD'),
+          endDate: selectedDate
+            .clone()
+            .add(duration, 'day')
+            .format('YYYY-MM-DD'),
+          list: [],
+        });
+      } else {
+        return {
+          data: {
+            list: [],
+          },
+        };
+      }
     },
     {
       refreshDeps: [selectedDate, duration],
@@ -317,7 +343,7 @@ const RoomStatePage: React.FC = () => {
                   });
                   return (
                     <OrderDrawer
-                      dateItem={dateItem}
+                      dateItem={dateItem as any}
                       record={record}
                       order={order}
                     />
@@ -469,14 +495,20 @@ const RoomStatePage: React.FC = () => {
             <Radio.Button value={7}>
               {intl.formatMessage({ id: '7天' })}
             </Radio.Button>
+            <Radio.Button value={-1}>
+              {intl.formatMessage({ id: '单日房态' })}
+            </Radio.Button>
           </Radio.Group>
-          <Button
-            onClick={() => {
-              history.push('/pms/room-state/single-day');
-            }}
-          >
-            {intl.formatMessage({ id: '单日房态' })}
-          </Button>
+        </Space>
+        <Space>
+          <div>{intl.formatMessage({ id: '图例' })}: </div>
+          <Tag color="green">{intl.formatMessage({ id: '已预定' })}</Tag>
+          <Tag color="lime">{intl.formatMessage({ id: '已入住' })}</Tag>
+          <Tag color="orange">{intl.formatMessage({ id: '已退房' })}</Tag>
+          <Tag color="warning">{intl.formatMessage({ id: '停用房' })}</Tag>
+          <Tag color="error">{intl.formatMessage({ id: '维修房' })}</Tag>
+          <Tag color="processing">{intl.formatMessage({ id: '保留房' })}</Tag>
+          <Tag color="#ccc">{intl.formatMessage({ id: '脏房' })}</Tag>
         </Space>
         {/* <Space>
           <TodayOverviewModal />
@@ -484,50 +516,58 @@ const RoomStatePage: React.FC = () => {
           <ChangeLogModal />
         </Space> */}
       </Space>
+      {duration === -1 ? (
+        <SingleDay />
+      ) : (
+        <>
+          <Table<ROOM_STATE.StateTableData>
+            bordered
+            size="small"
+            sticky={{ offsetHeader: 48 }}
+            loading={
+              rowLoading || orderLoading || stockLoading || statusLoading
+            }
+            className="roome-state-calendar-table"
+            rowClassName="state-table-row"
+            scroll={{ x: 'scroll' }}
+            columns={columns}
+            dataSource={dataSource}
+            pagination={false}
+            rowKey="id"
+          />
 
-      <Table<ROOM_STATE.StateTableData>
-        bordered
-        size="small"
-        sticky={{ offsetHeader: 48 }}
-        loading={rowLoading || orderLoading || stockLoading || statusLoading}
-        className="roome-state-calendar-table"
-        rowClassName="state-table-row"
-        scroll={{ x: 'scroll' }}
-        columns={columns}
-        dataSource={dataSource}
-        pagination={false}
-        rowKey="id"
-      />
-      <OrderFormDrawer
-        visible={addVisible}
-        onVisibleChange={(v) => {
-          if (!v) {
-            setSelectedRooms([]);
-            selectService.sendCancelInfo();
-          }
-          setAddVisible(v);
-        }}
-        rooms={processOrderRoom(selectedRooms)}
-        onSubmited={() => {
-          setSelectedRooms([]);
-          selectService.sendCancelInfo();
-          setAddVisible(false);
-          refreshAllOrder();
-        }}
-      />
-      <CloseRoomModal
-        visible={closeVisible}
-        stateList={openOrCloseList}
-        onSubmit={() => {
-          setSelectedRooms([]);
-          selectService.sendCancelInfo();
-          setCloseVisible(false);
-          refreshAllState();
-        }}
-        onClose={() => {
-          setCloseVisible(false);
-        }}
-      />
+          <OrderFormDrawer
+            visible={addVisible}
+            onVisibleChange={(v) => {
+              if (!v) {
+                setSelectedRooms([]);
+                selectService.sendCancelInfo();
+              }
+              setAddVisible(v);
+            }}
+            rooms={processOrderRoom(selectedRooms)}
+            onSubmited={() => {
+              setSelectedRooms([]);
+              selectService.sendCancelInfo();
+              setAddVisible(false);
+              refreshAllOrder();
+            }}
+          />
+          <CloseRoomModal
+            visible={closeVisible}
+            stateList={openOrCloseList}
+            onSubmit={() => {
+              setSelectedRooms([]);
+              selectService.sendCancelInfo();
+              setCloseVisible(false);
+              refreshAllState();
+            }}
+            onClose={() => {
+              setCloseVisible(false);
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };
