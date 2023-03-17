@@ -12,7 +12,15 @@ export async function queryChannels() {
     },
   );
 }
-
+/** 获取全部渠道 */
+export async function queryAllChannels() {
+  return request<API.Result_List_ALL_<SETTING.Channel>>(
+    '/motel/channel/listAllChannel',
+    {
+      method: 'POST',
+    },
+  );
+}
 /** 新增渠道 */
 export async function addChannel(name: string, type = 0) {
   return request<API.Result>('/motel/config/channelSet/save', {
@@ -189,7 +197,7 @@ export async function getChannelList() {
         color: string;
       }[]
     >
-  >('/motel/channel/list');
+  >('/motel/channel/listOTA');
 }
 
 /** 同步渠道 */
