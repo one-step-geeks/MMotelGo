@@ -148,12 +148,10 @@ export function useOperateDrawer(onSuccess: () => void) {
                 {room.roomTypeName}/{room.roomCode}
               </Checkbox>
               <div>
-                {moment(room.checkInDate).format('YYYY-MM-DD')}
+                {moment(room.startDate).format('YYYY-MM-DD')}
                 {intl.formatMessage({ id: '至' })}
-                {moment(room.endDate)
-                  .add(room.checkInDays)
-                  .format('YYYY-MM-DD')}
-                ，{intl.formatMessage({ id: '共' })}
+                {moment(room.endDate).format('YYYY-MM-DD')}，
+                {intl.formatMessage({ id: '共' })}
                 {room.checkInDays}
                 {intl.formatMessage({ id: '晚' })}
                 <br />
