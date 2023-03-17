@@ -16,9 +16,6 @@ export async function queryChannels() {
 export async function queryAllChannels() {
   return request<API.Result_List_ALL_<SETTING.Channel>>(
     '/motel/channel/listAllChannel',
-    {
-      method: 'POST',
-    },
   );
 }
 /** 新增渠道 */
