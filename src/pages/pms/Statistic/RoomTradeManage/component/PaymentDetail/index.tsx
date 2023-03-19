@@ -136,19 +136,27 @@ const PaymentDetailTable: React.FC = () => {
                 items: [
                   {
                     key: RoomTradeManageEnum.ROOM_COST,
-                    label: RoomTradeManageEnum.ROOM_COST,
+                    label: intl.formatMessage({
+                      id: RoomTradeManageEnum.ROOM_COST,
+                    }),
                   },
                   {
                     key: RoomTradeManageEnum.JIAN_YE,
-                    label: RoomTradeManageEnum.JIAN_YE,
+                    label: intl.formatMessage({
+                      id: RoomTradeManageEnum.JIAN_YE,
+                    }),
                   },
                   {
                     key: RoomTradeManageEnum.OCCUPANCY,
-                    label: RoomTradeManageEnum.OCCUPANCY,
+                    label: intl.formatMessage({
+                      id: RoomTradeManageEnum.OCCUPANCY,
+                    }),
                   },
                   {
                     key: RoomTradeManageEnum.AVERAGE_ROOM_REVENUE,
-                    label: RoomTradeManageEnum.AVERAGE_ROOM_REVENUE,
+                    label: intl.formatMessage({
+                      id: RoomTradeManageEnum.AVERAGE_ROOM_REVENUE,
+                    }),
                   },
                 ],
                 onChange: (key) => {

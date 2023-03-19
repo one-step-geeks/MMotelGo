@@ -264,7 +264,8 @@ export default (props: Props) => {
               },
             }}
             request={async () => {
-              const { data } = await services.ChannelController.queryChannels();
+              const { data } =
+                await services.ChannelController.queryAllChannels();
               return data.map((row) => ({
                 label: row.name,
                 value: row.id,

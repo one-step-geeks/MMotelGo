@@ -663,19 +663,19 @@ export async function fetchOccupancyDetail(data: FetchPaymentDetailParams) {
     const paymentDaySet = new Set<string>();
     const newPaymentDetailList: OccupancyDetailItem[] = [];
     let totalRowSpanList: number[] = [];
-    const totalItem: OccupancyDetailItem = {
-      roomTypeName: '合计',
-      roomTypeId: Math.random(),
-      total: '0.00%',
-    };
+    // const totalItem: OccupancyDetailItem = {
+    //   roomTypeName: '合计',
+    //   roomTypeId: Math.random(),
+    //   total: '0.00%',
+    // };
     data?.forEach((item) => {
       const { roomTypeId, roomTypeName, totalOccupancy, occupancyDateDtoList } =
         item || {};
       const indexList: number[] = [];
-      totalItem.total =
-        new Big(totalItem.total.replace('%', ''))
-          .add(new Big(totalOccupancy.replace('%', '')))
-          .toFixed(2) + '%';
+      // totalItem.total =
+      //   new Big(totalItem.total.replace('%', ''))
+      //     .add(new Big(totalOccupancy.replace('%', '')))
+      //     .toFixed(2) + '%';
       const detailItem: OccupancyDetailItem = {
         roomTypeName,
         roomTypeId,
@@ -685,15 +685,15 @@ export async function fetchOccupancyDetail(data: FetchPaymentDetailParams) {
       occupancyDateDtoList?.forEach((occupancyDate, i) => {
         const { date, occupancy } = occupancyDate;
 
-        if (totalItem[date]) {
-          totalItem[date] =
-            new Big(totalItem[date].replace('%', ''))
-              .add(new Big(occupancy.replace('%', '')))
-              .toFixed(2) + '%';
-        } else {
-          totalItem[date] =
-            new Big(occupancy.replace('%', '')).toFixed(2) + '%';
-        }
+        // if (totalItem[date]) {
+        //   totalItem[date] =
+        //     new Big(totalItem[date].replace('%', ''))
+        //       .add(new Big(occupancy.replace('%', '')))
+        //       .toFixed(2) + '%';
+        // } else {
+        //   totalItem[date] =
+        //     new Big(occupancy.replace('%', '')).toFixed(2) + '%';
+        // }
 
         detailItem[date] = occupancy;
         paymentDaySet.add(date);
@@ -704,9 +704,9 @@ export async function fetchOccupancyDetail(data: FetchPaymentDetailParams) {
         indexList[occupancyDateDtoList.length] = 1;
       }
     });
-    if (newPaymentDetailList.length > 0) {
-      newPaymentDetailList.push(totalItem);
-    }
+    // if (newPaymentDetailList.length > 0) {
+    //   newPaymentDetailList.push(totalItem);
+    // }
     return {
       list: newPaymentDetailList,
       dayList: [...paymentDaySet.values()],
@@ -762,11 +762,11 @@ export async function fetchAverageRoomRevenueDetail(
     const paymentDaySet = new Set<string>();
     const newPaymentDetailList: AverageRoomRevenueDetailItem[] = [];
     let totalRowSpanList: number[] = [];
-    const totalItem: AverageRoomRevenueDetailItem = {
-      roomTypeName: '合计',
-      roomTypeId: Math.random(),
-      total: '0',
-    };
+    // const totalItem: AverageRoomRevenueDetailItem = {
+    //   roomTypeName: '合计',
+    //   roomTypeId: Math.random(),
+    //   total: '0',
+    // };
     data?.forEach((item) => {
       const {
         roomTypeId,
@@ -775,7 +775,7 @@ export async function fetchAverageRoomRevenueDetail(
         averageRoomRevenueDateDtoList,
       } = item || {};
       const indexList: number[] = [];
-      totalItem.total = new Big(totalItem.total).add(totalRevenue).toString();
+      // totalItem.total = new Big(totalItem.total).add(totalRevenue).toString();
       const detailItem: OccupancyDetailItem = {
         roomTypeName,
         roomTypeId,
@@ -785,13 +785,13 @@ export async function fetchAverageRoomRevenueDetail(
       averageRoomRevenueDateDtoList?.forEach((averageRoomRevenueDate, i) => {
         const { date, averageRoomRevenue } = averageRoomRevenueDate;
 
-        if (totalItem[date]) {
-          totalItem[date] = new Big(totalItem[date])
-            .add(averageRoomRevenue)
-            .toString();
-        } else {
-          totalItem[date] = averageRoomRevenue;
-        }
+        // if (totalItem[date]) {
+        //   totalItem[date] = new Big(totalItem[date])
+        //     .add(averageRoomRevenue)
+        //     .toString();
+        // } else {
+        //   totalItem[date] = averageRoomRevenue;
+        // }
 
         detailItem[date] = averageRoomRevenue;
         paymentDaySet.add(date);
@@ -802,9 +802,9 @@ export async function fetchAverageRoomRevenueDetail(
         indexList[averageRoomRevenueDateDtoList.length] = 1;
       }
     });
-    if (newPaymentDetailList.length > 0) {
-      newPaymentDetailList.push(totalItem);
-    }
+    // if (newPaymentDetailList.length > 0) {
+    //   newPaymentDetailList.push(totalItem);
+    // }
     return {
       list: newPaymentDetailList,
       dayList: [...paymentDaySet.values()],
