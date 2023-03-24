@@ -484,6 +484,7 @@ const RoomStatePage: React.FC = () => {
                 `/pms/room-state/calendar?defaultDuration=${dur}`,
               );
               setDuration(dur);
+              selectService.sendCancelInfo();
             }}
           >
             <Radio.Button value={30}>

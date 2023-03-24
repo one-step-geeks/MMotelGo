@@ -247,6 +247,7 @@ export default (props: Props) => {
         </ProForm.Group>
         <ProForm.Group>
           <ProFormSelect
+            rules={[{ required: true }]}
             colProps={{ md: 12 }}
             label={intl.formatMessage({ id: '渠道' })}
             name="channelSettingId"
