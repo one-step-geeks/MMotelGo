@@ -73,14 +73,14 @@ export const getRangeDate = (
   if (start && end) {
     return {
       startTime: moment(start)
-        .tz('Asia/Shanghai')
+        // .tz('Asia/Shanghai')
         .hour(0)
         .minute(0)
         .second(0)
         .millisecond(0)
         .valueOf(),
       endTime: moment(end)
-        .tz('Asia/Shanghai')
+        // .tz('Asia/Shanghai')
         .hour(23)
         .minute(59)
         .second(59)
