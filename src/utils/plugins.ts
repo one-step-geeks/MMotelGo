@@ -42,6 +42,7 @@ export const commonRequestInterceptor = (
      */
     return {};
   }
+  const timezoneOffset = new Date().getTimezoneOffset();
   return {
     url: `${APP_BASE_URL}${url}`,
     options: {
@@ -49,6 +50,7 @@ export const commonRequestInterceptor = (
       headers: {
         ...(options?.headers || null),
         'x-auth': Cookie.get('token'),
+        timezoneOffset: -(timezoneOffset / 60),
         locale: getLocale(),
       },
     },
