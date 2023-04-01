@@ -258,7 +258,7 @@ const OrderContainer: React.FC = (props) => {
       width: 120,
       search: false,
       renderText(_) {
-        return `A$ ${_}`;
+        return _ ? `A$ ${_}` : '-';
       },
     },
     {
@@ -268,7 +268,7 @@ const OrderContainer: React.FC = (props) => {
       width: 120,
       search: false,
       renderText(_) {
-        return `A$ ${_}`;
+        return _ ? `A$ ${_}` : '-';
       },
       onCell: (_) => {
         return { rowSpan: _.rowSpan };
@@ -491,15 +491,23 @@ const OrderContainer: React.FC = (props) => {
           let index = 0;
           for (let i = 0; i < list.length; i++) {
             const { roomDtoList, totalAmount, ...rest } = list[i];
-            for (let j = 0; j < roomDtoList.length; j++) {
-              const room = roomDtoList[j];
+            if (roomDtoList.length === 0) {
               flattedList.push({
                 ...rest,
-                ...room,
-                rowSpan: j === 0 ? roomDtoList.length : 0,
-                totalAmount,
+                rowSpan: 1,
                 key: `${index++}`,
               });
+            } else {
+              for (let j = 0; j < roomDtoList.length; j++) {
+                const room = roomDtoList[j];
+                flattedList.push({
+                  ...rest,
+                  ...room,
+                  rowSpan: j === 0 ? roomDtoList.length : 0,
+                  totalAmount,
+                  key: `${index++}`,
+                });
+              }
             }
           }
           setPagination({
