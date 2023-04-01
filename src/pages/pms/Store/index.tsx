@@ -116,8 +116,12 @@ export default function StorePage() {
               rules={[{ required: true }]}
               request={async () => {
                 return services.UserController.getTimezone().then((res) => {
-                  console.log(res);
-                  return [];
+                  return res.data.map((item) => {
+                    return {
+                      label: item.desc,
+                      value: item.timezone,
+                    };
+                  });
                 });
               }}
             />

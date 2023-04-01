@@ -67,7 +67,10 @@ export async function newPmsStore(params?: Partial<SYSTEM.ShopDetail>) {
 }
 /** 获取门店时区列表 */
 export async function getTimezone() {
-  return request<API.Result>('/motel/store/getTimezone', {});
+  return request<API.Result<{ desc: string; timezone: number }[]>>(
+    '/motel/store/getTimezone',
+    {},
+  );
 }
 /** 选择门店进入系统 */
 export async function bindPmsStoreToken() {
