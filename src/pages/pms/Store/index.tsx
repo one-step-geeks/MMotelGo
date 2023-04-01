@@ -1,10 +1,16 @@
 import { Space, Card, Button, Row, Col } from 'antd';
 import { useModel, useRequest } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import { ModalForm, ProFormText, ProFormRadio } from '@ant-design/pro-form';
+import {
+  ModalForm,
+  ProFormText,
+  ProFormRadio,
+  ProFormSelect,
+} from '@ant-design/pro-form';
 import Cookie from 'js-cookie';
 import { useHistory } from 'umi';
 import services from '@/services';
+import { useIntl } from 'umi';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -14,7 +20,7 @@ const formItemLayout = {
 export default function StorePage() {
   const history = useHistory();
   const { refresh } = useModel('@@initialState');
-
+  const intl = useIntl();
   const { data, run } = useRequest(() => {
     return services.UserController.getPmsStoreList();
   });
@@ -23,7 +29,7 @@ export default function StorePage() {
     <PageContainer
       ghost
       header={{
-        title: '门店列表',
+        title: intl.formatMessage({ id: '门店列表' }),
       }}
       style={{ minHeight: '100vh' }}
     >
@@ -45,7 +51,12 @@ export default function StorePage() {
                 >
                   <Card.Meta
                     title={store.storeName}
-                    description={<>到期时间：{store.expirationTime}</>}
+                    description={
+                      <>
+                        {intl.formatMessage({ id: '到期时间' })}：
+                        {store.expirationTime}
+                      </>
+                    }
                   />
                 </Card>
               );
@@ -54,8 +65,12 @@ export default function StorePage() {
         </Col>
         <Col>
           <ModalForm<Partial<SYSTEM.ShopDetail>>
-            title="添加门店"
-            trigger={<Button type="primary">添加门店</Button>}
+            title={intl.formatMessage({ id: '添加门店' })}
+            trigger={
+              <Button type="primary">
+                {intl.formatMessage({ id: '添加门店' })}
+              </Button>
+            }
             autoFocusFirstInput
             modalProps={{
               width: 600,
@@ -72,7 +87,7 @@ export default function StorePage() {
           >
             <ProFormText
               name="name"
-              label="门店名称"
+              label={intl.formatMessage({ id: '门店名称' })}
               fieldProps={{
                 maxLength: 20,
               }}
@@ -80,30 +95,44 @@ export default function StorePage() {
             />
             <ProFormText
               name="code"
-              label="门店编号"
+              label={intl.formatMessage({ id: '门店编号' })}
               rules={[{ required: true }]}
               fieldProps={{
                 maxLength: 30,
               }}
             />
             <ProFormRadio.Group
-              label="门店类型"
+              label={intl.formatMessage({ id: '门店类型' })}
               name="type"
               initialValue={1}
               options={[
-                { label: '⺠宿', value: 1 },
-                { label: '其他', value: 2 },
+                { label: intl.formatMessage({ id: '⺠宿' }), value: 1 },
+                { label: intl.formatMessage({ id: '其他' }), value: 2 },
               ]}
+            />
+            <ProFormSelect
+              label={intl.formatMessage({ id: '时区' })}
+              name="timezone"
+              rules={[{ required: true }]}
+              request={async () => {
+                return services.UserController.getTimezone().then((res) => {
+                  console.log(res);
+                  return [];
+                });
+              }}
             />
             <ProFormText
               name="address"
-              label="一级地址"
+              label={intl.formatMessage({ id: '一级地址' })}
               rules={[{ required: true }]}
             />
-            <ProFormText name="detailAddress" label="详细地址" />
+            <ProFormText
+              name="detailAddress"
+              label={intl.formatMessage({ id: '详细地址' })}
+            />
             <ProFormText
               name="bossName"
-              label="负责人姓名"
+              label={intl.formatMessage({ id: '负责人姓名' })}
               rules={[{ required: true }]}
               fieldProps={{
                 maxLength: 30,
@@ -111,26 +140,26 @@ export default function StorePage() {
             />
             <ProFormText
               name="bossEmail"
-              label="负责人邮箱"
+              label={intl.formatMessage({ id: '负责人邮箱' })}
               initialValue={Cookie.get('emailAddress')}
               rules={[
                 {
                   type: 'email',
-                  message: '邮箱格式不正确',
+                  message: intl.formatMessage({ id: '邮箱格式不正确' }),
                 },
               ]}
               hidden
             />
             <ProFormText
               name="bossPhoneNo"
-              label="门店座机"
+              label={intl.formatMessage({ id: '门店座机' })}
               fieldProps={{
                 maxLength: 30,
               }}
             />
             <ProFormText
               name="activationCode"
-              label="激活码"
+              label={intl.formatMessage({ id: '激活码' })}
               rules={[{ required: true }]}
             />
           </ModalForm>

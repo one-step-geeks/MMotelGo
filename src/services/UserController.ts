@@ -65,7 +65,10 @@ export async function newPmsStore(params?: Partial<SYSTEM.ShopDetail>) {
     data: { ...params },
   });
 }
-
+/** 获取门店时区列表 */
+export async function getTimezone() {
+  return request<API.Result>('/motel/store/getTimezone', {});
+}
 /** 选择门店进入系统 */
 export async function bindPmsStoreToken() {
   const storeId = Cookie.get('storeId');

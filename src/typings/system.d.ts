@@ -39,6 +39,7 @@ declare namespace SYSTEM {
     bossPhoneNo: string; //负责⼈手机号
     bossEmail: string; //负责⼈邮箱账号
     activationCode?: string; // 激活码
+    timezone: any;
     createTime?: string;
   }
 }
