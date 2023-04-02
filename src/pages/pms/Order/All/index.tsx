@@ -12,6 +12,7 @@ import { bufferDownload } from '@/utils';
 import { OrderStateOptions, OrderPayOptions } from '@/services/OrderController';
 import { useOrderDetailDrawer } from '../components/OrderDetailDrawer';
 import OrderFormDrawer from '../components/OrderFormDrawer';
+import classNames from 'classnames';
 
 import './style.less';
 
@@ -85,6 +86,10 @@ const OrderContainer: React.FC = (props) => {
       })),
     );
   });
+
+  const { data: countData } = useRequest(
+    services.OrderController.queryOrderCounts,
+  );
 
   type TableListItem = ORDER.OrderListItemFlatted;
 
@@ -391,6 +396,15 @@ const OrderContainer: React.FC = (props) => {
             </Radio.Button>
             <Radio.Button value={QueryType.TODAY_CREAYED}>
               {intl.formatMessage({ id: '今日新办' })}
+            </Radio.Button>
+
+            <Radio.Button
+              className={classNames({
+                dotted: countData && countData.unlinedCount > 0,
+              })}
+              value={QueryType.NOT_ARRANGED}
+            >
+              {intl.formatMessage({ id: '未排房' })}
             </Radio.Button>
           </Radio.Group>
         ) : null}
