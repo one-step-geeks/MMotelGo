@@ -112,10 +112,9 @@ const RoomStatePage: React.FC = () => {
   const { selectedRooms, setSelectedRooms } = useModel('state');
   const [roomTypeList, setRoomTypeList] = useState<ROOM_STATE.RoomType[]>([]);
 
-  const openOrCloseList = useMemo(
-    () => processOpenAndClose(selectedRooms),
-    [selectedRooms],
-  );
+  const openOrCloseList = useMemo(() => processOpenAndClose(selectedRooms), [
+    selectedRooms,
+  ]);
 
   useEffect(() => {
     setSelectedRooms([]);
@@ -391,6 +390,7 @@ const RoomStatePage: React.FC = () => {
             const selctDate = value || moment();
             setCalendarList(getCalendarDate(duration, selctDate));
             setSelectedDate(selctDate);
+            selectService.sendCancelInfo();
           }}
           inputReadOnly
           autoFocus={false}
