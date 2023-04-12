@@ -5,6 +5,7 @@ import Cookie from 'js-cookie';
 import type { CSSProperties } from 'react';
 import { useHistory, useModel } from 'umi';
 import services from '@/services';
+import logo from '@/assets/images/logo.jpeg';
 
 const { Link, Text } = Typography;
 
@@ -26,8 +27,8 @@ export default () => {
     >
       <LoginFormPage
         backgroundImageUrl="https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png"
-        logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
-        title="MotelGo"
+        logo={logo}
+        title="PieTable"
         subTitle="Hotel Online Property Management Platform"
         onFinish={async (values) => {
           await services.UserController.accountLogin(values);
