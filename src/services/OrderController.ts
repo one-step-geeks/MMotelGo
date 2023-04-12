@@ -294,6 +294,16 @@ export async function queryOperationLog(orderId: number) {
   );
 }
 
+/** 查询各类订单的计数 */
+export async function queryOrderCounts() {
+  return request<API.Result<{ unlinedCount: number }>>(
+    '/motel/home/getAccomService',
+    {
+      method: 'GET',
+    },
+  );
+}
+
 // /** 查询渠道列表 */
 // export async function querychannelSet() {
 //   return request<API.Result<Array<{id: number, name: string, color: string}>>>(

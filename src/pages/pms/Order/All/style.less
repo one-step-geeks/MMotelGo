@@ -40,4 +40,16 @@
   .ant-pro-card-body {
     padding-bottom: 16px;
   }
+  .ant-radio-button-wrapper.dotted:not(.ant-radio-button-wrapper-checked)
+    ::after {
+    content: ' ';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: red;
+    display: inline-block;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
 }

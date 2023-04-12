@@ -31,9 +31,9 @@ const OrderContainer: React.FC = (props) => {
             <Menu.Item key="/pms/order/all">
               {intl.formatMessage({ id: '所有订单' })}
             </Menu.Item>
-            <Menu.Item key="/pms/order/unarrange">
+            {/* <Menu.Item key="/pms/order/unarrange">
               {intl.formatMessage({ id: '未排房' })}
-            </Menu.Item>
+            </Menu.Item> */}
             {/* <Menu.Item key="/pms/order/unhandle">未处理</Menu.Item> */}
           </SubMenu>
         </Menu>

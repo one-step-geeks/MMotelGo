@@ -367,6 +367,7 @@ export default {
   修改收款项: 'Modify Incoming Payments',
   删除收款项: 'Delete Incoming Payments',
   订单提醒: 'Order Reminder',
+  图例: 'Samples',
   已预定: 'Booked',
   已入住: 'Checked in',
   已取消: 'Canceled',
