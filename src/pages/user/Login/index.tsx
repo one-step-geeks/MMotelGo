@@ -6,6 +6,7 @@ import type { CSSProperties } from 'react';
 import { useHistory, useModel } from 'umi';
 import services from '@/services';
 import logo from '@/assets/images/logohome.png';
+import './style.less';
 
 const { Link, Text } = Typography;
 
@@ -24,6 +25,7 @@ export default () => {
         backgroundColor: '#fff',
         height: '100vh',
       }}
+      className="mmotel-login-form"
     >
       <LoginFormPage
         backgroundImageUrl="https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png"
