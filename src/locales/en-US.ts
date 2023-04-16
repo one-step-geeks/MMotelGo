@@ -337,6 +337,7 @@ export default {
   修改提醒: 'Modify Reminder',
   订单编号: 'Order Number',
   返回: 'Back',
+  补录: 'Supplement',
   新增入住人: 'Add Resident',
   'Consumption.数量': 'Consumption Count',
   订单操作: 'Order Operation',

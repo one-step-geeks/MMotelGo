@@ -14,7 +14,6 @@ interface Props {
 
 const OrderBox: React.FC<Props> = (props) => {
   const { order, record, dateItem, onOrder } = props;
-  console.log(order, record, dateItem);
   return (
     <div
       className={classnames(

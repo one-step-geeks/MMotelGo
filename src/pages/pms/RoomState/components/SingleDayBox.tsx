@@ -35,7 +35,6 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   const [visible, setVisible] = useState(false);
   const [dirty, setDirty] = useState(false);
   const { selectedRooms, setSelectedRooms } = useModel('state');
-  console.log(room, order);
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
@@ -83,7 +82,6 @@ const RoomCodeBox: React.FC<Props> = (props) => {
     });
   }
   const isBeforeNow = moment(date).isSameOrAfter(moment(), 'day');
-
   return order ? (
     <div
       className={className}
