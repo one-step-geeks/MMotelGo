@@ -39,6 +39,7 @@ export default {
   收款概况: 'Payment Situation',
   统计说明: 'Statistical Description',
   营业明细: 'Business Details',
+  收款记录: 'Collections record',
   净收款: 'Net receipts',
   总收款: 'Total receipts',
   总退款: 'Total Refund',
