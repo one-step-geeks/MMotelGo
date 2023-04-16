@@ -97,30 +97,41 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
                 items: [
                   {
                     key: String(PaymentDetailTypeEnum.NET_RECEIPTS),
-                    label:
-                      paymentDetailTrans[PaymentDetailTypeEnum.NET_RECEIPTS],
+                    label: intl.formatMessage({
+                      id: paymentDetailTrans[
+                        PaymentDetailTypeEnum.NET_RECEIPTS
+                      ],
+                    }),
                   },
                   {
                     key: String(PaymentDetailTypeEnum.RECEIPTS),
-                    label: paymentDetailTrans[PaymentDetailTypeEnum.RECEIPTS],
+                    label: intl.formatMessage({
+                      id: paymentDetailTrans[PaymentDetailTypeEnum.RECEIPTS],
+                    }),
                   },
                   {
                     key: String(PaymentDetailTypeEnum.RECEIPTS_CASH_PLEDGE),
-                    label:
-                      paymentDetailTrans[
+
+                    label: intl.formatMessage({
+                      id: paymentDetailTrans[
                         PaymentDetailTypeEnum.RECEIPTS_CASH_PLEDGE
                       ],
+                    }),
                   },
                   {
                     key: String(PaymentDetailTypeEnum.REFUND),
-                    label: paymentDetailTrans[PaymentDetailTypeEnum.REFUND],
+                    label: intl.formatMessage({
+                      id: paymentDetailTrans[PaymentDetailTypeEnum.REFUND],
+                    }),
                   },
                   {
                     key: String(PaymentDetailTypeEnum.REFUND_CASH_PLEDGE),
-                    label:
-                      paymentDetailTrans[
+
+                    label: intl.formatMessage({
+                      id: paymentDetailTrans[
                         PaymentDetailTypeEnum.REFUND_CASH_PLEDGE
                       ],
+                    }),
                   },
                 ],
                 onChange: (key) => {

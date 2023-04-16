@@ -40,21 +40,31 @@ const PaymentRecordTable: React.FC = () => {
         hideInTable: true,
         valueEnum: {
           [PaymentDetailTypeEnum.NET_RECEIPTS]: {
-            text: paymentDetailTrans[PaymentDetailTypeEnum.NET_RECEIPTS],
+            text: intl.formatMessage({
+              id: paymentDetailTrans[PaymentDetailTypeEnum.NET_RECEIPTS],
+            }),
           },
           [PaymentDetailTypeEnum.RECEIPTS]: {
-            text: paymentDetailTrans[PaymentDetailTypeEnum.RECEIPTS],
+            text: intl.formatMessage({
+              id: paymentDetailTrans[PaymentDetailTypeEnum.RECEIPTS],
+            }),
           },
           [PaymentDetailTypeEnum.RECEIPTS_CASH_PLEDGE]: {
-            text: paymentDetailTrans[
-              PaymentDetailTypeEnum.RECEIPTS_CASH_PLEDGE
-            ],
+            text: intl.formatMessage({
+              id: paymentDetailTrans[
+                PaymentDetailTypeEnum.RECEIPTS_CASH_PLEDGE
+              ],
+            }),
           },
           [PaymentDetailTypeEnum.REFUND]: {
-            text: paymentDetailTrans[PaymentDetailTypeEnum.REFUND],
+            text: intl.formatMessage({
+              id: paymentDetailTrans[PaymentDetailTypeEnum.REFUND],
+            }),
           },
           [PaymentDetailTypeEnum.REFUND_CASH_PLEDGE]: {
-            text: paymentDetailTrans[PaymentDetailTypeEnum.REFUND_CASH_PLEDGE],
+            text: intl.formatMessage({
+              id: paymentDetailTrans[PaymentDetailTypeEnum.REFUND_CASH_PLEDGE],
+            }),
           },
         },
       },

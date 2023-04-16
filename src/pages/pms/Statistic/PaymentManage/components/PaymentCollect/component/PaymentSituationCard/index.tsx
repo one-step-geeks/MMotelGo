@@ -41,17 +41,23 @@ const PaymentSituationCard: React.FC = () => {
         <div className="payment-situation-card-warp">
           <PaymentSituationCardItem
             iconUrl={netReceiptsIcon}
-            label="净收款"
+            label={intl.formatMessage({
+              id: '净收款',
+            })}
             price={(paymentSurvey.netReceipts || 0).toFixed(2)}
           />
           <PaymentSituationCardItem
             iconUrl={receiptsIcon}
-            label="总收款"
+            label={intl.formatMessage({
+              id: '总收款',
+            })}
             price={(paymentSurvey.totalAmount || 0).toFixed(2)}
           />
           <PaymentSituationCardItem
             iconUrl={refundIcon}
-            label="总退款"
+            label={intl.formatMessage({
+              id: '总退款',
+            })}
             price={(paymentSurvey.totalRefund || 0).toFixed(2)}
           />
         </div>
