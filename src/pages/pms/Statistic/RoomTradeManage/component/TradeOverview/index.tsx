@@ -73,7 +73,7 @@ const TradeOverview: React.FC = () => {
             </div>
             <div className="overview-column-fee">
               {intl.formatMessage({ id: '¥' })}
-              {state?.averageRoomPrice}
+              {Number(state?.averageRoomPrice || 0).toFixed(2)}
             </div>
           </div>
           {styledDivider}
@@ -95,7 +95,7 @@ const TradeOverview: React.FC = () => {
               </div>
               <div className="overview-column-fee">
                 {intl.formatMessage({ id: '¥' })}
-                {state?.averageRoomRevenue}
+                {Number(state?.averageRoomRevenue || 0).toFixed(2)}
               </div>
             </div>
           </div>

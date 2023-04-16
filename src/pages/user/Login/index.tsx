@@ -5,7 +5,7 @@ import Cookie from 'js-cookie';
 import type { CSSProperties } from 'react';
 import { useHistory, useModel } from 'umi';
 import services from '@/services';
-import logo from '@/assets/images/logo.jpeg';
+import logo from '@/assets/images/logohome.png';
 
 const { Link, Text } = Typography;
 
@@ -28,8 +28,6 @@ export default () => {
       <LoginFormPage
         backgroundImageUrl="https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png"
         logo={logo}
-        title="PieTable"
-        subTitle="Hotel Online Property Management Platform"
         onFinish={async (values) => {
           await services.UserController.accountLogin(values);
           Cookie.set('emailAddress', values?.emailAddress);

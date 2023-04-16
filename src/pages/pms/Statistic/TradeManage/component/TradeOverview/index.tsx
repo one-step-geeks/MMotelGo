@@ -70,11 +70,11 @@ const TradeOverview: React.FC = () => {
             </div>
             <div className="overview-column-fee">
               {intl.formatMessage({ id: '¥' })}
-              {state?.total}
+              {(state?.total || 0).toFixed(2)}
             </div>
             <div className="overview-column-rate">
               {intl.formatMessage({ id: '日环比' })}&nbsp;
-              {(state?.dayPercent || 0) * 100}%
+              {((state?.dayPercent || 0) * 100).toFixed(2)}%
             </div>
           </div>
           {styledDivider}
@@ -86,11 +86,11 @@ const TradeOverview: React.FC = () => {
               </div>
               <div className="overview-column-fee">
                 {intl.formatMessage({ id: '¥' })}
-                {state?.roomFees}
+                {(state?.roomFees || 0).toFixed(2)}
               </div>
               <div className="overview-column-rate">
                 {intl.formatMessage({ id: '占比' })}&nbsp;
-                {(state?.roomFeesPercent || 0) * 100}%
+                {((state?.roomFeesPercent || 0) * 100).toFixed(2)}%
               </div>
             </div>
           </div>
@@ -103,11 +103,11 @@ const TradeOverview: React.FC = () => {
               </div>
               <div className="overview-column-fee">
                 {intl.formatMessage({ id: '¥' })}
-                {state?.penalSum}
+                {(state?.penalSum || 0).toFixed(2)}
               </div>
               <div className="overview-column-rate">
                 {intl.formatMessage({ id: '占比' })}&nbsp;
-                {(state?.penalSumPercent || 0) * 100}%
+                {((state?.penalSumPercent || 0) * 100).toFixed(2)}%
               </div>
             </div>
           </div>
@@ -120,11 +120,11 @@ const TradeOverview: React.FC = () => {
               </div>
               <div className="overview-column-fee">
                 {intl.formatMessage({ id: '¥' })}
-                {state?.consume}
+                {(state?.consume || 0).toFixed(2)}
               </div>
               <div className="overview-column-rate">
                 {intl.formatMessage({ id: '占比' })}&nbsp;
-                {(state?.consumePercent || 0) * 100}%
+                {((state?.consumePercent || 0) * 100).toFixed(2)}%
               </div>
             </div>
           </div>

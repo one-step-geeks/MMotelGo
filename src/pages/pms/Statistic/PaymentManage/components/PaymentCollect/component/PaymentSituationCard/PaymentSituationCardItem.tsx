@@ -4,7 +4,7 @@ import { useIntl } from 'umi';
 import './style.less';
 
 interface PaymentSituationCardItemProps {
-  price: number;
+  price: string;
   label: string;
   iconUrl: string;
 }
