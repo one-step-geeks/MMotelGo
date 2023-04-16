@@ -56,7 +56,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
     return () => {
       subs.unsubscribe();
     };
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     const isDirty =
