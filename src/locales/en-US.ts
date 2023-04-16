@@ -352,6 +352,7 @@ export default {
   请至少选择1条记录: 'At lease choose one record',
   共: 'Total',
   至: 'To',
+  营业额明细: 'Turnover Details',
   全选: 'All',
   搜索订单号: 'Search order number',
   收押金: 'Deposit',
