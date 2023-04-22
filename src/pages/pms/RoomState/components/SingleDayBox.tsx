@@ -63,7 +63,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
       roomList?.find((item) => item.roomId === room.roomId)?.roomStatus === 14;
     setDirty(isDirty);
   }, [roomList]);
-
+  console.log(room);
   const isRoomClosed = [9, 10, 11].includes(room.status);
 
   const className = classnames(

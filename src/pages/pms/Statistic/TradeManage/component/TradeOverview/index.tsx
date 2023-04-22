@@ -72,10 +72,10 @@ const TradeOverview: React.FC = () => {
               {intl.formatMessage({ id: '¥' })}
               {(state?.total || 0).toFixed(2)}
             </div>
-            <div className="overview-column-rate">
+            {/* <div className="overview-column-rate">
               {intl.formatMessage({ id: '日环比' })}&nbsp;
               {((state?.dayPercent || 0) * 100).toFixed(2)}%
-            </div>
+            </div> */}
           </div>
           {styledDivider}
           <div className="overview-column">
@@ -95,7 +95,7 @@ const TradeOverview: React.FC = () => {
             </div>
           </div>
           {styledDivider}
-          <div className="overview-column">
+          {/* <div className="overview-column">
             <StrikethroughOutlined />
             <div className="overview-column-stack">
               <div className="overview-column-type">
@@ -111,7 +111,7 @@ const TradeOverview: React.FC = () => {
               </div>
             </div>
           </div>
-          {styledDivider}
+          {styledDivider} */}
           <div className="overview-column">
             <FileDoneOutlined />
             <div className="overview-column-stack">
