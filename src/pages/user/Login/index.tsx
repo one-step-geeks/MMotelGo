@@ -3,7 +3,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 import Cookie from 'js-cookie';
 import type { CSSProperties } from 'react';
-import { useHistory, useModel } from 'umi';
+import { useHistory, useIntl, useModel } from 'umi';
 import services from '@/services';
 import logo from '@/assets/images/logohome.png';
 import './style.less';
@@ -19,6 +19,7 @@ const iconStyles: CSSProperties = {
 
 export default () => {
   const history = useHistory();
+  const intl = useIntl();
   return (
     <div
       style={{
@@ -43,11 +44,11 @@ export default () => {
             prefix: <UserOutlined className={'prefixIcon'} />,
           }}
           initialValue={Cookie.get('emailAddress')}
-          placeholder={'请输入邮箱账号'}
+          placeholder={intl.formatMessage({ id: '请输入邮箱账号' })}
           rules={[
             {
               required: true,
-              message: '请输入邮箱账号!',
+              message: `${intl.formatMessage({ id: '请输入邮箱账号' })}!`,
             },
           ]}
         />
@@ -57,11 +58,11 @@ export default () => {
             size: 'large',
             prefix: <LockOutlined className={'prefixIcon'} />,
           }}
-          placeholder={'请输入密码'}
+          placeholder={intl.formatMessage({ id: '请输入密码' })}
           rules={[
             {
               required: true,
-              message: '请输入密码！',
+              message: `${intl.formatMessage({ id: '请输入密码' })}!`,
             },
           ]}
         />
@@ -77,7 +78,7 @@ export default () => {
               history.push('/user/regist');
             }}
           >
-            注册账号
+            {intl.formatMessage({ id: '注册账号' })}
           </Link>
           <Text
             style={{ cursor: 'pointer' }}
@@ -86,7 +87,7 @@ export default () => {
               history.push('/user/reset_password');
             }}
           >
-            忘记密码
+            {intl.formatMessage({ id: '忘记密码' })}
           </Text>
         </div>
       </LoginFormPage>

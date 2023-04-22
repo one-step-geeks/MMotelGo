@@ -3,7 +3,7 @@ import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { Form, Button, Typography } from 'antd';
 import { emailPattern } from '@/constants';
 import services from '@/services';
-import { useHistory } from 'umi';
+import { useHistory, useIntl } from 'umi';
 import logo from '@/assets/images/logohome.png';
 
 const { Link } = Typography;
@@ -11,13 +11,14 @@ const { Link } = Typography;
 export default () => {
   const [form] = Form.useForm();
   const history = useHistory();
+  const intl = useIntl();
   return (
     <div style={{ backgroundColor: 'white' }} className="mmotel-login-form">
       <LoginForm
         form={form}
         size="large"
         logo={logo}
-        subTitle="账号注册"
+        subTitle={intl.formatMessage({ id: '账号注册' })}
         submitter={{
           render: () => {
             return (
@@ -32,9 +33,11 @@ export default () => {
                     history.push('/user/regist-success?type=email');
                   }}
                 >
-                  注册
+                  {intl.formatMessage({ id: '注册' })}
                 </Button>
-                <Link href="#/user/login">返回</Link>
+                <Link href="#/user/login">
+                  {intl.formatMessage({ id: '返回' })}
+                </Link>
               </>
             );
           },
@@ -46,11 +49,11 @@ export default () => {
             maxLength: 50,
           }}
           name="nickName"
-          placeholder={'请输入用户昵称'}
+          placeholder={intl.formatMessage({ id: '请输入用户昵称' })}
           rules={[
             {
               required: true,
-              message: '请输入用户昵称',
+              message: intl.formatMessage({ id: '请输入用户昵称' }),
             },
           ]}
         />
@@ -60,15 +63,15 @@ export default () => {
             maxLength: 50,
           }}
           name="emailAddress"
-          placeholder={'请输入邮箱账号'}
+          placeholder={intl.formatMessage({ id: '请输入邮箱账号' })}
           rules={[
             {
               required: true,
-              message: '请输入邮箱账号',
+              message: intl.formatMessage({ id: '请输入邮箱账号' }),
             },
             {
               pattern: emailPattern,
-              message: '邮箱账号格式不正确',
+              message: intl.formatMessage({ id: '邮箱账号格式不正确' }),
             },
           ]}
         />
@@ -82,10 +85,10 @@ export default () => {
           rules={[
             {
               required: true,
-              message: '请输入用户密码',
+              message: intl.formatMessage({ id: '请输入用户密码' }),
             },
           ]}
-          placeholder="请输入用户密码"
+          placeholder={intl.formatMessage({ id: '请输入用户密码' })}
         />
         {/* <ProFormText
           name="confirmPassword"
