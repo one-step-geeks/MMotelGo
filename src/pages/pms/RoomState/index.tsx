@@ -91,7 +91,6 @@ export function processOrderRoom(list: ROOM_STATE.SelectTableData[]) {
       }
     }
   }
-  console.log('trueResult', trueResult);
   return trueResult;
 }
 
@@ -112,9 +111,10 @@ const RoomStatePage: React.FC = () => {
   const { selectedRooms, setSelectedRooms } = useModel('state');
   const [roomTypeList, setRoomTypeList] = useState<ROOM_STATE.RoomType[]>([]);
 
-  const openOrCloseList = useMemo(() => processOpenAndClose(selectedRooms), [
-    selectedRooms,
-  ]);
+  const openOrCloseList = useMemo(
+    () => processOpenAndClose(selectedRooms),
+    [selectedRooms],
+  );
 
   useEffect(() => {
     setSelectedRooms([]);
@@ -151,7 +151,7 @@ const RoomStatePage: React.FC = () => {
     return () => {
       subs.unsubscribe();
     };
-  }, [openOrCloseList, duration]);
+  }, [openOrCloseList, duration, selectedDate]);
 
   // 生成房态日历-columns
   const [calendarList, setCalendarList] = useState(() => {
@@ -266,8 +266,7 @@ const RoomStatePage: React.FC = () => {
     return stockData?.list?.find((s) => moment(s.date).isSame(date, 'day'))
       ?.roomCount;
   }
-
-  function getCalendarColumns() {
+  const calenderColumns = useMemo(() => {
     return (
       calendarList?.map?.((item) => {
         const d = moment(item.date);
@@ -334,7 +333,6 @@ const RoomStatePage: React.FC = () => {
                   );
                 }
                 const order = findOrderByRecord(record, item.date);
-                console.log('order', order ? 'true' : 'false');
 
                 if (order) {
                   const dateItem = record.dateList?.find((_item) => {
@@ -355,7 +353,7 @@ const RoomStatePage: React.FC = () => {
         };
       }) || []
     );
-  }
+  }, [calendarList]);
 
   function getCalendarRows(list: ROOM_STATE.RoomType[] = []) {
     const result = [];
@@ -464,11 +462,10 @@ const RoomStatePage: React.FC = () => {
         },
       ],
     },
-    ...getCalendarColumns(),
+    ...calenderColumns,
   ];
 
   const dataSource = getCalendarRows(rowData?.list);
-  console.log('dataSource', dataSource, rowData?.list);
 
   return (
     <div className="roome-state-container">

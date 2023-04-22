@@ -51,14 +51,14 @@ const EmptyBox: React.FC<Props> = (props) => {
     return () => {
       subs.unsubscribe();
     };
-  }, []);
+  }, [record, date]);
 
   const boxData = record?.dateList?.find((d) =>
     moment(d.date).isSame(date, 'day'),
   );
-
   const { price, status } = boxData || {};
 
+  const isBeforeNow = moment(boxData?.date).isSameOrAfter(moment(), 'day');
   return ![9, 10, 11].includes(status!) ? (
     <Popover
       content={
@@ -92,7 +92,9 @@ const EmptyBox: React.FC<Props> = (props) => {
               selectService.sendAddOrder();
             }}
           >
-            {intl.formatMessage({ id: '预订' })}
+            {isBeforeNow
+              ? intl.formatMessage({ id: '预定' })
+              : intl.formatMessage({ id: '补录' })}
           </Text>
         </Space>
       }
@@ -185,7 +187,9 @@ const EmptyBox: React.FC<Props> = (props) => {
               selectService.sendAddOrder();
             }}
           >
-            {intl.formatMessage({ id: '预订' })}
+            {isBeforeNow
+              ? intl.formatMessage({ id: '预定' })
+              : intl.formatMessage({ id: '补录' })}
           </Text>
         </Space>
       }

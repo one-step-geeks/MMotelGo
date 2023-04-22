@@ -8,6 +8,7 @@ import {
   deleteChannelMail,
   getChannelMailList,
 } from '@/services/ChannelController';
+import './style.less';
 
 const TradeManage: React.FC = () => {
   const intl = useIntl();

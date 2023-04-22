@@ -35,7 +35,6 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   const [visible, setVisible] = useState(false);
   const [dirty, setDirty] = useState(false);
   const { selectedRooms, setSelectedRooms } = useModel('state');
-  console.log(room, order);
   useEffect(() => {
     const subs = selectService.getSelectedInfo().subscribe((info: any) => {
       switch (info.type) {
@@ -57,7 +56,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
     return () => {
       subs.unsubscribe();
     };
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     const isDirty =
@@ -82,7 +81,7 @@ const RoomCodeBox: React.FC<Props> = (props) => {
       status,
     });
   }
-
+  const isBeforeNow = moment(date).isSameOrAfter(moment(), 'day');
   return order ? (
     <div
       className={className}
@@ -150,7 +149,9 @@ const RoomCodeBox: React.FC<Props> = (props) => {
               selectService.sendAddOrder();
             }}
           >
-            {intl.formatMessage({ id: '预订' })}
+            {isBeforeNow
+              ? intl.formatMessage({ id: '预定' })
+              : intl.formatMessage({ id: '补录' })}
           </Text>
         </Space>
       }

@@ -89,7 +89,7 @@ const PaymentDetailTable: React.FC = () => {
   return (
     <div className="payment-detail">
       <CommonCard
-        title={intl.formatMessage({ id: '支付方式明细' })}
+        title={intl.formatMessage({ id: '营业额明细' })}
         subTitle={
           collectDateRange?.length
             ? collectDateRange
