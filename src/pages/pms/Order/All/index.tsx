@@ -35,10 +35,11 @@ enum QueryType {
 }
 interface QueryParam {
   queryType?: QueryType;
-  keyword?: string;
-  searchType: string;
   dateType: DateType;
+  keyword?: string;
+  searchType?: string;
 }
+
 enum DateType {
   checkInDate = 1,
   checkOutDate,
@@ -409,22 +410,12 @@ const OrderContainer: React.FC = (props) => {
           </Radio.Group>
         ) : null}
         <Space size="large" className="quick-action-bar">
-          {/* onSearch={onSearch} */}
-
-          {/* (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase()) */}
-          {/* e => handleKeywordChange(e.target.value) */}
-          {/* 订单号/渠道单号/姓名/手机号/房间号 */}
           <Select
             placeholder={intl.formatMessage({ id: '搜索类型' })}
-            // showSearch
             optionFilterProp="children"
-            // onSearch={value => {
-            //   handleKeywordChange(value)
-            // }}
+            value={param.searchType}
             onChange={(value) => {
               handleSearchTypeChange(value);
-              // return false;
-              // console.log('onChange e.target.value', e, el);
             }}
           >
             <Option value="channelOrderNo">
@@ -444,6 +435,7 @@ const OrderContainer: React.FC = (props) => {
           <Input.Search
             disabled={!param.searchType}
             style={{ width: '340px' }}
+            value={param.keyword}
             placeholder={intl.formatMessage({
               id: '订单&渠道号/姓名/手机号/房间号',
             })}
@@ -476,6 +468,14 @@ const OrderContainer: React.FC = (props) => {
         scroll={{ x: 'scroll' }}
         bordered
         row-key="orderId"
+        onReset={() => {
+          const { keyword, searchType, ...rest } = param;
+          setParam({
+            ...rest,
+            searchType: 'channelOrderNo',
+            keyword: '',
+          });
+        }}
         search={{
           defaultCollapsed: false,
         }}
