@@ -22,7 +22,7 @@ export default () => {
         name: 'searchParam',
       },
       fieldProps: {
-        placeholder: '请输入账号、员工姓名',
+        placeholder: intl.formatMessage({ id: '请输入账号、员工姓名' }),
       },
     },
     {

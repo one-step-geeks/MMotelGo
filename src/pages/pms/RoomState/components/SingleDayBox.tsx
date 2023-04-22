@@ -91,7 +91,9 @@ const RoomCodeBox: React.FC<Props> = (props) => {
     >
       <div className="room-code">{room.roomCode}</div>
       <div className="reserve-name">{order.reserveName}</div>
-      <div className="orgin-source">{order.channelTypeName || '自来客'}</div>
+      <div className="orgin-source">
+        {order.channelTypeName || intl.formatMessage({ id: '自来客' })}
+      </div>
     </div>
   ) : (
     <Popover

@@ -242,7 +242,7 @@ const EmptyBox: React.FC<Props> = (props) => {
           <>
             <ToolFilled className="icon" />
             <Text type="secondary" className="text">
-              维修
+              {intl.formatMessage({ id: '维修' })}
             </Text>
           </>
         ) : null}
@@ -250,7 +250,7 @@ const EmptyBox: React.FC<Props> = (props) => {
           <>
             <MinusCircleFilled className="icon" />
             <Text type="secondary" className="text">
-              停用
+              {intl.formatMessage({ id: '停用' })}
             </Text>
           </>
         ) : null}
@@ -258,7 +258,7 @@ const EmptyBox: React.FC<Props> = (props) => {
           <>
             <CarryOutFilled className="icon" />
             <Text type="secondary" className="text">
-              保留
+              {intl.formatMessage({ id: '保留' })}
             </Text>
           </>
         ) : null}

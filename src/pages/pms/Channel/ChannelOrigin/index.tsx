@@ -186,7 +186,7 @@ const TradeManage: React.FC = () => {
                 }).then(() => refreshList());
               }}
             >
-              手动拉取订单
+              {intl.formatMessage({ id: '手动拉取订单' })}
             </Button>,
           ],
         }}

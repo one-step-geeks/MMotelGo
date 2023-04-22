@@ -1,5 +1,5 @@
 import { Form, Radio, Modal, Input } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import services from '@/services';
 import { selectService } from './service';
 
@@ -20,6 +20,7 @@ const layoutConfig = {
 const CloseRoomModal: React.FC<Props> = (props) => {
   const { visible, onClose, onSubmit, stateList } = props;
   const [form] = Form.useForm();
+  const intl = useIntl();
 
   return (
     <Modal
@@ -40,15 +41,15 @@ const CloseRoomModal: React.FC<Props> = (props) => {
     >
       <Form {...layoutConfig} form={form} preserve={false}>
         <FormItem
-          label="关房类型"
+          label={intl.formatMessage({ id: '关房类型' })}
           name="status"
           initialValue={10}
-          rules={[{ required: true, message: '必填项' }]}
+          rules={[{ required: true }]}
         >
           <Radio.Group>
-            <Radio value={10}>停用房</Radio>
-            <Radio value={9}>维修房</Radio>
-            <Radio value={11}>保留房</Radio>
+            <Radio value={10}>{intl.formatMessage({ id: '停用房' })}</Radio>
+            <Radio value={9}>{intl.formatMessage({ id: '维修房' })}</Radio>
+            <Radio value={11}>{intl.formatMessage({ id: '保留房' })}</Radio>
           </Radio.Group>
         </FormItem>
         <FormItem label="备注" name="remark">
