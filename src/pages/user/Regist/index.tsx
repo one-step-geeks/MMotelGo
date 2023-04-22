@@ -4,6 +4,7 @@ import { Form, Button, Typography } from 'antd';
 import { emailPattern } from '@/constants';
 import services from '@/services';
 import { useHistory } from 'umi';
+import logo from '@/assets/images/logohome.png';
 
 const { Link } = Typography;
 
@@ -11,12 +12,11 @@ export default () => {
   const [form] = Form.useForm();
   const history = useHistory();
   return (
-    <div style={{ backgroundColor: 'white' }}>
+    <div style={{ backgroundColor: 'white' }} className="mmotel-login-form">
       <LoginForm
         form={form}
         size="large"
-        logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
-        title="MotelGo"
+        logo={logo}
         subTitle="账号注册"
         submitter={{
           render: () => {

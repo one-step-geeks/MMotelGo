@@ -9,6 +9,7 @@ import { emailPattern } from '@/constants';
 import { useHistory } from 'umi';
 // import { useState } from 'react';
 import services from '@/services';
+import logo from '@/assets/images/logohome.png';
 
 const { Link } = Typography;
 
@@ -17,14 +18,13 @@ export default () => {
   const history = useHistory();
 
   return (
-    <div style={{ backgroundColor: '#fff' }}>
+    <div style={{ backgroundColor: '#fff' }} className="mmotel-login-form">
       <div className="reset-step-wrap">
         <LoginForm
           form={form}
           preserve={true}
           size="large"
-          logo="https://github.githubassets.com/images/modules/logos_page/Octocat.png"
-          title="MotelGo"
+          logo={logo}
           subTitle="重置密码"
           submitter={{
             render: () => {
