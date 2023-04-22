@@ -266,7 +266,7 @@ const RoomStatePage: React.FC = () => {
     return stockData?.list?.find((s) => moment(s.date).isSame(date, 'day'))
       ?.roomCount;
   }
-  const calenderColumns = useMemo(() => {
+  function getCalendarColumns() {
     return (
       calendarList?.map?.((item) => {
         const d = moment(item.date);
@@ -353,7 +353,7 @@ const RoomStatePage: React.FC = () => {
         };
       }) || []
     );
-  }, [calendarList]);
+  }
 
   function getCalendarRows(list: ROOM_STATE.RoomType[] = []) {
     const result = [];
@@ -462,7 +462,7 @@ const RoomStatePage: React.FC = () => {
         },
       ],
     },
-    ...calenderColumns,
+    ...getCalendarColumns(),
   ];
 
   const dataSource = getCalendarRows(rowData?.list);
