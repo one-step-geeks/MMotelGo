@@ -83,42 +83,23 @@ export default {
   房价管理: 'Price Management',
   渠道管理: 'Channel Management',
   渠道设置: 'Channel Setting',
+  添加门店: 'Add Store',
   邮箱授权码: 'Authorization code',
-  [`邮箱授权码是保护用户邮件隐私的一种方式。
-          谷歌gmail:要获取谷歌邮箱授权码，用户需要登录账户并进入“安全性”设置页面。
-          在此页面中，用户需启用两步验证功能，并创建一个应用程序密码，该密码将作为授权码。
-          在创建过程中，用户需要选择应用程序(例如“Outlook")，操作系统(Windows、 Android等)和针对该应用程序的授权码。
-          用户还需要确认哪一个谷歌账户将使用该授权码。
-        
-          2.雅虎邮箱:要获取雅虎邮箱的授权码，用户需要登录账户并进入“安全性”选项卡。
-          在此页面中，用户需要单击"生成密码”按钮，并为其授权码设置一个自定义名称。
-          用户将要在用于获取授权码的应用程序中使用该密码。
-          用户还可以在此页面中，监控从该账户发出的所有会话，以确保账户安全。
-          
-          3.微软Outlook邮箱:要获取微软Outlook邮件的授权码，用户需在邮箱页面中打开“文件>信息>账户设置>账户设置"，
-          然后单击“更改”按钮。在此页面中，用户需要选择他们要使用的电子邮件账户，
-          并单击“更改”按钮。在“更改电子邮件设置"页面中，用户需要单击“更改”按钮，然后单击“其他设置”。
-          在授权类别中，用户需要单击“生成授权码"按钮，该授权码将作为用户邮箱的应用程序密
-          码。
-          其他邮箱授权码有些许的不同，但大部分流程是类似的，
-          需要在邮箱的“安全”或“设置”选项中生成。可以防止他人恶意登陆账户进而操作邮件，保护用户的个人信息安全，
-          如果不清楚您的邮箱授权码如何获取，可以google一下。`]: `E-mail authorization code is a kind of method to protect the user e-mail privacy.
-  Google Gmail: Users need to log in account and enter the "safety" setting page for Google E-mail authorization code.
+  '邮箱授权码是保护用户邮件隐私的一种方式。':
+    'E-mail authorization code is a kind of method to protect the user e-mail privacy.',
+  [`谷歌gmail:要获取谷歌邮箱授权码，用户需要登录账户并进入“安全性”设置页面。在此页面中，用户需启用两步验证功能，并创建一个应用程序密码，该密码将作为授权码。在创建过程中，用户需要选择应用程序(例如“Outlook")，操作系统(Windows、 Android等)和针对该应用程序的授权码。用户还需要确认哪一个谷歌账户将使用该授权码。`]: `Google Gmail: Users need to log in account and enter the "safety" setting page for Google E-mail authorization code.
   On that page, users need to enable two-step validation function and create an Application password which would be used as authorization code.
   In the creation process, users need to select the Application (such as "Outlook"), Operating System (Windows, Android, etc.) and the authorization code of such Application.
-  Users also need to confirm the concrete Google account which needs such authorization code.
-   
-  2. Yahoo E-mail: Users need to log in account and enter the "safety" optional card for Yahoo E-mail authorization code.
+  Users also need to confirm the concrete Google account which needs such authorization code.`,
+  [`雅虎邮箱:要获取雅虎邮箱的授权码，用户需要登录账户并进入“安全性”选项卡。在此页面中，用户需要单击"生成密码”按钮，并为其授权码设置一个自定义名称。用户将要在用于获取授权码的应用程序中使用该密码。用户还可以在此页面中，监控从该账户发出的所有会话，以确保账户安全。`]: `Yahoo E-mail: Users need to log in account and enter the "safety" optional card for Yahoo E-mail authorization code.
   On that page, users need to click "generate password" button, and set an user-defined name for their authorization code.
   Users would use such password in the Application used to obtain authorization code.
-  Users can also monitor all dialogues sent out from such account on the page to ensure the account security.
-   
-  3. Microsoft Outlook e-mail: Users need to switch on "document > information > account setting > account setting" on the E-mail page for the authorization code of Microsoft Outlook e-mail,
+  Users can also monitor all dialogues sent out from such account on the page to ensure the account security.`,
+  [`微软Outlook邮箱:要获取微软Outlook邮件的授权码，用户需在邮箱页面中打开“文件>信息>账户设置>账户设置"，然后单击“更改”按钮。在此页面中，用户需要选择他们要使用的电子邮件账户，并单击“更改”按钮。在“更改电子邮件设置"页面中，用户需要单击“更改”按钮，然后单击“其他设置”。在授权类别中，用户需要单击“生成授权码"按钮，该授权码将作为用户邮箱的应用程序密码。`]: `Microsoft Outlook e-mail: Users need to switch on "document > information > account setting > account setting" on the E-mail page for the authorization code of Microsoft Outlook e-mail,
   then click "Change" button. On that page, users need to select the e-mail account used by them,
   then click "Change" button. On the page of "change e-mail setting", users need to click "change" button, then click "other settings".
-  In the authorization category, users need to click "generate authorization code" button, and then such authorization code will be used as the Application password of user e-mail.
-   
-  Other E-mail authorization codes are a little different, but most processes are similar.
+  In the authorization category, users need to click "generate authorization code" button, and then such authorization code will be used as the Application password of user e-mail.`,
+  [`其他邮箱授权码有些许的不同，但大部分流程是类似的，需要在邮箱的“安全”或“设置”选项中生成。可以防止他人恶意登陆账户进而操作邮件，保护用户的个人信息安全，如果不清楚您的邮箱授权码如何获取，可以google一下。`]: `Other E-mail authorization codes are a little different, but most processes are similar.
   It is necessary to generate in the "security" or "setting" option of e-mail to prevent others from viciously log in account for operating e-mail and to protect users' personal information security.
   If you are unclear about the method to obtain your e-mail authorization code, you can google.`,
   注意: 'Notice',
@@ -463,4 +444,28 @@ export default {
   间夜报表: 'Room Night',
   房间: 'Room',
   入住率报表: 'Occupancy',
+  请选择语言: 'Please select a language',
+  请输入密码: 'Please enter password',
+  请输入邮箱账号: 'Please enter email',
+  请输入用户昵称: 'Please enter nickname',
+  账号注册: 'Register Account',
+  忘记密码: 'Forgot Password',
+  '恭喜你注册成功，快去邮箱验证吧！':
+    'Congratulations on your successful registration, go to the email verification!',
+  返回登录: 'Back to login',
+  '恭喜你注册成功，点击下方按钮去登录吧！':
+    'Congratulations on your successful registration, click the button below to log in!',
+  去登录: 'To Login',
+  两次输入密码不一致: 'The password is inconsistently',
+  '密码重置成功，请重新登录！':
+    'Password reset successful, please log in again!',
+  获取验证码: 'Get a verification code',
+  验证邮箱: 'Verify email',
+  '邮箱验证码发送成功！': 'Email verification code sent successfully!',
+  请输入邮箱验证码: 'Please enter the email verification code',
+  请输入新用户密码: 'Please enter the new password',
+  请确认新用户密码: 'Please confirm the new password',
+  注册: 'Register',
+  注册账号: 'Register Account',
+  重置密码: 'Reset password',
 };

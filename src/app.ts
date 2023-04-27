@@ -33,6 +33,15 @@ export const layout: RunTimeLayoutConfig = ({}) => {
   return {
     // 登录账号信息，包括所选管理员渠道
     rightContentRender,
+    menuDataRender(menuData) {
+      if (
+        window.location.hash.includes('/user') ||
+        window.location.hash.includes('/pms/store')
+      ) {
+        return [];
+      }
+      return menuData;
+    },
     logo: Logo,
   };
 };

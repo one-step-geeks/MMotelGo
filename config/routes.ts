@@ -204,7 +204,7 @@ export default [
     hideInMenu: true,
     layout: {
       hideMenu: true, //  隐藏边栏
-      hideNav: true, // 隐藏顶部导航
+      // hideNav: true, // 隐藏顶部导航
       hideFooter: true, // 隐藏底部底栏
     },
   },
@@ -215,7 +215,7 @@ export default [
     hideInMenu: true,
     layout: {
       hideMenu: true, //  隐藏边栏
-      hideNav: true, // 隐藏顶部导航
+      // hideNav: true, // 隐藏顶部导航
       hideFooter: true, // 隐藏底部底栏
     },
   },
@@ -225,7 +225,7 @@ export default [
     hideInMenu: true,
     layout: {
       hideMenu: true, //  隐藏边栏
-      hideNav: true, // 隐藏顶部导航
+      // hideNav: true, // 隐藏顶部导航
       hideFooter: true, // 隐藏底部底栏
     },
     component: 'user/Regist',
@@ -236,7 +236,7 @@ export default [
     hideInMenu: true,
     layout: {
       hideMenu: true, //  隐藏边栏
-      hideNav: true, // 隐藏顶部导航
+      // hideNav: true, // 隐藏顶部导航
       hideFooter: true, // 隐藏底部底栏
     },
     component: 'user/RegistSuccess',
@@ -247,7 +247,7 @@ export default [
     hideInMenu: true,
     layout: {
       hideMenu: true, //  隐藏边栏
-      hideNav: true, // 隐藏顶部导航
+      // hideNav: true, // 隐藏顶部导航
       hideFooter: true, // 隐藏底部底栏
     },
     component: 'user/ResetPassword',

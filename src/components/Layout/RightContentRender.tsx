@@ -7,6 +7,23 @@ import Cookie from 'js-cookie';
 export default () => {
   const allLocales = getAllLocales();
   const history = useHistory();
+  if (
+    window.location.hash.includes('/user') ||
+    window.location.hash.includes('/pms/store')
+  ) {
+    return (
+      <Select
+        value={getLocale()}
+        options={allLocales?.map((locale) => ({
+          label: localeMap.find((loc) => loc.value === locale)?.label,
+          value: locale,
+        }))}
+        onChange={(locale) => {
+          setLocale(locale, false);
+        }}
+      ></Select>
+    );
+  }
   return (
     <Space>
       <Select

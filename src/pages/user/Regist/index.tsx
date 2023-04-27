@@ -1,9 +1,13 @@
 import { MailOutlined, UserOutlined, KeyOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import {
+  LoginForm,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
 import { Form, Button, Typography } from 'antd';
 import { emailPattern } from '@/constants';
 import services from '@/services';
-import { useHistory, useIntl } from 'umi';
+import { useHistory, useIntl, setLocale } from 'umi';
 import logo from '@/assets/images/logohome.png';
 
 const { Link } = Typography;
@@ -85,10 +89,10 @@ export default () => {
           rules={[
             {
               required: true,
-              message: intl.formatMessage({ id: '请输入用户密码' }),
+              message: intl.formatMessage({ id: '请输入密码' }),
             },
           ]}
-          placeholder={intl.formatMessage({ id: '请输入用户密码' })}
+          placeholder={intl.formatMessage({ id: '请输入密码' })}
         />
         {/* <ProFormText
           name="confirmPassword"

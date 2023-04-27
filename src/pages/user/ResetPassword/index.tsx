@@ -55,7 +55,7 @@ export default () => {
                       } catch (error) {}
                     }}
                   >
-                    重置密码
+                    {intl.formatMessage({ id: '重置密码' })}
                   </Button>
                   <Link href="#/user/login">
                     {intl.formatMessage({ id: '返回' })}

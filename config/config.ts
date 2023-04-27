@@ -45,6 +45,7 @@ export default defineConfig({
       target: 'http://127.0.0.1',
     },
   },
+
   // 提速方案配置
   mfsu: {},
   fastRefresh: {},
