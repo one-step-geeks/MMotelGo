@@ -72,7 +72,7 @@ const PaymentRecordTable: React.FC = () => {
         title: intl.formatMessage({ id: '收款方式' }),
         valueType: 'select',
         fieldProps: {
-          placeholder: '请选择',
+          placeholder: intl.formatMessage({ id: '请选择' }),
           mode: 'multiple',
         },
         dataIndex: 'paymentIds',
