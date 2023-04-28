@@ -108,7 +108,9 @@ const PaymentRecordTable: React.FC = () => {
         dataIndex: 'amount',
         search: false,
         render: (amount) => {
-          return `${intl.formatMessage({ id: '¥' })}${amount}`;
+          return `${intl.formatMessage({ id: '¥' })}${
+            typeof amount === 'number' ? amount.toFixed(2) : amount
+          }`;
         },
       },
       {

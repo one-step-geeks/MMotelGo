@@ -59,7 +59,11 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
         dataIndex: 'total',
         render: (price) => {
           return `${intl.formatMessage({ id: '¥' })}${
-            price === '-' ? 0 : price
+            price === '-'
+              ? 0
+              : typeof price === 'number'
+              ? price.toFixed(2)
+              : price
           }`;
         },
       },
@@ -70,7 +74,11 @@ const PaymentDetailTable: React.FC<PaymentDetailProps> = (props) => {
           dataIndex: item,
           render: (price) => {
             return `${intl.formatMessage({ id: '¥' })}${
-              price === '-' ? 0 : price
+              price === '-'
+                ? 0
+                : typeof price === 'number'
+                ? price.toFixed(2)
+                : price
             }`;
           },
         } as ProColumns;

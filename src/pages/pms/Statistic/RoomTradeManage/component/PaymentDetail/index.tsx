@@ -70,7 +70,13 @@ const PaymentDetailTable: React.FC = () => {
           dataIndex: 'total',
           width: 100,
           render: (price) => {
-            return `${priceSymbol}${price === '-' ? 0 : price}`;
+            return `${priceSymbol}${
+              price === '-'
+                ? 0
+                : typeof price === 'number'
+                ? price.toFixed(2)
+                : price
+            }`;
           },
         },
         ...rangeDayList.map((item) => {
@@ -79,7 +85,13 @@ const PaymentDetailTable: React.FC = () => {
             width: 150,
             dataIndex: item,
             render: (price) => {
-              return `${priceSymbol}${price === '-' ? 0 : price}`;
+              return `${priceSymbol}${
+                price === '-'
+                  ? 0
+                  : typeof price === 'number'
+                  ? price.toFixed(2)
+                  : price
+              }`;
             },
           } as ProColumns;
         }),
