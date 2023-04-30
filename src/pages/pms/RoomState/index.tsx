@@ -120,39 +120,6 @@ const RoomStatePage: React.FC = () => {
     setSelectedRooms([]);
   }, [location]);
 
-  useEffect(() => {
-    const subs = selectService.getSelectedInfo().subscribe((info: any) => {
-      switch (info.type) {
-        case 'ADD_ORDER':
-          if (duration === -1) {
-            return;
-          }
-          setAddVisible(true);
-          break;
-        case 'CLOSE_ROOM':
-          if (duration === -1) {
-            return;
-          }
-          setCloseVisible(true);
-          break;
-        case 'OPEN_ROOM':
-          services.RoomStateController.batchOpenRooms({
-            stateList: openOrCloseList,
-          });
-          setSelectedRooms([]);
-          selectService.sendCancelInfo();
-          refreshAllState();
-          break;
-        default:
-          break;
-      }
-    });
-
-    return () => {
-      subs.unsubscribe();
-    };
-  }, [openOrCloseList, duration, selectedDate]);
-
   // 生成房态日历-columns
   const [calendarList, setCalendarList] = useState(() => {
     return getCalendarDate(duration);
@@ -193,7 +160,11 @@ const RoomStatePage: React.FC = () => {
   });
 
   // 获取房态剩余房间-rows
-  const { data: stockData, loading: stockLoading } = useRequest(
+  const {
+    data: stockData,
+    loading: stockLoading,
+    run: refreshRoomStateStock,
+  } = useRequest(
     async () => {
       if (duration !== -1) {
         return services.RoomStateController.getRoomStateStock({
@@ -216,7 +187,42 @@ const RoomStatePage: React.FC = () => {
       refreshDeps: [selectedDate, duration],
     },
   );
+  useEffect(() => {
+    const subs = selectService.getSelectedInfo().subscribe((info: any) => {
+      switch (info.type) {
+        case 'ADD_ORDER':
+          if (duration === -1) {
+            return;
+          }
+          setAddVisible(true);
+          break;
+        case 'CLOSE_ROOM':
+          if (duration === -1) {
+            return;
+          }
+          setCloseVisible(true);
+          break;
+        case 'OPEN_ROOM':
+          services.RoomStateController.batchOpenRooms({
+            stateList: openOrCloseList,
+          }).then(() => {
+            refreshRoomStateStock().then(() => {
+              setSelectedRooms([]);
+              selectService.sendCancelInfo();
+              refreshAllState();
+            });
+          });
 
+          break;
+        default:
+          break;
+      }
+    });
+
+    return () => {
+      subs.unsubscribe();
+    };
+  }, [openOrCloseList, duration, selectedDate]);
   // 获取房间订单-渲染订单单元格
   const {
     data: orderData,
@@ -555,10 +561,12 @@ const RoomStatePage: React.FC = () => {
             visible={closeVisible}
             stateList={openOrCloseList}
             onSubmit={() => {
-              setSelectedRooms([]);
-              selectService.sendCancelInfo();
-              setCloseVisible(false);
-              refreshAllState();
+              refreshRoomStateStock().then(() => {
+                setSelectedRooms([]);
+                selectService.sendCancelInfo();
+                setCloseVisible(false);
+                refreshAllState();
+              });
             }}
             onClose={() => {
               setCloseVisible(false);
