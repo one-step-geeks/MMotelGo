@@ -151,13 +151,18 @@ const RoomStatePage: React.FC = () => {
   );
 
   // 获取房态列表
-  const { loading: statusLoading } = useRequest(async () => {
-    return services.RoomStateController.getRoomStatusList({
-      roomTypeIdList: [],
-    }).then((res) => {
-      setRoomTypeList(res.data.roomTypeList);
-    });
-  });
+  const { loading: statusLoading } = useRequest(
+    async () => {
+      return services.RoomStateController.getRoomStatusList({
+        roomTypeIdList: [],
+      }).then((res) => {
+        setRoomTypeList(res.data.roomTypeList);
+      });
+    },
+    {
+      refreshDeps: [selectedDate, duration],
+    },
+  );
 
   // 获取房态剩余房间-rows
   const {
