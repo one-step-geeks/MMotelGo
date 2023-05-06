@@ -89,7 +89,13 @@ const ShopMange: React.FC = () => {
             {data?.code}
           </DescItem>
           <DescItem label={intl.formatMessage({ id: '门店类型' })}>
-            {['', '民宿', '其他'][data?.type!]}
+            {
+              [
+                '',
+                intl.formatMessage({ id: '民宿' }),
+                intl.formatMessage({ id: '其他' }),
+              ][data?.type!]
+            }
           </DescItem>
           <DescItem label={intl.formatMessage({ id: '门店地址' })}>
             {!editable ? (

@@ -23,12 +23,12 @@ export default (props: Props) => {
       dataIndex: 'roomCode',
     },
     {
-      title: '操作内容',
+      title: intl.formatMessage({ id: '操作内容' }),
       width: 80,
       dataIndex: 'operationDesc',
     },
     {
-      title: '开始/结束时间',
+      title: intl.formatMessage({ id: '开始/结束时间' }),
       width: 180,
       dataIndex: 'startTime',
       valueType: 'dateTime',

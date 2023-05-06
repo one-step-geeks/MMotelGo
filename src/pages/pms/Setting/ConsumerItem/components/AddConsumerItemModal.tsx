@@ -121,7 +121,7 @@ export default () => {
         >
           <InputNumber
             style={{ width: '100%' }}
-            addonBefore="￥"
+            addonBefore={intl.formatMessage({ id: '￥' })}
             precision={2}
           />
         </FormItem>

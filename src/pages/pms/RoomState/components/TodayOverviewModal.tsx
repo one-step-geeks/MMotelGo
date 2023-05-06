@@ -50,7 +50,7 @@ export default (props: Props) => {
       dataIndex: 'roomCode',
     },
     {
-      title: '入离时间',
+      title: intl.formatMessage({ id: '入离时间' }),
       width: 180,
       dataIndex: 'startTime',
       valueType: 'dateTime',

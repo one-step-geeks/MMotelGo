@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import services from '@/services';
 import './room-code.less';
+import { useIntl } from 'umi';
 
 interface Props {
   room: ROOM_STATE.StateTableData;
@@ -11,7 +12,7 @@ interface Props {
 
 const RoomCodeBox: React.FC<Props> = (props) => {
   const { room, roomList, onStatusChange } = props;
-
+  const intl = useIntl();
   const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
@@ -21,11 +22,11 @@ const RoomCodeBox: React.FC<Props> = (props) => {
   }, [roomList]);
 
   let className = 'room-code-box';
-  let hoverText = '转为脏房';
+  let hoverText = intl.formatMessage({ id: '转为脏房' });
 
   if (dirty) {
     className += ' dirty';
-    hoverText = '转为净房';
+    hoverText = intl.formatMessage({ id: '转为净房' });
   }
 
   return (

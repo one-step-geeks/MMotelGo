@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRequest } from 'umi';
+import { useIntl, useRequest } from 'umi';
 import {
   Button,
   Form,
@@ -27,7 +27,7 @@ export default () => {
   const [action, setAction] = useState<ActionType>();
   const [submitLoading, setSubmitLoading] = useState(false);
   const [roomTypeId, setRoomTypeId] = useState<number>();
-
+  const intl = useIntl();
   const isUpdate = !!roomTypeId;
 
   async function onSubmit() {
@@ -179,7 +179,7 @@ export default () => {
               min={1}
               max={99}
               style={{ width: '100%' }}
-              addonAfter="间"
+              addonAfter={intl.formatMessage({ id: '间' })}
             />
           </FormItem>
           <FormItem label="房间号" dependencies={['roomCount']}>

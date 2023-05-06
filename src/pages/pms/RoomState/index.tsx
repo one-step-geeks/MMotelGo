@@ -340,7 +340,10 @@ const RoomStatePage: React.FC = () => {
               render: (_: ReactNode, record: ROOM_STATE.StateTableData) => {
                 if (expand) {
                   return (
-                    <div className="left-room-box">{record.roomCount}间</div>
+                    <div className="left-room-box">
+                      {record.roomCount}
+                      {intl.formatMessage({ id: '间' })}
+                    </div>
                   );
                 }
                 const order = findOrderByRecord(record, item.date);
@@ -446,7 +449,7 @@ const RoomStatePage: React.FC = () => {
           align: 'center',
           render: (_, record) => {
             if (expand) {
-              return '剩余';
+              return intl.formatMessage({ id: '剩余' });
             }
             return (
               <RoomCodeBox

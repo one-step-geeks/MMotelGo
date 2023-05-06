@@ -189,7 +189,9 @@ const SingleDay: React.FC = () => {
                   <Space>
                     <Text className="title">{item.roomTypeName}</Text>
                     <Text type="secondary">
-                      (共{item?.roomList?.length || 0}间)
+                      ({intl.formatMessage({ id: '共' })}
+                      {item?.roomList?.length || 0}
+                      {intl.formatMessage({ id: '间' })})
                     </Text>
                   </Space>
                   <Space wrap size={[12, 12]} className="box-wrap">

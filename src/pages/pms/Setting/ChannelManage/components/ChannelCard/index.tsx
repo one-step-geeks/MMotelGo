@@ -102,7 +102,7 @@ export default (props: Props) => {
                 marginRight: '8px',
               }}
             ></span>
-            <span>{op.text}</span>
+            {/* <span>{op.text}</span> */}
           </div>
         ),
       }))}

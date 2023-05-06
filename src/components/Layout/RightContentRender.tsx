@@ -1,12 +1,14 @@
 import { Avatar, Space, Select, Popover, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { setLocale, getLocale, getAllLocales, useHistory } from 'umi';
+import { setLocale, getLocale, getAllLocales, useHistory, useIntl } from 'umi';
 import { localeMap } from '@/constants';
 import Cookie from 'js-cookie';
 
 export default () => {
   const allLocales = getAllLocales();
   const history = useHistory();
+  const intl = useIntl();
+
   if (
     window.location.hash.includes('/user') ||
     window.location.hash.includes('/pms/store')
@@ -47,7 +49,7 @@ export default () => {
                 history.push('/pms/store');
               }}
             >
-              门店列表
+              {intl.formatMessage({ id: '门店列表' })}
             </Button>
             <Button
               type="link"
@@ -59,7 +61,7 @@ export default () => {
                 history.push('/user/login');
               }}
             >
-              退出登录
+              {intl.formatMessage({ id: '退出登录' })}
             </Button>
           </Space>
         }

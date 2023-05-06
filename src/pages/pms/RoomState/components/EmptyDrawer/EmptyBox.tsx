@@ -130,7 +130,8 @@ const EmptyBox: React.FC<Props> = (props) => {
             {record?.roomCode}
           </Text>
           <Text type="secondary" className="hiden">
-            ￥{price}
+            {intl.formatMessage({ id: '￥' })}
+            {price}
           </Text>
         </div>
       ) : (

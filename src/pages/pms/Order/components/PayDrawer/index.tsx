@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import services from '@/services';
 import moment from 'moment';
-import { useIntl } from 'umi';
+import { useIntl, getIntl, getLocale } from 'umi';
 import {
   DrawerForm,
   ProFormDatePicker,
@@ -18,19 +18,19 @@ interface FormOrder {}
 
 export const payOrRefundOptions = [
   {
-    label: '收款',
+    label: getIntl(getLocale()).formatMessage({ id: '收款' }),
     value: 1,
   },
   {
-    label: '收押金',
+    label: getIntl(getLocale()).formatMessage({ id: '收押金' }),
     value: 2,
   },
   {
-    label: '退款',
+    label: getIntl(getLocale()).formatMessage({ id: '退款' }),
     value: 3,
   },
   {
-    label: '退押金',
+    label: getIntl(getLocale()).formatMessage({ id: '退押金' }),
     value: 4,
   },
 ];
