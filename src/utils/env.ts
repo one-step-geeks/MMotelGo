@@ -7,7 +7,8 @@ const host = window.location.host;
 
 const envList = [
   { origin: /dev/, env: 'dev' },
-  { origin: /uat/, env: 'uat' },
+  { origin: /^uat\.pietable\.com/, env: 'uat' },
+  { origin: /^pietable\.com/, env: 'production' },
 ];
 
 function getConfigByEnv(): EnvConfig {
@@ -16,7 +17,7 @@ function getConfigByEnv(): EnvConfig {
     case 'production':
       return {
         ENV: 'prod',
-        APP_BASE_URL: 'https://uat.pietable.com',
+        APP_BASE_URL: 'https://pietable.com',
       };
     case 'uat':
       return {
