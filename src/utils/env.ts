@@ -6,7 +6,7 @@ interface EnvConfig {
 const host = window.location.host;
 
 const envList = [
-  { origin: /dev/, env: 'dev' },
+  { origin: /^dev\.lamshan\.com/, env: 'dev' },
   { origin: /^uat\.pietable\.com/, env: 'uat' },
   { origin: /^www\.pietable\.com/, env: 'production' },
 ];
@@ -17,17 +17,17 @@ function getConfigByEnv(): EnvConfig {
     case 'production':
       return {
         ENV: 'prod',
-        APP_BASE_URL: 'https://pietable.com',
+        APP_BASE_URL: window.location.origin,
       };
     case 'uat':
       return {
         ENV: 'uat',
-        APP_BASE_URL: 'https://uat.pietable.com',
+        APP_BASE_URL: window.location.origin,
       };
     default:
       return {
         ENV: 'test',
-        APP_BASE_URL: 'http://dev.lamshan.com',
+        APP_BASE_URL: window.location.origin,
       };
   }
 }
