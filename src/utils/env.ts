@@ -8,7 +8,7 @@ const host = window.location.host;
 const envList = [
   { origin: /dev/, env: 'dev' },
   { origin: /^uat\.pietable\.com/, env: 'uat' },
-  { origin: /^pietable\.com/, env: 'production' },
+  { origin: /^www\.pietable\.com/, env: 'production' },
 ];
 
 function getConfigByEnv(): EnvConfig {
