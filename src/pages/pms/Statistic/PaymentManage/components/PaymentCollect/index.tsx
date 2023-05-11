@@ -17,10 +17,10 @@ const PaymentCollect: React.FC<PaymentCollectContextType> = (props) => {
   const intl = useIntl();
   return (
     <div className="payment-manage-collect">
-      <Alert
+      {/* <Alert
         message={intl.formatMessage({ id: '收款记录不含记一笔收款' })}
         type="warning"
-      />
+      /> */}
       <PaymentManageDateRangePicker />
       <PaymentSituationCard />
       <div className="payment-manage-collect-receipts">

@@ -318,6 +318,7 @@ export default {
   日期: 'Date',
   入住日期: 'Check-in Date',
   房价: 'Price',
+  房费总价: 'Total Price',
   入住人数: 'Living Population',
   客房状态: 'Room Status',
   入住人: 'Resident',

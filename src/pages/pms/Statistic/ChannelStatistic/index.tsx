@@ -15,10 +15,10 @@ const ChannelStatistic: React.FC<ChannelStatisticContextType> = (props) => {
   const intl = useIntl();
   return (
     <div className="channel-statistic">
-      <Alert
+      {/* <Alert
         message={intl.formatMessage({ id: '收款记录不含记一笔收款' })}
         type="warning"
-      />
+      /> */}
       <div className="channel-statistic-data-piker">
         <DatePicker.RangePicker
           value={collectDateRange}

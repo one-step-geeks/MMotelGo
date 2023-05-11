@@ -309,7 +309,7 @@ export function useOrderDetailDrawer(
       render: (value) => `${value}夜`,
     },
     {
-      title: intl.formatMessage({ id: '房价' }),
+      title: intl.formatMessage({ id: '房费总价' }),
       width: 82,
       align: 'center',
       dataIndex: 'totalAmount',

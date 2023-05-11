@@ -9,10 +9,10 @@ const PaymentRecord: React.FC = () => {
 
   return (
     <div className="payment-manage-record">
-      <Alert
+      {/* <Alert
         message={intl.formatMessage({ id: '收款记录不含记一笔收款' })}
         type="warning"
-      />
+      /> */}
       <PaymentRecordTable />
     </div>
   );
