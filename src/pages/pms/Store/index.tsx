@@ -114,6 +114,7 @@ export default function StorePage() {
               label={intl.formatMessage({ id: '时区' })}
               name="timezone"
               rules={[{ required: true }]}
+              initialValue={-(new Date().getTimezoneOffset() / 60)}
               request={async () => {
                 return services.UserController.getTimezone().then((res) => {
                   return res.data.map((item) => {
