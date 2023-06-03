@@ -33,6 +33,7 @@
     "rc-picker": "~2.7.0",
     "react": "^17.x",
     "react-dom": "^17.x",
+    "react-intl": "^5",
     "react-sortablejs": "^6.1.1",
     "rxjs": "^7.5.5",
     "sortablejs": "^1.15.0",

@@ -79,10 +79,12 @@ export async function bindPmsStoreToken() {
     history.replace('/user/login');
     return Promise.reject();
   }
-  return request<API.Result>('/motel/store/getPmsStore', {
+  return request<API.Result<number>>('/motel/store/getPmsStore', {
     method: 'GET',
     params: {
       storeId: Cookie.get('storeId'),
     },
+  }).then((res) => {
+    Cookie.set('offsetTimezone', res.data);
   });
 }

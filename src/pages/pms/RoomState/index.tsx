@@ -299,7 +299,7 @@ const RoomStatePage: React.FC = () => {
           children: [
             {
               align: 'center' as AlignType,
-              width: 120,
+              width: 80,
               title: (
                 <Typography.Text
                   type="secondary"
