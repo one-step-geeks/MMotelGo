@@ -21,8 +21,22 @@ export default function StorePage() {
   const history = useHistory();
   const { refresh } = useModel('@@initialState');
   const intl = useIntl();
+  const selectStore = async (storeInfo: SYSTEM.StoreListInfo) => {
+    if (!storeInfo) {
+      return;
+    }
+    Cookie.set('storeId', storeInfo.storeId);
+    await services.UserController.bindPmsStoreToken();
+    refresh();
+    history.replace('/');
+  };
   const { data, run } = useRequest(() => {
-    return services.UserController.getPmsStoreList();
+    return services.UserController.getPmsStoreList().then((res) => {
+      if (res.data?.list?.length === 1) {
+        selectStore(res.data?.list?.[0]);
+      }
+      return res;
+    });
   });
 
   return (
@@ -42,12 +56,7 @@ export default function StorePage() {
                   key={store.storeId}
                   hoverable
                   style={{ width: 240 }}
-                  onClick={async () => {
-                    Cookie.set('storeId', store.storeId);
-                    await services.UserController.bindPmsStoreToken();
-                    refresh();
-                    history.push('/');
-                  }}
+                  onClick={() => selectStore(store)}
                 >
                   <Card.Meta
                     title={store.storeName}
