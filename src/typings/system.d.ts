@@ -33,6 +33,7 @@ declare namespace SYSTEM {
     name: string; //⻔店名称
     code: string; //⻔店编号
     address: string; //⼀级地址
+    cover: string;
     detailAddress: string; //⼆级详细地址
     type: number; //⻔店类型 1-⺠宿 2-其他
     bossName: string; //负责⼈姓名

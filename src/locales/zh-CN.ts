@@ -137,6 +137,8 @@ export default {
   邮箱账号格式不正确: '邮箱账号格式不正确',
   邮箱验证码发送成功: '邮箱验证码发送成功',
   门店列表: '门店列表',
+  'You can only upload JPG/PNG file!': '只支持JPG/PNG格式图片',
+  'Image must smaller than 20MB!': '最大支持20M图片',
   到期时间: '到期时间',
   民宿: '民宿',
   其他: '其他',

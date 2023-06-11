@@ -1,16 +1,20 @@
-import { Space, Card, Button, Row, Col } from 'antd';
+import { Space, Card, Button, Row, Col, message, Upload } from 'antd';
 import { useModel, useRequest } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
+import ProForm, {
   ModalForm,
   ProFormText,
   ProFormRadio,
   ProFormSelect,
+  ProFormUploadButton,
 } from '@ant-design/pro-form';
+import { RcFile } from 'antd/es/upload';
 import Cookie from 'js-cookie';
 import { useHistory } from 'umi';
 import services from '@/services';
 import { useIntl } from 'umi';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -21,6 +25,38 @@ export default function StorePage() {
   const history = useHistory();
   const { refresh } = useModel('@@initialState');
   const intl = useIntl();
+  const [imgUrl, setImgUrl] = useState('');
+  const [imgLoading, setImgLoading] = useState(false);
+  const { disableAutoSelect } = (history.location as any).query || {};
+  const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      console.log(reader);
+      callback(reader.result as string);
+    });
+    reader.readAsDataURL(img);
+  };
+  const beforeUpload = (file: RcFile) => {
+    setImgLoading(true);
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error(
+        intl.formatMessage({ id: 'You can only upload JPG/PNG file!' }),
+      );
+    }
+    const isLt20M = file.size / 1024 / 1024 < 20;
+    if (!isLt20M) {
+      message.error(
+        intl.formatMessage({ id: 'Image must smaller than 20MB!' }),
+      );
+    }
+    console.log(file);
+    getBase64(file as RcFile, (url) => {
+      setImgLoading(false);
+      setImgUrl(url);
+    });
+    return isJpgOrPng && isLt20M;
+  };
   const selectStore = async (storeInfo: SYSTEM.StoreListInfo) => {
     if (!storeInfo) {
       return;
@@ -33,7 +69,9 @@ export default function StorePage() {
   const { data, run } = useRequest(() => {
     return services.UserController.getPmsStoreList().then((res) => {
       if (res.data?.list?.length === 1) {
-        selectStore(res.data?.list?.[0]);
+        if (!disableAutoSelect) {
+          selectStore(res.data?.list?.[0]);
+        }
       }
       return res;
     });
@@ -86,7 +124,10 @@ export default function StorePage() {
               destroyOnClose: true,
             }}
             onFinish={async (values) => {
-              await services.UserController.newPmsStore(values);
+              await services.UserController.newPmsStore({
+                ...values,
+                cover: imgUrl,
+              });
               run();
               return true;
             }}
@@ -94,6 +135,28 @@ export default function StorePage() {
             preserve={false}
             {...formItemLayout}
           >
+            <ProForm.Item
+              name="cover"
+              label={intl.formatMessage({ id: '门店图片' })}
+              rules={[{ required: true }]}
+            >
+              <Upload
+                name="avatar"
+                listType="picture-card"
+                className="avatar-uploader"
+                showUploadList={false}
+                beforeUpload={beforeUpload}
+              >
+                {imgUrl ? (
+                  <img src={imgUrl} alt="avatar" style={{ width: '100%' }} />
+                ) : (
+                  <div>
+                    {imgLoading ? <LoadingOutlined /> : <PlusOutlined />}
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
+              </Upload>
+            </ProForm.Item>
             <ProFormText
               name="name"
               label={intl.formatMessage({ id: '门店名称' })}

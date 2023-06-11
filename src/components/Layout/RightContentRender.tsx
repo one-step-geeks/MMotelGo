@@ -46,7 +46,7 @@ export default () => {
               type="link"
               size="small"
               onClick={() => {
-                history.push('/pms/store');
+                history.push('/pms/store?disableAutoSelect=true');
               }}
             >
               {intl.formatMessage({ id: '门店列表' })}

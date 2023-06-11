@@ -180,6 +180,7 @@ export default {
   财务设置: 'Financial Setting',
   收款方式设置: 'Payment Setting',
   记一笔设置: 'Take Note Setting',
+  门店图片: 'Store Banner',
   成功: 'Success',
   新增成功: 'Success',
   新建成功: 'Success',
