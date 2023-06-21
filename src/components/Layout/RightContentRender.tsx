@@ -3,6 +3,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { setLocale, getLocale, getAllLocales, useHistory, useIntl } from 'umi';
 import { localeMap } from '@/constants';
 import Cookie from 'js-cookie';
+import StoreSelect from './StoreSelect';
 
 export default () => {
   const allLocales = getAllLocales();
@@ -38,19 +39,11 @@ export default () => {
           setLocale(locale, false);
         }}
       ></Select>
+      <StoreSelect />
       <Popover
         placement="bottomRight"
         content={
           <Space direction="vertical">
-            <Button
-              type="link"
-              size="small"
-              onClick={() => {
-                history.push('/pms/store?disableAutoSelect=true');
-              }}
-            >
-              {intl.formatMessage({ id: '门店列表' })}
-            </Button>
             <Button
               type="link"
               size="small"

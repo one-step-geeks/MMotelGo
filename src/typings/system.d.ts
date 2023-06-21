@@ -26,6 +26,7 @@ declare namespace SYSTEM {
     storeId: number;
     storeName: string;
     expirationTime: string;
+    cover: string;
   }
 
   interface ShopDetail {
