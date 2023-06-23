@@ -446,7 +446,7 @@ export function useOrderDetailDrawer(
   const OrderDetailDrawer = (
     <>
       <Drawer
-        width={640}
+        width={800}
         destroyOnClose
         maskClosable={false}
         title={intl.formatMessage({ id: '订单详情' })}

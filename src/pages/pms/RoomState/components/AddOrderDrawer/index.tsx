@@ -24,7 +24,7 @@ const AddOrderDrawer: React.FC<Props> = (props) => {
         selectService.sendCancelInfo();
         onClose?.();
       }}
-      width={532}
+      width={800}
       visible={visible}
       maskClosable={false}
       destroyOnClose

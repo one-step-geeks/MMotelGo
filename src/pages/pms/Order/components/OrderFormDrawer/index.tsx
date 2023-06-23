@@ -161,7 +161,7 @@ export default (props: Props) => {
       visible={props.visible}
       preserve={false}
       drawerProps={{
-        width: 640,
+        width: 800,
         destroyOnClose: true,
         maskClosable: false,
         onClose: (value) => {

@@ -52,12 +52,11 @@ const EmptyBox: React.FC<Props> = (props) => {
       subs.unsubscribe();
     };
   }, [record, date]);
-
   const boxData = record?.dateList?.find((d) =>
     moment(d.date).isSame(date, 'day'),
   );
   const { price, status } = boxData || {};
-
+  const isToday = moment(date).isSame(moment(), 'day');
   const isBeforeNow = moment(boxData?.date).isSameOrAfter(moment(), 'day');
   return ![9, 10, 11].includes(status!) ? (
     <Popover
@@ -105,7 +104,10 @@ const EmptyBox: React.FC<Props> = (props) => {
     >
       {!selected ? (
         <div
-          className="room-empty-box"
+          className={classnames(
+            'room-empty-box',
+            isToday && 'room-empty-box-today',
+          )}
           onClick={() => {
             const info = {
               date,

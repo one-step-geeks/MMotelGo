@@ -3,6 +3,7 @@ import { message, Form } from 'antd';
 import { DrawerForm } from '@ant-design/pro-form';
 import EmptyBox from './EmptyBox';
 import services from '@/services';
+import { useIntl } from 'umi';
 
 const FormItem = Form.Item;
 
@@ -14,12 +15,12 @@ interface Props {
 const EmptyDrawer: React.FC<Props> = (props) => {
   const { date, record } = props;
   const [visible, setVisible] = useState(false);
-
+  const intl = useIntl();
   return (
     <DrawerForm
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 16 }}
-      width={480}
+      width={800}
       visible={visible}
       onVisibleChange={setVisible}
       trigger={<EmptyBox record={record} date={date} />}
@@ -28,7 +29,7 @@ const EmptyDrawer: React.FC<Props> = (props) => {
         maskClosable: false,
       }}
       layout="horizontal"
-      title="订单详情"
+      title={intl.formatMessage({ id: '订单详情' })}
       onFinish={async (values) => {
         try {
           await services.SettingController.updateRoomPrice({
@@ -36,7 +37,7 @@ const EmptyDrawer: React.FC<Props> = (props) => {
             startTime: values?.dateRange?.[0],
             endTime: values?.dateRange?.[1],
           });
-          message.success('设置成功！');
+          message.success(intl.formatMessage({ id: '设置成功' }));
         } catch (error) {}
         return true;
       }}

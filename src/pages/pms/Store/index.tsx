@@ -17,6 +17,7 @@ import { useState } from 'react';
 import storeDefaultCover from '@/assets/images/storeDefaultCover.png';
 import logo from '@/assets/images/logohome.png';
 import './style.less';
+import { ProCard } from '@ant-design/pro-components';
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -33,7 +34,6 @@ export default function StorePage() {
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => {
-      console.log(reader);
       callback(reader.result as string);
     });
     reader.readAsDataURL(img);
@@ -213,7 +213,7 @@ export default function StorePage() {
   if (!data?.list?.length) {
     return (
       <div className="store-welcome">
-        <div className="store-welcome-left">
+        <ProCard className="store-welcome-left">
           <div>
             <img src={logo} />
           </div>
@@ -247,8 +247,8 @@ export default function StorePage() {
             {intl.formatMessage({ id: '请创建您的第一家酒店，开始体验吧！' })}
           </div>
           <div>{createStoreModal}</div>
-        </div>
-        <div className="store-welcome-right">
+        </ProCard>
+        <ProCard className="store-welcome-right">
           <div>{intl.formatMessage({ id: '您名下至少有一家酒店' })}</div>
           <br />
           <div>
@@ -286,7 +286,7 @@ export default function StorePage() {
             </span>{' '}
             {intl.formatMessage({ id: '必填项，有PieTable的工作人员为您提供' })}
           </div>
-        </div>
+        </ProCard>
       </div>
     );
   }

@@ -282,18 +282,21 @@ const RoomStatePage: React.FC = () => {
       calendarList?.map?.((item) => {
         const d = moment(item.date);
         const isWeekend = [0, 6].includes(d.day());
-        const dateText = d.isSame(moment(), 'day')
+        const dateIsToday = d.isSame(moment(), 'day');
+        const dateText = dateIsToday
           ? intl.formatMessage({ id: '今天' })
           : d.format('MM-DD');
         const textType = isWeekend ? 'danger' : undefined;
         return {
           title: (
-            <Space size={[10, 0]} style={{ padding: '10px 0' }}>
-              <Typography.Text type={textType}>{dateText}</Typography.Text>
-              <Typography.Text type={textType || 'secondary'}>
-                {getWeekDay(d)}
-              </Typography.Text>
-            </Space>
+            <div className={dateIsToday ? 'table-header-today' : ''}>
+              <Space size={[10, 0]} style={{ padding: '10px 0' }}>
+                <Typography.Text type={textType}>{dateText}</Typography.Text>
+                <Typography.Text type={textType || 'secondary'}>
+                  {getWeekDay(d)}
+                </Typography.Text>
+              </Space>
+            </div>
           ),
           align: 'center' as AlignType,
           children: [
@@ -301,15 +304,17 @@ const RoomStatePage: React.FC = () => {
               align: 'center' as AlignType,
               width: 80,
               title: (
-                <Typography.Text
-                  type="secondary"
-                  style={{ fontSize: 12, padding: '6px 0', display: 'block' }}
-                >
-                  {intl.formatMessage(
-                    { id: 'ROOM_LEFT' },
-                    { count: getLeftRoomCount(d) || 0 },
-                  )}
-                </Typography.Text>
+                <div className={dateIsToday ? 'table-header-today' : ''}>
+                  <Typography.Text
+                    type="secondary"
+                    style={{ fontSize: 12, padding: '6px 0', display: 'block' }}
+                  >
+                    {intl.formatMessage(
+                      { id: 'ROOM_LEFT' },
+                      { count: getLeftRoomCount(d) || 0 },
+                    )}
+                  </Typography.Text>
+                </div>
               ),
               onCell: (record: ROOM_STATE.StateTableData) => {
                 const order = findOrderByRecord(record, item.date);
@@ -515,7 +520,9 @@ const RoomStatePage: React.FC = () => {
         <Space>
           <div>{intl.formatMessage({ id: '图例' })}: </div>
           <Tag color="green">{intl.formatMessage({ id: '已预定' })}</Tag>
-          <Tag color="lime">{intl.formatMessage({ id: '已入住' })}</Tag>
+          <Tag color="rgba(99,151,207, 0.4)">
+            {intl.formatMessage({ id: '已入住' })}
+          </Tag>
           <Tag color="orange">{intl.formatMessage({ id: '已退房' })}</Tag>
           <Tag color="warning">{intl.formatMessage({ id: '停用房' })}</Tag>
           <Tag color="error">{intl.formatMessage({ id: '维修房' })}</Tag>
